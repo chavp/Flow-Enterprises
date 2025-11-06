@@ -9,4 +9,8 @@ public sealed class Enterprise : PartyRole
     public string? Notes { get; set; }
 
     public LegalStructure? LegalStructure { get; set; }
+
+    public string? BusinessRegistrationNumber { get; set; }
+    public string? TaxId { get; set; }
+    public int FiscalYearStartMonth { get; set; }
 }

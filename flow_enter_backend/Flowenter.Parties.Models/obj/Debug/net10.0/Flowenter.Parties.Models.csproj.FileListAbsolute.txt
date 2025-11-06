@@ -13,3 +13,4 @@ D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Parties.Models\obj\Debug
 D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Parties.Models\obj\Debug\net10.0\refint\Flowenter.Parties.Models.dll
 D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Parties.Models\obj\Debug\net10.0\Flowenter.Parties.Models.pdb
 D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Parties.Models\obj\Debug\net10.0\ref\Flowenter.Parties.Models.dll
+D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Parties.Models\obj\Debug\net10.0\Flowenter.Parties.Models.sourcelink.json
