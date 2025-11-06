@@ -1,0 +1,11 @@
+D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Domain.Models\bin\Debug\net10.0\Flowenter.Domain.Models.deps.json
+D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Domain.Models\bin\Debug\net10.0\Flowenter.Domain.Models.dll
+D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Domain.Models\bin\Debug\net10.0\Flowenter.Domain.Models.pdb
+D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Domain.Models\obj\Debug\net10.0\Flowenter.Domain.Models.GeneratedMSBuildEditorConfig.editorconfig
+D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Domain.Models\obj\Debug\net10.0\Flowenter.Domain.Models.AssemblyInfoInputs.cache
+D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Domain.Models\obj\Debug\net10.0\Flowenter.Domain.Models.AssemblyInfo.cs
+D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Domain.Models\obj\Debug\net10.0\Flowenter.Domain.Models.csproj.CoreCompileInputs.cache
+D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Domain.Models\obj\Debug\net10.0\Flowenter.Domain.Models.dll
+D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Domain.Models\obj\Debug\net10.0\refint\Flowenter.Domain.Models.dll
+D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Domain.Models\obj\Debug\net10.0\Flowenter.Domain.Models.pdb
+D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Domain.Models\obj\Debug\net10.0\ref\Flowenter.Domain.Models.dll
