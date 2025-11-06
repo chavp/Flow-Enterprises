@@ -1,6 +1,6 @@
 ﻿namespace Flowenter.Parties.Models;
 
-public sealed class Enterprise : Party
+public sealed class Enterprise : PartyRole
 {
     public string? Information { get; set; }
     public byte[]? Logo { get; set; }
