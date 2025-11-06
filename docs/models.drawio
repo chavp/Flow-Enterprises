@@ -140,7 +140,7 @@
           <mxGeometry x="-336.46153846153845" y="420" width="81.23076923076923" height="30" as="geometry" />
         </mxCell>
         <mxCell id="tdPrWEJd15tEannaNgth-17" value="Enterprise" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="-329.77" y="145" width="129.77" height="50" as="geometry" />
+          <mxGeometry x="-360.72999999999996" y="145" width="129.77" height="50" as="geometry" />
         </mxCell>
         <mxCell id="tdPrWEJd15tEannaNgth-40" value="PartyRole" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="1">
           <mxGeometry x="-370" y="100" width="60" height="30" as="geometry" />
