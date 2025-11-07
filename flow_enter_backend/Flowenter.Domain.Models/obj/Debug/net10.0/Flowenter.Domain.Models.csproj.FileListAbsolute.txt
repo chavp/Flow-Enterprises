@@ -10,3 +10,4 @@ D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Domain.Models\obj\Debug\
 D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Domain.Models\obj\Debug\net10.0\Flowenter.Domain.Models.pdb
 D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Domain.Models\obj\Debug\net10.0\ref\Flowenter.Domain.Models.dll
 D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Domain.Models\obj\Debug\net10.0\Flowenter.Domain.Models.sourcelink.json
+D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Domain.Models\obj\Debug\net10.0\Flowenter.Domain.Models.csproj.AssemblyReference.cache

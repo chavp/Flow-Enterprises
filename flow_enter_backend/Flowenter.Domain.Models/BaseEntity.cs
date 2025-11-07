@@ -1,11 +1,17 @@
-﻿namespace Flowenter.Domain.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Flowenter.Domain.Models;
 
 public abstract class BaseEntity
 {
-    public Guid Id { get; set; }
-    public DateTime CreatedAtUtc { get; set; }
+    public Guid? Id { get; set; }
+    public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
     public DateTime? UpdatedAtUtc { get; set; }
-    public string? CreatedBy { get; set; }
+
+    [Required, StringLength(300)]
+    public string? CreatedBy { get; set; } = Environment.UserName;
+
+    [StringLength(300)]
     public string? UpdatedBy { get; set; }
     public ulong Revision { get; set; }
 }

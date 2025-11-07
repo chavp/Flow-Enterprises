@@ -1,10 +1,12 @@
 <Solution>
+  <Folder Name="/Api/" />
   <Folder Name="/Core/">
     <Project Path="Flowenter.Domain.Models/Flowenter.Domain.Models.csproj" Id="ced4bbdc-4f3a-4d2a-9186-109612d60d27" />
   </Folder>
   <Folder Name="/Core/Invoinces/" />
   <Folder Name="/Core/Orders/" />
   <Folder Name="/Core/Parties/">
+    <Project Path="Flowenter.Parties.Mappings/Flowenter.Parties.Mappings.csproj" Id="81ae8854-6d50-496a-95c6-d1f82d76d803" />
     <Project Path="Flowenter.Parties.Models/Flowenter.Parties.Models.csproj" Id="4d7254cd-8952-4b30-b8e6-7aa2f915eb14" />
   </Folder>
   <Folder Name="/Core/Products/" />
