@@ -43,7 +43,6 @@ D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\obj\Debug\net10.0\re
 D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\obj\Debug\net10.0\Flowenter.Api.pdb
 D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\obj\Debug\net10.0\Flowenter.Api.genruntimeconfig.cache
 D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\obj\Debug\net10.0\ref\Flowenter.Api.dll
-D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt
 D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\bin\Debug\net10.0\Scalar.AspNetCore.dll
 D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\bin\Debug\net10.0\Swashbuckle.AspNetCore.ReDoc.dll
@@ -51,3 +50,4 @@ D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\bin\Debug\net10.0\Mi
 D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\bin\Debug\net10.0\Newtonsoft.Json.dll
 D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\bin\Debug\net10.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
 D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\bin\Debug\net10.0\Newtonsoft.Json.Bson.dll
+D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt
