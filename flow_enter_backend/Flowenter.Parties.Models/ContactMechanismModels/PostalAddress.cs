@@ -2,10 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Flowenter.Parties.Models.ContactMechanismModels;
 
+[Table("PostalAddresses")]
 public sealed class PostalAddress : ContactMechanism
 {
     [Required]

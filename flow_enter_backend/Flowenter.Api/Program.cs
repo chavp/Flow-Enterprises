@@ -1,14 +1,17 @@
 using Flowenter.Api.Extensions;
 using Microsoft.OpenApi;
 using Scalar.AspNetCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add Serilog logging
+builder.AddSerilogLogging();
+
+// Add database
+builder.AddDatabase();
+
 // Add services to the container.
-
-// Add database services
-builder.Services.AddDatabaseServices(builder.Configuration);
-
 builder.Services.AddControllers()
     .AddNewtonsoftJson();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -19,6 +22,8 @@ builder.Services.AddOpenApi(
     });
 
 var app = builder.Build();
+
+app.UseErrorHandling();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

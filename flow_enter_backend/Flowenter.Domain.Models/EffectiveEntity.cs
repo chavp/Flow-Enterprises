@@ -6,6 +6,6 @@ namespace Flowenter.Domain.Models;
 
 public abstract class EffectiveEntity : BaseEntity    
 {
-    public DateOnly FromDate { get; set; }
-    public DateOnly? ThruDate { get; set; }
+    public DateOnly FromDate { get; set; } = DateOnly.FromDateTime(DateTime.UtcNow);
+    public DateOnly ThruDate { get; set; } = DateOnly.FromDateTime(DateTime.MaxValue);
 }

@@ -8,6 +8,7 @@
   <Folder Name="/Core/Invoinces/" />
   <Folder Name="/Core/Orders/" />
   <Folder Name="/Core/Parties/">
+    <Project Path="Flowenter.Parties.IServices/Flowenter.Parties.IServices.csproj" Id="dec52951-d494-4aab-8da4-1343d4c27248" />
     <Project Path="Flowenter.Parties.Mappings/Flowenter.Parties.Mappings.csproj" Id="81ae8854-6d50-496a-95c6-d1f82d76d803" />
     <Project Path="Flowenter.Parties.Models/Flowenter.Parties.Models.csproj" Id="4d7254cd-8952-4b30-b8e6-7aa2f915eb14" />
   </Folder>

@@ -1,12 +1,11 @@
 ﻿using Flowenter.Domain.Models;
-using Flowenter.Parties.Models.PartyModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace Flowenter.Parties.Models.FinancialAccountModels;
+namespace Flowenter.Parties.Models.PartyModels;
 
 [Index(nameof(OwnerId), nameof(Number), IsUnique = true)]
 public sealed class FinancialAccount: BaseEntity

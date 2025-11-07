@@ -37,11 +37,6 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("character varying(300)");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(34)
-                        .HasColumnType("character varying(34)");
-
                     b.Property<decimal>("Revision")
                         .HasColumnType("numeric(20,0)");
 
@@ -61,9 +56,7 @@ namespace Flowenter.Parties.Mappings.Migrations
 
                     b.ToTable("ContactMechanisms", "parties");
 
-                    b.HasDiscriminator().HasValue("ContactMechanism");
-
-                    b.UseTphMappingStrategy();
+                    b.UseTptMappingStrategy();
                 });
 
             modelBuilder.Entity("Flowenter.Parties.Models.ContactMechanismModels.ContactMechanismType", b =>
@@ -108,7 +101,85 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.ToTable("ContactMechanismTypes", "parties");
                 });
 
-            modelBuilder.Entity("Flowenter.Parties.Models.FinancialAccountModels.FinancialAccount", b =>
+            modelBuilder.Entity("Flowenter.Parties.Models.GeographicBoundaryModels.GeographicBoundary", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<decimal>("Revision")
+                        .HasColumnType("numeric(20,0)");
+
+                    b.Property<Guid?>("TypeId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("UpdatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TypeId");
+
+                    b.ToTable("GeographicBoundaries", "parties");
+
+                    b.UseTptMappingStrategy();
+                });
+
+            modelBuilder.Entity("Flowenter.Parties.Models.GeographicBoundaryModels.GeographicBoundaryType", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<decimal>("Revision")
+                        .HasColumnType("numeric(20,0)");
+
+                    b.Property<DateTime?>("UpdatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.ToTable("GeographicBoundaryTypes", "parties");
+                });
+
+            modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.FinancialAccount", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -164,91 +235,6 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .IsUnique();
 
                     b.ToTable("FinancialAccounts", "parties");
-                });
-
-            modelBuilder.Entity("Flowenter.Parties.Models.GeographicBoundaryModels.GeographicBoundary", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(21)
-                        .HasColumnType("character varying(21)");
-
-                    b.Property<decimal>("Revision")
-                        .HasColumnType("numeric(20,0)");
-
-                    b.Property<Guid?>("TypeId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("UpdatedAtUtc")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TypeId");
-
-                    b.ToTable("GeographicBoundaries", "parties");
-
-                    b.HasDiscriminator().HasValue("GeographicBoundary");
-
-                    b.UseTphMappingStrategy();
-                });
-
-            modelBuilder.Entity("Flowenter.Parties.Models.GeographicBoundaryModels.GeographicBoundaryType", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<decimal>("Revision")
-                        .HasColumnType("numeric(20,0)");
-
-                    b.Property<DateTime?>("UpdatedAtUtc")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Code")
-                        .IsUnique();
-
-                    b.ToTable("GeographicBoundaryTypes", "parties");
                 });
 
             modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.LegalStructure", b =>
@@ -307,11 +293,6 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("character varying(300)");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(13)
-                        .HasColumnType("character varying(13)");
-
                     b.Property<decimal>("Revision")
                         .HasColumnType("numeric(20,0)");
 
@@ -331,9 +312,7 @@ namespace Flowenter.Parties.Mappings.Migrations
 
                     b.ToTable("Parties", "parties");
 
-                    b.HasDiscriminator().HasValue("Party");
-
-                    b.UseTphMappingStrategy();
+                    b.UseTptMappingStrategy();
                 });
 
             modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.PartyCategory", b =>
@@ -446,7 +425,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.Property<decimal>("Revision")
                         .HasColumnType("numeric(20,0)");
 
-                    b.Property<DateOnly?>("ThruDate")
+                    b.Property<DateOnly>("ThruDate")
                         .HasColumnType("date");
 
                     b.Property<DateTime?>("UpdatedAtUtc")
@@ -482,11 +461,6 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("character varying(300)");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(13)
-                        .HasColumnType("character varying(13)");
-
                     b.Property<DateOnly>("FromDate")
                         .HasColumnType("date");
 
@@ -496,7 +470,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.Property<decimal>("Revision")
                         .HasColumnType("numeric(20,0)");
 
-                    b.Property<DateOnly?>("ThruDate")
+                    b.Property<DateOnly>("ThruDate")
                         .HasColumnType("date");
 
                     b.Property<Guid>("TypeId")
@@ -518,9 +492,7 @@ namespace Flowenter.Parties.Mappings.Migrations
 
                     b.ToTable("PartyRoles", "parties");
 
-                    b.HasDiscriminator().HasValue("PartyRole");
-
-                    b.UseTphMappingStrategy();
+                    b.UseTptMappingStrategy();
                 });
 
             modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.PartyRoleType", b =>
@@ -618,7 +590,7 @@ namespace Flowenter.Parties.Mappings.Migrations
 
                     b.HasIndex("Address");
 
-                    b.HasDiscriminator().HasValue("ElectronicAddress");
+                    b.ToTable("ElectronicAddresses", "parties");
                 });
 
             modelBuilder.Entity("Flowenter.Parties.Models.ContactMechanismModels.PostalAddress", b =>
@@ -671,13 +643,7 @@ namespace Flowenter.Parties.Mappings.Migrations
 
                     b.HasIndex("CountryId");
 
-                    b.ToTable("ContactMechanisms", "parties", t =>
-                        {
-                            t.Property("Address")
-                                .HasColumnName("PostalAddress_Address");
-                        });
-
-                    b.HasDiscriminator().HasValue("PostalAddress");
+                    b.ToTable("PostalAddresses", "parties");
                 });
 
             modelBuilder.Entity("Flowenter.Parties.Models.ContactMechanismModels.TelecommunicationNumber", b =>
@@ -707,13 +673,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.HasIndex("CountryId", "Number")
                         .IsUnique();
 
-                    b.ToTable("ContactMechanisms", "parties", t =>
-                        {
-                            t.Property("CountryId")
-                                .HasColumnName("TelecommunicationNumber_CountryId");
-                        });
-
-                    b.HasDiscriminator().HasValue("TelecommunicationNumber");
+                    b.ToTable("TelecommunicationNumbers", "parties");
                 });
 
             modelBuilder.Entity("Flowenter.Parties.Models.GeographicBoundaryModels.Country", b =>
@@ -738,7 +698,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.HasDiscriminator().HasValue("Country");
+                    b.ToTable("Countries", "parties");
                 });
 
             modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.Organization", b =>
@@ -753,7 +713,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.HasDiscriminator().HasValue("Organization");
+                    b.ToTable("Organizations", "parties");
                 });
 
             modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.Person", b =>
@@ -781,14 +741,14 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.HasIndex("FirstName", "MiddleName", "LastName")
                         .IsUnique();
 
-                    b.HasDiscriminator().HasValue("Person");
+                    b.ToTable("People", "parties");
                 });
 
             modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.Customer", b =>
                 {
                     b.HasBaseType("Flowenter.Parties.Models.PartyModels.PartyRole");
 
-                    b.HasDiscriminator().HasValue("Customer");
+                    b.ToTable("Customers", "parties");
                 });
 
             modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.Enterprise", b =>
@@ -834,7 +794,7 @@ namespace Flowenter.Parties.Mappings.Migrations
 
                     b.HasIndex("LegalStructureId");
 
-                    b.HasDiscriminator().HasValue("Enterprise");
+                    b.ToTable("Enterprises", "parties");
                 });
 
             modelBuilder.Entity("Flowenter.Parties.Models.ContactMechanismModels.ContactMechanism", b =>
@@ -848,17 +808,6 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.Navigation("Type");
                 });
 
-            modelBuilder.Entity("Flowenter.Parties.Models.FinancialAccountModels.FinancialAccount", b =>
-                {
-                    b.HasOne("Flowenter.Parties.Models.PartyModels.Party", "Owner")
-                        .WithMany()
-                        .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Owner");
-                });
-
             modelBuilder.Entity("Flowenter.Parties.Models.GeographicBoundaryModels.GeographicBoundary", b =>
                 {
                     b.HasOne("Flowenter.Parties.Models.GeographicBoundaryModels.GeographicBoundaryType", "Type")
@@ -866,6 +815,17 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasForeignKey("TypeId");
 
                     b.Navigation("Type");
+                });
+
+            modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.FinancialAccount", b =>
+                {
+                    b.HasOne("Flowenter.Parties.Models.PartyModels.Party", "Owner")
+                        .WithMany("FinancialAccounts")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.Party", b =>
@@ -953,11 +913,26 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.Navigation("Type");
                 });
 
+            modelBuilder.Entity("Flowenter.Parties.Models.ContactMechanismModels.ElectronicAddress", b =>
+                {
+                    b.HasOne("Flowenter.Parties.Models.ContactMechanismModels.ContactMechanism", null)
+                        .WithOne()
+                        .HasForeignKey("Flowenter.Parties.Models.ContactMechanismModels.ElectronicAddress", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Flowenter.Parties.Models.ContactMechanismModels.PostalAddress", b =>
                 {
                     b.HasOne("Flowenter.Parties.Models.GeographicBoundaryModels.Country", "Country")
                         .WithMany()
                         .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Flowenter.Parties.Models.ContactMechanismModels.ContactMechanism", null)
+                        .WithOne()
+                        .HasForeignKey("Flowenter.Parties.Models.ContactMechanismModels.PostalAddress", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -972,11 +947,59 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Flowenter.Parties.Models.ContactMechanismModels.ContactMechanism", null)
+                        .WithOne()
+                        .HasForeignKey("Flowenter.Parties.Models.ContactMechanismModels.TelecommunicationNumber", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Country");
+                });
+
+            modelBuilder.Entity("Flowenter.Parties.Models.GeographicBoundaryModels.Country", b =>
+                {
+                    b.HasOne("Flowenter.Parties.Models.GeographicBoundaryModels.GeographicBoundary", null)
+                        .WithOne()
+                        .HasForeignKey("Flowenter.Parties.Models.GeographicBoundaryModels.Country", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.Organization", b =>
+                {
+                    b.HasOne("Flowenter.Parties.Models.PartyModels.Party", null)
+                        .WithOne()
+                        .HasForeignKey("Flowenter.Parties.Models.PartyModels.Organization", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.Person", b =>
+                {
+                    b.HasOne("Flowenter.Parties.Models.PartyModels.Party", null)
+                        .WithOne()
+                        .HasForeignKey("Flowenter.Parties.Models.PartyModels.Person", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.Customer", b =>
+                {
+                    b.HasOne("Flowenter.Parties.Models.PartyModels.PartyRole", null)
+                        .WithOne()
+                        .HasForeignKey("Flowenter.Parties.Models.PartyModels.Customer", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.Enterprise", b =>
                 {
+                    b.HasOne("Flowenter.Parties.Models.PartyModels.PartyRole", null)
+                        .WithOne()
+                        .HasForeignKey("Flowenter.Parties.Models.PartyModels.Enterprise", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Flowenter.Parties.Models.PartyModels.LegalStructure", "LegalStructure")
                         .WithMany()
                         .HasForeignKey("LegalStructureId")
@@ -984,6 +1007,11 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .IsRequired();
 
                     b.Navigation("LegalStructure");
+                });
+
+            modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.Party", b =>
+                {
+                    b.Navigation("FinancialAccounts");
                 });
 #pragma warning restore 612, 618
         }

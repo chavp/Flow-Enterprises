@@ -51,3 +51,17 @@ D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\bin\Debug\net10.0\Ne
 D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\bin\Debug\net10.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
 D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\bin\Debug\net10.0\Newtonsoft.Json.Bson.dll
 D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt
+D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\bin\Debug\net10.0\Flowenter.Parties.IServices.dll
+D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\bin\Debug\net10.0\Flowenter.Parties.IServices.pdb
+D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\bin\Debug\net10.0\Serilog.dll
+D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\bin\Debug\net10.0\Microsoft.Extensions.DependencyModel.dll
+D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\bin\Debug\net10.0\Serilog.AspNetCore.dll
+D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\bin\Debug\net10.0\Serilog.Enrichers.Environment.dll
+D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\bin\Debug\net10.0\Serilog.Enrichers.Thread.dll
+D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\bin\Debug\net10.0\Serilog.Extensions.Hosting.dll
+D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\bin\Debug\net10.0\Serilog.Extensions.Logging.dll
+D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\bin\Debug\net10.0\Serilog.Formatting.Compact.dll
+D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\bin\Debug\net10.0\Serilog.Settings.Configuration.dll
+D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\bin\Debug\net10.0\Serilog.Sinks.Console.dll
+D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\bin\Debug\net10.0\Serilog.Sinks.Debug.dll
+D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\bin\Debug\net10.0\Serilog.Sinks.File.dll

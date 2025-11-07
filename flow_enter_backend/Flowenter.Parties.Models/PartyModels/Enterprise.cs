@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Xml.Linq;
 
 namespace Flowenter.Parties.Models.PartyModels;
 
+[Table("Enterprises")]
 [Index(nameof(LegalName), IsUnique = true)]
 public sealed class Enterprise : PartyRole
 {

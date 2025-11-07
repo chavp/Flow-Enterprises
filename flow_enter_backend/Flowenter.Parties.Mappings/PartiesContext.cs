@@ -1,7 +1,6 @@
 ﻿using Flowenter.Domain.Models;
 using Flowenter.Parties.Mappings.Extensions;
 using Flowenter.Parties.Models.ContactMechanismModels;
-using Flowenter.Parties.Models.FinancialAccountModels;
 using Flowenter.Parties.Models.GeographicBoundaryModels;
 using Flowenter.Parties.Models.PartyModels;
 using Microsoft.EntityFrameworkCore;
@@ -59,6 +58,11 @@ public sealed class PartiesContext : DbContext
         modelBuilder.Entity<Country>();
 
         modelBuilder.ApplyUpperConverter(["Code", "Number"]);
+
+        modelBuilder.Entity<Party>()
+            .HasMany(e => e.FinancialAccounts)
+            .WithOne(e => e.Owner)
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Party>()
             .HasMany(e => e.ContactMechanisms)

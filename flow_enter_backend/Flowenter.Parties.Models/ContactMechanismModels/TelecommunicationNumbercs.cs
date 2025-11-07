@@ -1,11 +1,13 @@
 ﻿using Flowenter.Parties.Models.GeographicBoundaryModels;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.CompilerServices;
 
 namespace Flowenter.Parties.Models.ContactMechanismModels;
 
 
+[Table("TelecommunicationNumbers")]
 [Index(nameof(CountryId), nameof(Number), IsUnique = true)]
 public sealed class TelecommunicationNumber : ContactMechanism
 {

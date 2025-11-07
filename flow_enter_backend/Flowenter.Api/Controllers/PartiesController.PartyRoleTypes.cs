@@ -1,4 +1,4 @@
-using Flowenter.Api.DTOs;
+using Flowenter.Parties.IServices.DTOs;
 using Flowenter.Parties.Models.PartyModels;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -8,21 +8,22 @@ namespace Flowenter.Api.Controllers;
 
 public partial class PartiesController
 {
-    [HttpGet("party-role-types")]
+    [HttpGet("role-types")]
     [ProducesResponseType(typeof(List<PartyRoleType>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetPartyRoleTypes()
+    public async Task<IActionResult> GetPartyRoleTypes(CancellationToken cancellationToken)
     {
         using var context = _factory.CreateDbContext();
 
-        var partyRoleTypes = await context.PartyRoleTypes.ToListAsync();
+        var partyRoleTypes = await context.PartyRoleTypes.ToListAsync(cancellationToken);
 
         return Ok(partyRoleTypes);
     }
 
-    [HttpPost("party-role-types")]
+    [HttpPost("role-types")]
     [ProducesResponseType(typeof(PartyRoleType), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> CreatePartyRoleType(CreatePartyRoleType createPartyRoleType)
+    public async Task<IActionResult> CreatePartyRoleType(CreatePartyRoleType createPartyRoleType
+        , CancellationToken cancellationToken)
     {
         using var context = _factory.CreateDbContext();
 
@@ -34,24 +35,26 @@ public partial class PartiesController
         };
 
         await context.AddAsync(partyRoleType);
-        await context.SaveChangesAsync();
+        await context.SaveChangesAsync(cancellationToken);
 
         _logger.LogInformation("PartyRoleType created: {PartyRoleTypeId}", partyRoleType.Id);
 
         return CreatedAtAction(
             nameof(GetPartyRoleType),
-            new { partyRoleTypeId = partyRoleType.Id },
+            new { party_role_type_id = partyRoleType.Id },
             partyRoleType);
     }
 
-    [HttpGet("party-role-types/{partyRoleTypeId}")]
+    [HttpGet("role-types/{party_role_type_id}")]
     [ProducesResponseType(typeof(PartyRoleType), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetPartyRoleType([FromRoute] Guid partyRoleTypeId)
+    public async Task<IActionResult> GetPartyRoleType(Guid party_role_type_id
+        , CancellationToken cancellationToken)
     {
         using var context = _factory.CreateDbContext();
 
-        var partyRoleType = await context.PartyRoleTypes.FindAsync(partyRoleTypeId);
+        var partyRoleType = await context.PartyRoleTypes
+            .FindAsync(party_role_type_id, cancellationToken);
         if (partyRoleType == null)
         {
             return NotFound();
@@ -60,12 +63,13 @@ public partial class PartiesController
         return Ok(partyRoleType);
     }
 
-    [HttpPatch("party-role-types/{partyRoleTypeId}")]
+    [HttpPatch("role-types/{party_role_type_id}")]
     [ProducesResponseType(typeof(PartyRoleType), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> PatchPartyRoleType([FromRoute] Guid partyRoleTypeId,
-            [FromBody] JsonPatchDocument<PartyRoleType> patchDoc)
+    public async Task<IActionResult> PatchPartyRoleType(Guid party_role_type_id
+        , [FromBody] JsonPatchDocument<PartyRoleType> patchDoc
+        , CancellationToken cancellationToken)
     {
         if (patchDoc == null)
         {
@@ -74,7 +78,8 @@ public partial class PartiesController
 
         using var context = _factory.CreateDbContext();
 
-        var partyRoleType = await context.PartyRoleTypes.FindAsync(partyRoleTypeId);
+        var partyRoleType = await context.PartyRoleTypes
+            .FindAsync(party_role_type_id, cancellationToken);
         if (partyRoleType == null)
         {
             return NotFound();
@@ -82,26 +87,27 @@ public partial class PartiesController
 
         patchDoc.ApplyTo(partyRoleType);
 
-        await context.SaveChangesAsync();
+        await context.SaveChangesAsync(cancellationToken);
 
         return Ok(partyRoleType);
     }
 
-    [HttpDelete("party-role-types/{partyRoleTypeId}")]
+    [HttpDelete("role-types/{party_role_type_id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DeletePartyRoleType([FromRoute] Guid partyRoleTypeId)
+    public async Task<IActionResult> DeletePartyRoleType(Guid party_role_type_id
+        , CancellationToken cancellationToken)
     {
         using var context = _factory.CreateDbContext();
 
-        var partyRoleType = await context.PartyRoleTypes.FindAsync(partyRoleTypeId);
+        var partyRoleType = await context.PartyRoleTypes.FindAsync(party_role_type_id, cancellationToken);
         if (partyRoleType == null)
         {
             return NotFound();
         }
 
         context.PartyRoleTypes.Remove(partyRoleType);
-        await context.SaveChangesAsync();
+        await context.SaveChangesAsync(cancellationToken);
 
         return NoContent();
     }

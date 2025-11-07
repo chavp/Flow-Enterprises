@@ -135,16 +135,37 @@ namespace Flowenter.Parties.Mappings.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ContactMechanisms",
+                schema: "parties",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    TypeId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    CreatedBy = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
+                    UpdatedBy = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
+                    Revision = table.Column<decimal>(type: "numeric(20,0)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ContactMechanisms", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ContactMechanisms_ContactMechanismTypes_TypeId",
+                        column: x => x.TypeId,
+                        principalSchema: "parties",
+                        principalTable: "ContactMechanismTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "GeographicBoundaries",
                 schema: "parties",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     TypeId = table.Column<Guid>(type: "uuid", nullable: true),
-                    Discriminator = table.Column<string>(type: "character varying(21)", maxLength: 21, nullable: false),
-                    Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
-                    IsoCode2 = table.Column<string>(type: "character varying(2)", maxLength: 2, nullable: true),
-                    IsoCode3 = table.Column<string>(type: "character varying(3)", maxLength: 3, nullable: true),
                     CreatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedBy = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
@@ -169,12 +190,6 @@ namespace Flowenter.Parties.Mappings.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     TypeId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Discriminator = table.Column<string>(type: "character varying(13)", maxLength: 13, nullable: false),
-                    Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
-                    FirstName = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
-                    MiddleName = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
-                    LastName = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
-                    BirthDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedBy = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
@@ -194,56 +209,41 @@ namespace Flowenter.Parties.Mappings.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ContactMechanisms",
+                name: "ElectronicAddresses",
                 schema: "parties",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    TypeId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Discriminator = table.Column<string>(type: "character varying(34)", maxLength: 34, nullable: false),
-                    Address = table.Column<string>(type: "character varying(320)", maxLength: 320, nullable: true),
-                    CountryId = table.Column<Guid>(type: "uuid", nullable: true),
-                    PostalAddress_Address = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
-                    ZipCode = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
-                    Street = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
-                    City = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
-                    State = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
-                    House = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
-                    HouseNumber = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
-                    District = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
-                    SubDistrict = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
-                    Province = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
-                    TelecommunicationNumber_CountryId = table.Column<Guid>(type: "uuid", nullable: true),
-                    Number = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: true),
-                    CountryCode = table.Column<string>(type: "character varying(3)", maxLength: 3, nullable: true),
-                    AreaCode = table.Column<string>(type: "character varying(3)", maxLength: 3, nullable: true),
-                    AskForName = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
-                    CreatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedBy = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
-                    UpdatedBy = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
-                    Revision = table.Column<decimal>(type: "numeric(20,0)", nullable: false)
+                    Address = table.Column<string>(type: "character varying(320)", maxLength: 320, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ContactMechanisms", x => x.Id);
+                    table.PrimaryKey("PK_ElectronicAddresses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ContactMechanisms_ContactMechanismTypes_TypeId",
-                        column: x => x.TypeId,
+                        name: "FK_ElectronicAddresses_ContactMechanisms_Id",
+                        column: x => x.Id,
                         principalSchema: "parties",
-                        principalTable: "ContactMechanismTypes",
+                        principalTable: "ContactMechanisms",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Countries",
+                schema: "parties",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    IsoCode2 = table.Column<string>(type: "character varying(2)", maxLength: 2, nullable: false),
+                    IsoCode3 = table.Column<string>(type: "character varying(3)", maxLength: 3, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Countries", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ContactMechanisms_GeographicBoundaries_CountryId",
-                        column: x => x.CountryId,
-                        principalSchema: "parties",
-                        principalTable: "GeographicBoundaries",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ContactMechanisms_GeographicBoundaries_TelecommunicationNum~",
-                        column: x => x.TelecommunicationNumber_CountryId,
+                        name: "FK_Countries_GeographicBoundaries_Id",
+                        column: x => x.Id,
                         principalSchema: "parties",
                         principalTable: "GeographicBoundaries",
                         principalColumn: "Id",
@@ -274,6 +274,26 @@ namespace Flowenter.Parties.Mappings.Migrations
                     table.ForeignKey(
                         name: "FK_FinancialAccounts_Parties_OwnerId",
                         column: x => x.OwnerId,
+                        principalSchema: "parties",
+                        principalTable: "Parties",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Organizations",
+                schema: "parties",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Organizations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Organizations_Parties_Id",
+                        column: x => x.Id,
                         principalSchema: "parties",
                         principalTable: "Parties",
                         principalColumn: "Id",
@@ -314,58 +334,6 @@ namespace Flowenter.Parties.Mappings.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PartyRoles",
-                schema: "parties",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    TypeId = table.Column<Guid>(type: "uuid", nullable: false),
-                    PartyId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Discriminator = table.Column<string>(type: "character varying(13)", maxLength: 13, nullable: false),
-                    LegalName = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
-                    Information = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
-                    Logo = table.Column<byte[]>(type: "bytea", nullable: true),
-                    BrandName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
-                    Notes = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
-                    LegalStructureId = table.Column<Guid>(type: "uuid", nullable: true),
-                    BusinessRegistrationNumber = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
-                    TaxId = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
-                    FiscalYearStartMonth = table.Column<int>(type: "integer", nullable: true),
-                    CreatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedBy = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
-                    UpdatedBy = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
-                    Revision = table.Column<decimal>(type: "numeric(20,0)", nullable: false),
-                    FromDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    ThruDate = table.Column<DateOnly>(type: "date", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PartyRoles", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_PartyRoles_LegalStructures_LegalStructureId",
-                        column: x => x.LegalStructureId,
-                        principalSchema: "parties",
-                        principalTable: "LegalStructures",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PartyRoles_Parties_PartyId",
-                        column: x => x.PartyId,
-                        principalSchema: "parties",
-                        principalTable: "Parties",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PartyRoles_PartyRoleTypes_TypeId",
-                        column: x => x.TypeId,
-                        principalSchema: "parties",
-                        principalTable: "PartyRoleTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "PartyContactMechanisms",
                 schema: "parties",
                 columns: table => new
@@ -380,7 +348,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                     UpdatedBy = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
                     Revision = table.Column<decimal>(type: "numeric(20,0)", nullable: false),
                     FromDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    ThruDate = table.Column<DateOnly>(type: "date", nullable: true)
+                    ThruDate = table.Column<DateOnly>(type: "date", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -408,24 +376,185 @@ namespace Flowenter.Parties.Mappings.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateIndex(
-                name: "IX_ContactMechanisms_Address",
+            migrationBuilder.CreateTable(
+                name: "PartyRoles",
                 schema: "parties",
-                table: "ContactMechanisms",
-                column: "Address");
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    TypeId = table.Column<Guid>(type: "uuid", nullable: false),
+                    PartyId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    CreatedBy = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
+                    UpdatedBy = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
+                    Revision = table.Column<decimal>(type: "numeric(20,0)", nullable: false),
+                    FromDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    ThruDate = table.Column<DateOnly>(type: "date", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PartyRoles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PartyRoles_Parties_PartyId",
+                        column: x => x.PartyId,
+                        principalSchema: "parties",
+                        principalTable: "Parties",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PartyRoles_PartyRoleTypes_TypeId",
+                        column: x => x.TypeId,
+                        principalSchema: "parties",
+                        principalTable: "PartyRoleTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
 
-            migrationBuilder.CreateIndex(
-                name: "IX_ContactMechanisms_CountryId",
+            migrationBuilder.CreateTable(
+                name: "People",
                 schema: "parties",
-                table: "ContactMechanisms",
-                column: "CountryId");
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    FirstName = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
+                    MiddleName = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
+                    LastName = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
+                    BirthDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_People", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_People_Parties_Id",
+                        column: x => x.Id,
+                        principalSchema: "parties",
+                        principalTable: "Parties",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
 
-            migrationBuilder.CreateIndex(
-                name: "IX_ContactMechanisms_TelecommunicationNumber_CountryId_Number",
+            migrationBuilder.CreateTable(
+                name: "PostalAddresses",
                 schema: "parties",
-                table: "ContactMechanisms",
-                columns: new[] { "TelecommunicationNumber_CountryId", "Number" },
-                unique: true);
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    CountryId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Address = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
+                    ZipCode = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    Street = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
+                    City = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
+                    State = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
+                    House = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    HouseNumber = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    District = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
+                    SubDistrict = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
+                    Province = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PostalAddresses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PostalAddresses_ContactMechanisms_Id",
+                        column: x => x.Id,
+                        principalSchema: "parties",
+                        principalTable: "ContactMechanisms",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PostalAddresses_Countries_CountryId",
+                        column: x => x.CountryId,
+                        principalSchema: "parties",
+                        principalTable: "Countries",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TelecommunicationNumbers",
+                schema: "parties",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    CountryId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Number = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false),
+                    CountryCode = table.Column<string>(type: "character varying(3)", maxLength: 3, nullable: true),
+                    AreaCode = table.Column<string>(type: "character varying(3)", maxLength: 3, nullable: true),
+                    AskForName = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TelecommunicationNumbers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TelecommunicationNumbers_ContactMechanisms_Id",
+                        column: x => x.Id,
+                        principalSchema: "parties",
+                        principalTable: "ContactMechanisms",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TelecommunicationNumbers_Countries_CountryId",
+                        column: x => x.CountryId,
+                        principalSchema: "parties",
+                        principalTable: "Countries",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Customers",
+                schema: "parties",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Customers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Customers_PartyRoles_Id",
+                        column: x => x.Id,
+                        principalSchema: "parties",
+                        principalTable: "PartyRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Enterprises",
+                schema: "parties",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    LegalName = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    Information = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    Logo = table.Column<byte[]>(type: "bytea", nullable: true),
+                    BrandName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    Notes = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    LegalStructureId = table.Column<Guid>(type: "uuid", nullable: false),
+                    BusinessRegistrationNumber = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    TaxId = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    FiscalYearStartMonth = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Enterprises", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Enterprises_LegalStructures_LegalStructureId",
+                        column: x => x.LegalStructureId,
+                        principalSchema: "parties",
+                        principalTable: "LegalStructures",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Enterprises_PartyRoles_Id",
+                        column: x => x.Id,
+                        principalSchema: "parties",
+                        principalTable: "PartyRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContactMechanisms_TypeId",
@@ -441,17 +570,36 @@ namespace Flowenter.Parties.Mappings.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Countries_Name",
+                schema: "parties",
+                table: "Countries",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ElectronicAddresses_Address",
+                schema: "parties",
+                table: "ElectronicAddresses",
+                column: "Address");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Enterprises_LegalName",
+                schema: "parties",
+                table: "Enterprises",
+                column: "LegalName",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Enterprises_LegalStructureId",
+                schema: "parties",
+                table: "Enterprises",
+                column: "LegalStructureId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_FinancialAccounts_OwnerId_Number",
                 schema: "parties",
                 table: "FinancialAccounts",
                 columns: new[] { "OwnerId", "Number" },
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_GeographicBoundaries_Name",
-                schema: "parties",
-                table: "GeographicBoundaries",
-                column: "Name",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -475,16 +623,9 @@ namespace Flowenter.Parties.Mappings.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Parties_FirstName_MiddleName_LastName",
+                name: "IX_Organizations_Name",
                 schema: "parties",
-                table: "Parties",
-                columns: new[] { "FirstName", "MiddleName", "LastName" },
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Parties_Name",
-                schema: "parties",
-                table: "Parties",
+                table: "Organizations",
                 column: "Name",
                 unique: true);
 
@@ -539,19 +680,6 @@ namespace Flowenter.Parties.Mappings.Migrations
                 column: "PartyRoleTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PartyRoles_LegalName",
-                schema: "parties",
-                table: "PartyRoles",
-                column: "LegalName",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PartyRoles_LegalStructureId",
-                schema: "parties",
-                table: "PartyRoles",
-                column: "LegalStructureId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_PartyRoles_PartyId",
                 schema: "parties",
                 table: "PartyRoles",
@@ -577,13 +705,49 @@ namespace Flowenter.Parties.Mappings.Migrations
                 table: "PartyTypes",
                 column: "Code",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_People_FirstName_MiddleName_LastName",
+                schema: "parties",
+                table: "People",
+                columns: new[] { "FirstName", "MiddleName", "LastName" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PostalAddresses_CountryId",
+                schema: "parties",
+                table: "PostalAddresses",
+                column: "CountryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TelecommunicationNumbers_CountryId_Number",
+                schema: "parties",
+                table: "TelecommunicationNumbers",
+                columns: new[] { "CountryId", "Number" },
+                unique: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Customers",
+                schema: "parties");
+
+            migrationBuilder.DropTable(
+                name: "ElectronicAddresses",
+                schema: "parties");
+
+            migrationBuilder.DropTable(
+                name: "Enterprises",
+                schema: "parties");
+
+            migrationBuilder.DropTable(
                 name: "FinancialAccounts",
+                schema: "parties");
+
+            migrationBuilder.DropTable(
+                name: "Organizations",
                 schema: "parties");
 
             migrationBuilder.DropTable(
@@ -592,6 +756,22 @@ namespace Flowenter.Parties.Mappings.Migrations
 
             migrationBuilder.DropTable(
                 name: "PartyContactMechanisms",
+                schema: "parties");
+
+            migrationBuilder.DropTable(
+                name: "People",
+                schema: "parties");
+
+            migrationBuilder.DropTable(
+                name: "PostalAddresses",
+                schema: "parties");
+
+            migrationBuilder.DropTable(
+                name: "TelecommunicationNumbers",
+                schema: "parties");
+
+            migrationBuilder.DropTable(
+                name: "LegalStructures",
                 schema: "parties");
 
             migrationBuilder.DropTable(
@@ -607,7 +787,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties");
 
             migrationBuilder.DropTable(
-                name: "LegalStructures",
+                name: "Countries",
                 schema: "parties");
 
             migrationBuilder.DropTable(

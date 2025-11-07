@@ -11,4 +11,5 @@ public abstract class Party : BaseEntity
     public PartyType? Type { get; set; }
 
     public List<ContactMechanism> ContactMechanisms { get; set; } = new();
+    public List<FinancialAccount> FinancialAccounts { get; set; } = new();
 }

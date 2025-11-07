@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Flowenter.Parties.Models.PartyModels;
 
+[Table("People")]
 [Index(nameof(FirstName), nameof(MiddleName), nameof(LastName), IsUnique = true)]
 public class Person : Party
 {

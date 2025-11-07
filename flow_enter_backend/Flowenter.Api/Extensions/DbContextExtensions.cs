@@ -5,16 +5,15 @@ namespace Flowenter.Api.Extensions;
 
 public static class DbContextExtensions
 {
-    public static IServiceCollection AddDatabaseServices(this IServiceCollection services,
-        IConfiguration configuration)
+    public static WebApplicationBuilder AddDatabase(this WebApplicationBuilder builder)
     {
-        var partiesConnection = configuration.GetConnectionString("PartiesConnection")
+        var partiesConnection = builder.Configuration.GetConnectionString("PartiesConnection")
             ?? throw new InvalidOperationException("Connection string 'PartiesConnection' not found.");
 
-        services.AddSingleton<IDbContextFactory<PartiesContext>, PartiesDbContextFactory>(
+        builder.Services.AddSingleton<IDbContextFactory<PartiesContext>, PartiesDbContextFactory>(
                 x => new PartiesDbContextFactory(partiesConnection)
         );
 
-        return services;
+        return builder;
     }
 }

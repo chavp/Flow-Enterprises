@@ -1,4 +1,4 @@
-﻿using Flowenter.Api.DTOs;
+﻿using Flowenter.Parties.IServices.DTOs;
 using Flowenter.Parties.Models.PartyModels;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -8,21 +8,22 @@ namespace Flowenter.Api.Controllers;
 
 public partial class PartiesController
 {
-    [HttpGet("party-types")]
+    [HttpGet("types")]
     [ProducesResponseType(typeof(List<PartyType>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetPartyTypes()
+    public async Task<IActionResult> GetPartyTypes(CancellationToken cancellationToken)
     {
         using var context = _factory.CreateDbContext();
 
-        var partyTypes = await context.PartyTypes.ToListAsync();
+        var partyTypes = await context.PartyTypes.ToListAsync(cancellationToken);
 
         return Ok(partyTypes);
     }
 
-    [HttpPost("party-types")]
+    [HttpPost("types")]
     [ProducesResponseType(typeof(PartyType), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> CreatePartyType(CreatePartyType createPartyType)
+    public async Task<IActionResult> CreatePartyType(CreatePartyType createPartyType
+        , CancellationToken cancellationToken)
     {
         using var context = _factory.CreateDbContext();
         // Map DTO to entity
@@ -34,24 +35,24 @@ public partial class PartiesController
         };
 
         await context.AddAsync(partyType);
-        await context.SaveChangesAsync();
+        await context.SaveChangesAsync(cancellationToken);
 
         _logger.LogInformation("PartyType created: {PartyTypeId}", partyType.Id);
 
         return CreatedAtAction(
             nameof(GetPartyType),
-            new { partyTypeId = partyType.Id },
+            new { party_type_id = partyType.Id },
             partyType);
     }
 
-    [HttpGet("party-types/{partyTypeId}")]
+    [HttpGet("types/{party_type_id}")]
     [ProducesResponseType(typeof(PartyType), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetPartyType([FromRoute] Guid partyTypeId)
+    public async Task<IActionResult> GetPartyType(Guid party_type_id, CancellationToken cancellationToken)
     {
         using var context = _factory.CreateDbContext();
 
-        var partyType = await context.PartyTypes.FindAsync(partyTypeId);
+        var partyType = await context.PartyTypes.FindAsync(party_type_id, cancellationToken);
         if (partyType == null)
         {
             return NotFound();
@@ -60,12 +61,13 @@ public partial class PartiesController
         return Ok(partyType);
     }
 
-    [HttpPatch("party-types/{partyTypeId}")]
+    [HttpPatch("types/{party_type_id}")]
     [ProducesResponseType(typeof(PartyType), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> PatchPartyType([FromRoute] Guid partyTypeId,
-            [FromBody] JsonPatchDocument<PartyType> patchDoc)
+    public async Task<IActionResult> PatchPartyType(Guid party_type_id
+        , [FromBody] JsonPatchDocument<PartyType> patchDoc
+        , CancellationToken cancellationToken)
     {
         if (patchDoc == null)
         {
@@ -74,7 +76,7 @@ public partial class PartiesController
 
         using var context = _factory.CreateDbContext();
 
-        var partyType = await context.PartyTypes.FindAsync(partyTypeId);
+        var partyType = await context.PartyTypes.FindAsync(party_type_id, cancellationToken);
         if (partyType == null)
         {
             return NotFound();
@@ -83,26 +85,26 @@ public partial class PartiesController
         // Apply the patch document to the existing product object
         patchDoc.ApplyTo(partyType);
 
-        await context.SaveChangesAsync();
+        await context.SaveChangesAsync(cancellationToken);
 
         return Ok(partyType);
     }
 
-    [HttpDelete("party-types/{partyTypeId}")]
+    [HttpDelete("types/{party_type_id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DeletePartyType([FromRoute] Guid partyTypeId)
+    public async Task<IActionResult> DeletePartyType(Guid party_type_id, CancellationToken cancellationToken)
     {
         using var context = _factory.CreateDbContext();
 
-        var partyType = await context.PartyTypes.FindAsync(partyTypeId);
+        var partyType = await context.PartyTypes.FindAsync(party_type_id, cancellationToken);
         if (partyType == null)
         {
             return NotFound();
         }
 
         context.PartyTypes.Remove(partyType);
-        await context.SaveChangesAsync();
+        await context.SaveChangesAsync(cancellationToken);
 
         return NoContent();
     }

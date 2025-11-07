@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Flowenter.Parties.Models")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+799d4ddae2a64fa39d90828f9ba8771b1579185f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ed12865cad64a07744c451310bb22474a4dffe17")]
 [assembly: System.Reflection.AssemblyProductAttribute("Flowenter.Parties.Models")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Flowenter.Parties.Models")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
