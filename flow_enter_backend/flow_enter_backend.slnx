@@ -1,5 +1,7 @@
 <Solution>
-  <Folder Name="/Api/" />
+  <Folder Name="/Api/">
+    <Project Path="Flowenter.Api/Flowenter.Api.csproj" Id="a66b1c02-a35a-490b-a6fd-05116c2ddf7c" />
+  </Folder>
   <Folder Name="/Core/">
     <Project Path="Flowenter.Domain.Models/Flowenter.Domain.Models.csproj" Id="ced4bbdc-4f3a-4d2a-9186-109612d60d27" />
   </Folder>

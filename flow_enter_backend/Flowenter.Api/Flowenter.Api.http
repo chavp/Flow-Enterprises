@@ -1,0 +1,6 @@
+@Flowenter.Api_HostAddress = http://localhost:5172
+
+GET {{Flowenter.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

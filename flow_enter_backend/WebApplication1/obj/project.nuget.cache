@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "bRUVSwjO2kg=",
+  "success": true,
+  "projectFilePath": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\WebApplication1\\WebApplication1.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\mypar\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.0-rc.2.25502.107\\microsoft.aspnetcore.openapi.10.0.0-rc.2.25502.107.nupkg.sha512",
+    "C:\\Users\\mypar\\.nuget\\packages\\microsoft.openapi\\2.0.0\\microsoft.openapi.2.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,24 @@
+{
+  "version": 2,
+  "dgSpecHash": "mk15CYpCDMc=",
+  "success": true,
+  "projectFilePath": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Api\\Flowenter.Api.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\mypar\\.nuget\\packages\\microsoft.aspnetcore.jsonpatch\\9.0.10\\microsoft.aspnetcore.jsonpatch.9.0.10.nupkg.sha512",
+    "C:\\Users\\mypar\\.nuget\\packages\\microsoft.aspnetcore.mvc.newtonsoftjson\\9.0.10\\microsoft.aspnetcore.mvc.newtonsoftjson.9.0.10.nupkg.sha512",
+    "C:\\Users\\mypar\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.0-rc.2.25502.107\\microsoft.aspnetcore.openapi.10.0.0-rc.2.25502.107.nupkg.sha512",
+    "C:\\Users\\mypar\\.nuget\\packages\\microsoft.entityframeworkcore\\9.0.10\\microsoft.entityframeworkcore.9.0.10.nupkg.sha512",
+    "C:\\Users\\mypar\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\9.0.10\\microsoft.entityframeworkcore.abstractions.9.0.10.nupkg.sha512",
+    "C:\\Users\\mypar\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\9.0.10\\microsoft.entityframeworkcore.analyzers.9.0.10.nupkg.sha512",
+    "C:\\Users\\mypar\\.nuget\\packages\\microsoft.entityframeworkcore.relational\\9.0.10\\microsoft.entityframeworkcore.relational.9.0.10.nupkg.sha512",
+    "C:\\Users\\mypar\\.nuget\\packages\\microsoft.openapi\\2.0.0\\microsoft.openapi.2.0.0.nupkg.sha512",
+    "C:\\Users\\mypar\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
+    "C:\\Users\\mypar\\.nuget\\packages\\newtonsoft.json.bson\\1.0.2\\newtonsoft.json.bson.1.0.2.nupkg.sha512",
+    "C:\\Users\\mypar\\.nuget\\packages\\npgsql\\9.0.3\\npgsql.9.0.3.nupkg.sha512",
+    "C:\\Users\\mypar\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\9.0.4\\npgsql.entityframeworkcore.postgresql.9.0.4.nupkg.sha512",
+    "C:\\Users\\mypar\\.nuget\\packages\\scalar.aspnetcore\\2.10.1\\scalar.aspnetcore.2.10.1.nupkg.sha512",
+    "C:\\Users\\mypar\\.nuget\\packages\\swashbuckle.aspnetcore.redoc\\9.0.6\\swashbuckle.aspnetcore.redoc.9.0.6.nupkg.sha512",
+    "C:\\Users\\mypar\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\9.0.6\\swashbuckle.aspnetcore.swaggerui.9.0.6.nupkg.sha512"
+  ],
+  "logs": []
+}

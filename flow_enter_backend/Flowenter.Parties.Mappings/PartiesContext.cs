@@ -1,4 +1,5 @@
 ﻿using Flowenter.Domain.Models;
+using Flowenter.Parties.Mappings.Extensions;
 using Flowenter.Parties.Models.ContactMechanismModels;
 using Flowenter.Parties.Models.FinancialAccountModels;
 using Flowenter.Parties.Models.GeographicBoundaryModels;
@@ -6,9 +7,6 @@ using Flowenter.Parties.Models.PartyModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Flowenter.Parties.Mappings;
 
@@ -60,7 +58,7 @@ public sealed class PartiesContext : DbContext
         modelBuilder.Entity<GeographicBoundary>();
         modelBuilder.Entity<Country>();
 
-        //modelBuilder.ApplyUpperConverter(["Code"]);
+        modelBuilder.ApplyUpperConverter(["Code", "Number"]);
 
         modelBuilder.Entity<Party>()
             .HasMany(e => e.ContactMechanisms)
@@ -104,7 +102,13 @@ public sealed class PartiesContext : DbContext
                 entityEntry.Property(nameof(BaseEntity.UpdatedAtUtc)).CurrentValue = utcNow;
 
                 var revCurrentValue = entityEntry.Property(nameof(BaseEntity.Revision)).CurrentValue;
-                entityEntry.Property(nameof(BaseEntity.Revision)).CurrentValue = Convert.ToUInt32(revCurrentValue) + 1;
+                entityEntry.Property(nameof(BaseEntity.Revision)).CurrentValue = Convert.ToUInt64(revCurrentValue) + 1;
+
+                if (entityEntry.Property(nameof(BaseEntity.UpdatedBy)).CurrentValue == null)
+                {
+                    //entityEntry.Property(nameof(BaseEntity.CreatedBy)).CurrentValue = GetCurrentUserId();
+                    entityEntry.Property(nameof(BaseEntity.UpdatedBy)).CurrentValue = Environment.MachineName;
+                }
             }
         }
     }

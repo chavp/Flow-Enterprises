@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Flowenter.Parties.Mappings")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+432a041c04605fe0a271890697e332f464a1183c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e06221e4e9b6f1f6917eebd153ed9785263b5378")]
 [assembly: System.Reflection.AssemblyProductAttribute("Flowenter.Parties.Mappings")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Flowenter.Parties.Mappings")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
