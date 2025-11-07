@@ -173,8 +173,11 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="tdPrWEJd15tEannaNgth-48" value="GeographicBoundary" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="-355.85" y="-290" width="195.85" height="60" as="geometry" />
+        <mxCell id="tdPrWEJd15tEannaNgth-48" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-355.85" y="-290" width="295.85" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="tdPrWEJd15tEannaNgth-49" value="GeographicBoundary" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="-350" y="-280" width="142.07" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
