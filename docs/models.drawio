@@ -221,7 +221,7 @@
             <Array as="points" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="tdPrWEJd15tEannaNgth-57" value="Member" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="tdPrWEJd15tEannaNgth-57" value="User" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="-210" y="155" width="99.77" height="50" as="geometry" />
         </mxCell>
       </root>
