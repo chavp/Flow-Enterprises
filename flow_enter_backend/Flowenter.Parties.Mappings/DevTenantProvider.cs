@@ -7,12 +7,12 @@ namespace Flowenter.Parties.Mappings;
 
 public sealed class DevTenantProvider : ITenantProvider
 {
-    public Guid? GetTenantId()
+    public Guid? GetPartiesTenantId()
     {
         return Guid.Empty;
     }
 
-    public string GetTenantConnectionString()
+    public string GetPartiesTenantConnectionString()
     {
         return "Host=localhost;Database=flowenter-dev;Username=admin;Password=admin123;Port=5432";
     }

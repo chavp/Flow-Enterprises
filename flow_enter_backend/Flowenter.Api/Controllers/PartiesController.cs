@@ -20,7 +20,7 @@ namespace Flowenter.Api.Controllers
         }
 
         [HttpPost("roles/{party_role_id}")]
-        [ProducesResponseType(typeof(Enterprise), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(PartyRole), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetPartyRole(Guid party_role_id
             , CancellationToken cancellationToken)

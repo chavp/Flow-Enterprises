@@ -10,6 +10,7 @@
         "dependencies": {
           "Flowenter.Parties.IServices": "1.0.0",
           "Flowenter.Parties.Mappings": "1.0.0",
+          "Flowenter.Parties.Services": "1.0.0",
           "Microsoft.AspNetCore.JsonPatch": "9.0.10",
           "Microsoft.AspNetCore.Mvc.NewtonsoftJson": "9.0.10",
           "Microsoft.AspNetCore.OpenApi": "10.0.0-rc.2.25502.107",
@@ -310,6 +311,10 @@
         }
       },
       "Flowenter.Parties.IServices/1.0.0": {
+        "dependencies": {
+          "Flowenter.Parties.Models": "1.0.0",
+          "Microsoft.AspNetCore.JsonPatch": "9.0.10"
+        },
         "runtime": {
           "Flowenter.Parties.IServices.dll": {
             "assemblyVersion": "1.0.0.0",
@@ -335,6 +340,19 @@
         },
         "runtime": {
           "Flowenter.Parties.Models.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Flowenter.Parties.Services/1.0.0": {
+        "dependencies": {
+          "Flowenter.Parties.IServices": "1.0.0",
+          "Flowenter.Parties.Mappings": "1.0.0",
+          "Flowenter.Parties.Models": "1.0.0"
+        },
+        "runtime": {
+          "Flowenter.Parties.Services.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
           }
@@ -546,6 +564,11 @@
       "sha512": ""
     },
     "Flowenter.Parties.Models/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Flowenter.Parties.Services/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

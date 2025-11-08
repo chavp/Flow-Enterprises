@@ -2,6 +2,8 @@ using Flowenter.Api.Extensions;
 using Flowenter.Api.Middleware;
 using Flowenter.Api.Services;
 using Flowenter.Domain.Models;
+using Flowenter.Parties.IServices;
+using Flowenter.Parties.Services;
 using Microsoft.OpenApi;
 using Scalar.AspNetCore;
 using Serilog;
@@ -21,6 +23,10 @@ builder.Services.Configure<TenantPartiesConnectionStrings>(options =>
 
 // Add database
 builder.AddDatabase();
+
+// Add Domain Services
+builder.Services.AddScoped<IPartiesServices, PartiesServices>();
+builder.Services.AddScoped<IContactMechanismServices, ContactMechanismServices>();
 
 builder.Services.AddControllers()
     .AddNewtonsoftJson();

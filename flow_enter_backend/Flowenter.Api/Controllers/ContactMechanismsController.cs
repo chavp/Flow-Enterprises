@@ -1,4 +1,5 @@
-﻿using Flowenter.Parties.Mappings;
+﻿using Flowenter.Parties.IServices;
+using Flowenter.Parties.Mappings;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,12 +11,15 @@ namespace Flowenter.Api.Controllers
     {
         private readonly ILogger<ContactMechanismsController> _logger;
         private readonly IDbContextFactory<PartiesContext> _factory;
+        private readonly IContactMechanismServices _contactMechanismServices;
 
         public ContactMechanismsController(ILogger<ContactMechanismsController> logger,
-            IDbContextFactory<PartiesContext> factory)
+            IDbContextFactory<PartiesContext> factory, 
+            IContactMechanismServices contactMechanismServices)
         {
             _logger = logger;
             _factory = factory;
+            _contactMechanismServices = contactMechanismServices;
         }
     }
 }

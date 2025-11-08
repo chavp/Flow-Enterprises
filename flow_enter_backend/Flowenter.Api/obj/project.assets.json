@@ -453,6 +453,10 @@
       "Flowenter.Parties.IServices/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "Flowenter.Parties.Models": "1.0.0",
+          "Microsoft.AspNetCore.JsonPatch": "9.0.10"
+        },
         "compile": {
           "bin/placeholder/Flowenter.Parties.IServices.dll": {}
         },
@@ -485,6 +489,21 @@
         },
         "runtime": {
           "bin/placeholder/Flowenter.Parties.Models.dll": {}
+        }
+      },
+      "Flowenter.Parties.Services/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "Flowenter.Parties.IServices": "1.0.0",
+          "Flowenter.Parties.Mappings": "1.0.0",
+          "Flowenter.Parties.Models": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Flowenter.Parties.Services.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Flowenter.Parties.Services.dll": {}
         }
       }
     }
@@ -1062,12 +1081,18 @@
       "type": "project",
       "path": "../Flowenter.Parties.Models/Flowenter.Parties.Models.csproj",
       "msbuildProject": "../Flowenter.Parties.Models/Flowenter.Parties.Models.csproj"
+    },
+    "Flowenter.Parties.Services/1.0.0": {
+      "type": "project",
+      "path": "../Flowenter.Parties.Services/Flowenter.Parties.Services.csproj",
+      "msbuildProject": "../Flowenter.Parties.Services/Flowenter.Parties.Services.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net10.0": [
       "Flowenter.Parties.IServices >= 1.0.0",
       "Flowenter.Parties.Mappings >= 1.0.0",
+      "Flowenter.Parties.Services >= 1.0.0",
       "Microsoft.AspNetCore.JsonPatch >= 9.0.10",
       "Microsoft.AspNetCore.Mvc.NewtonsoftJson >= 9.0.10",
       "Microsoft.AspNetCore.OpenApi >= 10.0.0-rc.2.25502.107",
@@ -1120,6 +1145,9 @@
             },
             "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.Mappings\\Flowenter.Parties.Mappings.csproj": {
               "projectPath": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.Mappings\\Flowenter.Parties.Mappings.csproj"
+            },
+            "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.Services\\Flowenter.Parties.Services.csproj": {
+              "projectPath": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.Services\\Flowenter.Parties.Services.csproj"
             }
           }
         }

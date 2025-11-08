@@ -9,7 +9,7 @@
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.List\u00601[[Flowenter.Parties.Models.ContactMechanismModels.ContactMechanismType, Flowenter.Parties.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Collections.Generic.IReadOnlyList\u00601[[Flowenter.Parties.IServices.Dtos.ContactMechanismDto.ContactMechanismTypeDto, Flowenter.Parties.IServices, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -29,13 +29,13 @@
     "Parameters": [
       {
         "Name": "createContactMechanismType",
-        "Type": "Flowenter.Parties.IServices.Dtos.CreateContactMechanismType",
+        "Type": "Flowenter.Parties.IServices.Dtos.ContactMechanismDto.CreateContactMechanismType",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "Flowenter.Parties.Models.ContactMechanismModels.ContactMechanismType",
+        "Type": "Flowenter.Parties.IServices.Dtos.ContactMechanismDto.ContactMechanismTypeDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -70,7 +70,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "Flowenter.Parties.Models.ContactMechanismModels.ContactMechanismType",
+        "Type": "Flowenter.Parties.IServices.Dtos.ContactMechanismDto.ContactMechanismTypeDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -110,7 +110,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "Flowenter.Parties.Models.ContactMechanismModels.ContactMechanismType",
+        "Type": "Flowenter.Parties.IServices.Dtos.ContactMechanismDto.ContactMechanismTypeDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -126,15 +126,6 @@
           "text/json"
         ],
         "StatusCode": 400
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 404
       }
     ]
   },
@@ -980,7 +971,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "Flowenter.Parties.Models.PartyModels.Enterprise",
+        "Type": "Flowenter.Parties.Models.PartyModels.PartyRole",
         "MediaTypes": [
           "text/plain",
           "application/json",

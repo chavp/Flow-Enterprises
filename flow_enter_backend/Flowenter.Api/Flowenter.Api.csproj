@@ -24,6 +24,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Flowenter.Parties.IServices\Flowenter.Parties.IServices.csproj" />
     <ProjectReference Include="..\Flowenter.Parties.Mappings\Flowenter.Parties.Mappings.csproj" />
+    <ProjectReference Include="..\Flowenter.Parties.Services\Flowenter.Parties.Services.csproj" />
   </ItemGroup>
 
 </Project>

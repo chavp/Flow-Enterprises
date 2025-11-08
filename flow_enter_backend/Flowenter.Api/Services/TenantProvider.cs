@@ -5,7 +5,7 @@ namespace Flowenter.Api.Services;
 
 public sealed class TenantProvider : ITenantProvider
 {
-    public const string TenantIdHeaderName = "Flowenter-TenantId";
+    public const string PartiesTenantIdHeaderName = "Flowenter-Parties-TenantId";
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly TenantPartiesConnectionStrings _tenantPartiesConnectionStrings;
 
@@ -16,21 +16,21 @@ public sealed class TenantProvider : ITenantProvider
         _tenantPartiesConnectionStrings = tenantPartiesConnectionStrings.Value;
     }
 
-    public string GetTenantConnectionString()
+    public string GetPartiesTenantConnectionString()
     {
-        if (!_tenantPartiesConnectionStrings.Values.ContainsKey(GetTenantId().Value.ToString()))
+        if (!_tenantPartiesConnectionStrings.Values.ContainsKey(GetPartiesTenantId().Value.ToString()))
         {
             throw new ApplicationException("Tenant Connection String is missing.");
         }
 
-        return _tenantPartiesConnectionStrings.Values[GetTenantId().Value.ToString()];
+        return _tenantPartiesConnectionStrings.Values[GetPartiesTenantId().Value.ToString()];
     }
 
-    public Guid? GetTenantId()
+    public Guid? GetPartiesTenantId()
     {
         var httpContext = _httpContextAccessor.HttpContext?
             .Request
-            .Headers[TenantIdHeaderName];
+            .Headers[PartiesTenantIdHeaderName];
 
         if (!httpContext.HasValue ||
             !Guid.TryParse(httpContext.Value, out var tenantId) ||

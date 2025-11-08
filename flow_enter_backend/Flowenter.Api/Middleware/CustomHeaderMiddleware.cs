@@ -17,7 +17,7 @@ public class CustomHeaderMiddleware
     {
         if (_env.IsDevelopment())
         {
-            context.Request.Headers.Add(TenantProvider.TenantIdHeaderName, Guid.Empty.ToString());
+            context.Request.Headers.Add(TenantProvider.PartiesTenantIdHeaderName, Guid.Empty.ToString());
         }
         await _next(context);
     }

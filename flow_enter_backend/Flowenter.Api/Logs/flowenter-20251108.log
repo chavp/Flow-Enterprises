@@ -300,3 +300,322 @@ System.Threading.Tasks.TaskCanceledException: A task was canceled.
 2025-11-08 12:04:52.724 +07:00 [INF] Application started. Press Ctrl+C to shut down. {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
 2025-11-08 12:04:52.739 +07:00 [INF] Hosting environment: Development {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
 2025-11-08 12:04:52.754 +07:00 [INF] Content root path: D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 13:13:34.385 +07:00 [INF] Now listening on: https://localhost:7062 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 13:13:34.537 +07:00 [INF] Now listening on: http://localhost:5172 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 13:13:34.702 +07:00 [INF] Application started. Press Ctrl+C to shut down. {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 13:13:34.725 +07:00 [INF] Hosting environment: Development {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 13:13:34.752 +07:00 [INF] Content root path: D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 13:14:05.403 +07:00 [INF] ContactMechanismType created: "93e55213-a134-49d9-887a-024720f96a87" {"SourceContext":"Flowenter.Parties.Services.PartiesServices","ActionId":"17414fc5-8001-47fb-b57c-21e88b13cecc","ActionName":"Flowenter.Api.Controllers.ContactMechanismsController.CreateContactMechanismType (Flowenter.Api)","RequestId":"0HNGUHNPBLPTE:00000009","RequestPath":"/api/contact-mechanisms/types","ConnectionId":"0HNGUHNPBLPTE","EnvironmentName":"Development","MachineName":"DING","ThreadId":18,"Application":"Flowenter.Api"}
+2025-11-08 13:21:35.908 +07:00 [INF] Now listening on: https://localhost:7062 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 13:21:36.115 +07:00 [INF] Now listening on: http://localhost:5172 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 13:21:36.234 +07:00 [INF] Application started. Press Ctrl+C to shut down. {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 13:21:36.246 +07:00 [INF] Hosting environment: Development {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 13:21:36.260 +07:00 [INF] Content root path: D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 13:32:46.945 +07:00 [INF] Now listening on: https://localhost:7062 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 13:32:47.065 +07:00 [INF] Now listening on: http://localhost:5172 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 13:32:47.199 +07:00 [INF] Application started. Press Ctrl+C to shut down. {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 13:32:47.216 +07:00 [INF] Hosting environment: Development {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 13:32:47.232 +07:00 [INF] Content root path: D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 13:34:14.768 +07:00 [ERR] An error occurred: ContactMechanismType with ID 93e55213-a134-49d9-887a-024720f96a87 not found. {"RequestId":"0HNGUI2GSA3CK:00000017","RequestPath":"/api/contact-mechanisms/types/93e55213-a134-49d9-887a-024720f96a87","ConnectionId":"0HNGUI2GSA3CK","EnvironmentName":"Development","MachineName":"DING","ThreadId":20,"Application":"Flowenter.Api"}
+System.IO.InvalidDataException: ContactMechanismType with ID 93e55213-a134-49d9-887a-024720f96a87 not found.
+   at Flowenter.Parties.Services.PartiesServices.PatchContactMechanismTypeAsync(Guid contact_mechanism_type_id, JsonPatchDocument`1 patchDoc, CancellationToken cancellationToken) in D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Parties.Services\PartiesServices.cs:line 100
+   at Flowenter.Api.Controllers.ContactMechanismsController.PatchContactMechanismType(Guid contact_mechanism_type_id, JsonPatchDocument`1 patchDoc, CancellationToken cancellationToken) in D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\Controllers\ContactMechanismsController.ContactMechanismTypes.cs:line 52
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.ReDoc.ReDocMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Flowenter.Api.Middleware.CustomHeaderMiddleware.InvokeAsync(HttpContext context) in D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\Middleware\CustomHeaderMiddleware.cs:line 22
+   at Flowenter.Api.Middleware.ErrorHandlingMiddleware.InvokeAsync(HttpContext context) in D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\Middleware\ErrorHandlingMiddleware.cs:line 27
+2025-11-08 13:51:06.762 +07:00 [INF] Now listening on: https://localhost:7062 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 13:51:06.917 +07:00 [INF] Now listening on: http://localhost:5172 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 13:51:07.096 +07:00 [INF] Application started. Press Ctrl+C to shut down. {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 13:51:07.142 +07:00 [INF] Hosting environment: Development {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 13:51:07.172 +07:00 [INF] Content root path: D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 13:51:15.907 +07:00 [ERR] An error occurred: ContactMechanismType with ID 93e55213-a134-49d9-887a-024720f96a87 not found. {"RequestId":"0HNGUICOIP2JM:00000001","RequestPath":"/api/contact-mechanisms/types/93e55213-a134-49d9-887a-024720f96a87","ConnectionId":"0HNGUICOIP2JM","EnvironmentName":"Development","MachineName":"DING","ThreadId":12,"Application":"Flowenter.Api"}
+System.IO.InvalidDataException: ContactMechanismType with ID 93e55213-a134-49d9-887a-024720f96a87 not found.
+   at Flowenter.Parties.Services.PartiesServices.PatchContactMechanismTypeAsync(Guid contact_mechanism_type_id, JsonPatchDocument`1 patchDoc, CancellationToken cancellationToken) in D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Parties.Services\PartiesServices.cs:line 101
+   at Flowenter.Api.Controllers.ContactMechanismsController.PatchContactMechanismType(Guid contact_mechanism_type_id, JsonPatchDocument`1 patchDoc, CancellationToken cancellationToken) in D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\Controllers\ContactMechanismsController.ContactMechanismTypes.cs:line 55
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.ReDoc.ReDocMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Flowenter.Api.Middleware.CustomHeaderMiddleware.InvokeAsync(HttpContext context) in D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\Middleware\CustomHeaderMiddleware.cs:line 22
+   at Flowenter.Api.Middleware.ErrorHandlingMiddleware.InvokeAsync(HttpContext context) in D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\Middleware\ErrorHandlingMiddleware.cs:line 27
+2025-11-08 14:10:13.871 +07:00 [INF] Now listening on: https://localhost:7062 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 14:10:13.984 +07:00 [INF] Now listening on: http://localhost:5172 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 14:10:14.100 +07:00 [INF] Application started. Press Ctrl+C to shut down. {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 14:10:14.115 +07:00 [INF] Hosting environment: Development {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 14:10:14.132 +07:00 [INF] Content root path: D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 14:16:00.089 +07:00 [INF] Now listening on: https://localhost:7062 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 14:16:00.199 +07:00 [INF] Now listening on: http://localhost:5172 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 14:16:00.314 +07:00 [INF] Application started. Press Ctrl+C to shut down. {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 14:16:00.329 +07:00 [INF] Hosting environment: Development {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 14:16:00.344 +07:00 [INF] Content root path: D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 14:16:27.402 +07:00 [INF] ContactMechanismType created: "e0be7688-cb0c-4b36-8a8c-a4392dc031c5" {"SourceContext":"Flowenter.Parties.Services.PartiesServices","ActionId":"0b83368d-59b4-42db-ab68-d979c0d63d11","ActionName":"Flowenter.Api.Controllers.ContactMechanismsController.CreateContactMechanismType (Flowenter.Api)","RequestId":"0HNGUIQSR0767:00000001","RequestPath":"/api/contact-mechanisms/types","ConnectionId":"0HNGUIQSR0767","EnvironmentName":"Development","MachineName":"DING","ThreadId":6,"Application":"Flowenter.Api"}
+2025-11-08 14:16:43.107 +07:00 [ERR] An error occurred: An error occurred while saving the entity changes. See the inner exception for details. {"RequestId":"0HNGUIQSR0767:00000003","RequestPath":"/api/contact-mechanisms/types","ConnectionId":"0HNGUIQSR0767","EnvironmentName":"Development","MachineName":"DING","ThreadId":9,"Application":"Flowenter.Api"}
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Npgsql.PostgresException (0x80004005): 23505: duplicate key value violates unique constraint "IX_ContactMechanismTypes_Code"
+
+DETAIL: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+  Exception data:
+    Severity: ERROR
+    SqlState: 23505
+    MessageText: duplicate key value violates unique constraint "IX_ContactMechanismTypes_Code"
+    Detail: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+    SchemaName: parties
+    TableName: ContactMechanismTypes
+    ConstraintName: IX_ContactMechanismTypes_Code
+    File: nbtinsert.c
+    Line: 666
+    Routine: _bt_check_unique
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Flowenter.Parties.Mappings.PartiesContext.SaveChangesAsync(CancellationToken cancellationToken) in D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Parties.Mappings\PartiesContext.cs:line 105
+   at Flowenter.Parties.Services.PartiesServices.CreateContactMechanismTypeAsync(CreateContactMechanismType createContactMechanismType, CancellationToken cancellationToken) in D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Parties.Services\PartiesServices.cs:line 36
+   at Flowenter.Api.Controllers.ContactMechanismsController.CreateContactMechanismType(CreateContactMechanismType createContactMechanismType, CancellationToken cancellationToken) in D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\Controllers\ContactMechanismsController.ContactMechanismTypes.cs:line 27
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.ReDoc.ReDocMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Flowenter.Api.Middleware.CustomHeaderMiddleware.InvokeAsync(HttpContext context) in D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\Middleware\CustomHeaderMiddleware.cs:line 22
+   at Flowenter.Api.Middleware.ErrorHandlingMiddleware.InvokeAsync(HttpContext context) in D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\Middleware\ErrorHandlingMiddleware.cs:line 27
+2025-11-08 14:17:37.081 +07:00 [INF] Now listening on: https://localhost:7062 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 14:17:37.186 +07:00 [INF] Now listening on: http://localhost:5172 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 14:17:37.301 +07:00 [INF] Application started. Press Ctrl+C to shut down. {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 14:17:37.316 +07:00 [INF] Hosting environment: Development {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 14:17:37.331 +07:00 [INF] Content root path: D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 14:17:49.067 +07:00 [ERR] Error creating ContactMechanismType {"SourceContext":"Flowenter.Parties.Services.PartiesServices","ActionId":"d8febc20-dbec-4c43-9fd2-6e9931d1c616","ActionName":"Flowenter.Api.Controllers.ContactMechanismsController.CreateContactMechanismType (Flowenter.Api)","RequestId":"0HNGUIRKRQHG8:00000001","RequestPath":"/api/contact-mechanisms/types","ConnectionId":"0HNGUIRKRQHG8","EnvironmentName":"Development","MachineName":"DING","ThreadId":10,"Application":"Flowenter.Api"}
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Npgsql.PostgresException (0x80004005): 23505: duplicate key value violates unique constraint "IX_ContactMechanismTypes_Code"
+
+DETAIL: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+  Exception data:
+    Severity: ERROR
+    SqlState: 23505
+    MessageText: duplicate key value violates unique constraint "IX_ContactMechanismTypes_Code"
+    Detail: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+    SchemaName: parties
+    TableName: ContactMechanismTypes
+    ConstraintName: IX_ContactMechanismTypes_Code
+    File: nbtinsert.c
+    Line: 666
+    Routine: _bt_check_unique
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Flowenter.Parties.Mappings.PartiesContext.SaveChangesAsync(CancellationToken cancellationToken) in D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Parties.Mappings\PartiesContext.cs:line 105
+   at Flowenter.Parties.Services.PartiesServices.CreateContactMechanismTypeAsync(CreateContactMechanismType createContactMechanismType, CancellationToken cancellationToken) in D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Parties.Services\PartiesServices.cs:line 38
+2025-11-08 14:20:10.938 +07:00 [INF] Now listening on: https://localhost:7062 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 14:20:11.090 +07:00 [INF] Now listening on: http://localhost:5172 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 14:20:11.430 +07:00 [INF] Application started. Press Ctrl+C to shut down. {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 14:20:11.460 +07:00 [INF] Hosting environment: Development {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 14:20:11.521 +07:00 [INF] Content root path: D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 14:21:12.758 +07:00 [INF] Now listening on: https://localhost:7062 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 14:21:12.892 +07:00 [INF] Now listening on: http://localhost:5172 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 14:21:13.012 +07:00 [INF] Application started. Press Ctrl+C to shut down. {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 14:21:13.030 +07:00 [INF] Hosting environment: Development {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 14:21:13.049 +07:00 [INF] Content root path: D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 14:21:26.896 +07:00 [ERR] Database update error while creating ContactMechanismType {"SourceContext":"Flowenter.Parties.Services.PartiesServices","ActionId":"84a72865-4755-4d7e-9f3f-7a5c26840434","ActionName":"Flowenter.Api.Controllers.ContactMechanismsController.CreateContactMechanismType (Flowenter.Api)","RequestId":"0HNGUITKHA2HC:00000001","RequestPath":"/api/contact-mechanisms/types","ConnectionId":"0HNGUITKHA2HC","EnvironmentName":"Development","MachineName":"DING","ThreadId":6,"Application":"Flowenter.Api"}
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Npgsql.PostgresException (0x80004005): 23505: duplicate key value violates unique constraint "IX_ContactMechanismTypes_Code"
+
+DETAIL: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+  Exception data:
+    Severity: ERROR
+    SqlState: 23505
+    MessageText: duplicate key value violates unique constraint "IX_ContactMechanismTypes_Code"
+    Detail: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+    SchemaName: parties
+    TableName: ContactMechanismTypes
+    ConstraintName: IX_ContactMechanismTypes_Code
+    File: nbtinsert.c
+    Line: 666
+    Routine: _bt_check_unique
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Flowenter.Parties.Mappings.PartiesContext.SaveChangesAsync(CancellationToken cancellationToken) in D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Parties.Mappings\PartiesContext.cs:line 105
+   at Flowenter.Parties.Services.PartiesServices.CreateContactMechanismTypeAsync(CreateContactMechanismType createContactMechanismType, CancellationToken cancellationToken) in D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Parties.Services\PartiesServices.cs:line 38
+2025-11-08 15:30:37.682 +07:00 [INF] Now listening on: https://localhost:7062 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 15:30:37.870 +07:00 [INF] Now listening on: http://localhost:5172 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 15:30:38.125 +07:00 [INF] Application started. Press Ctrl+C to shut down. {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 15:30:38.142 +07:00 [INF] Hosting environment: Development {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 15:30:38.157 +07:00 [INF] Content root path: D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 15:30:45.912 +07:00 [ERR] Database update error while creating ContactMechanismType {"SourceContext":"Flowenter.Parties.Services.PartiesServices","ActionId":"64b308ef-4025-42cb-b505-d621ad0b8548","ActionName":"Flowenter.Api.Controllers.ContactMechanismsController.CreateContactMechanismType (Flowenter.Api)","RequestId":"0HNGUK4CN2RDP:00000001","RequestPath":"/api/contact-mechanisms/types","ConnectionId":"0HNGUK4CN2RDP","EnvironmentName":"Development","MachineName":"DING","ThreadId":8,"Application":"Flowenter.Api"}
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Npgsql.PostgresException (0x80004005): 23505: duplicate key value violates unique constraint "IX_ContactMechanismTypes_Code"
+
+DETAIL: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+  Exception data:
+    Severity: ERROR
+    SqlState: 23505
+    MessageText: duplicate key value violates unique constraint "IX_ContactMechanismTypes_Code"
+    Detail: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+    SchemaName: parties
+    TableName: ContactMechanismTypes
+    ConstraintName: IX_ContactMechanismTypes_Code
+    File: nbtinsert.c
+    Line: 666
+    Routine: _bt_check_unique
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Flowenter.Parties.Mappings.PartiesContext.SaveChangesAsync(CancellationToken cancellationToken) in D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Parties.Mappings\PartiesContext.cs:line 105
+   at Flowenter.Parties.Services.PartiesServices.CreateContactMechanismTypeAsync(CreateContactMechanismType createContactMechanismType, CancellationToken cancellationToken) in D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Parties.Services\PartiesServices.cs:line 38
+2025-11-08 15:41:33.925 +07:00 [INF] Now listening on: https://localhost:7062 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 15:41:34.066 +07:00 [INF] Now listening on: http://localhost:5172 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 15:41:34.187 +07:00 [INF] Application started. Press Ctrl+C to shut down. {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 15:41:34.201 +07:00 [INF] Hosting environment: Development {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 15:41:34.216 +07:00 [INF] Content root path: D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 15:41:57.132 +07:00 [INF] ContactMechanismType created: "f9c68a57-43ed-4eed-ae1e-791cd6331ad3" {"SourceContext":"Flowenter.Parties.Services.PartiesServices","ActionId":"3f247941-ae92-4159-baa6-d34357695eea","ActionName":"Flowenter.Api.Controllers.ContactMechanismsController.CreateContactMechanismType (Flowenter.Api)","RequestId":"0HNGUKAH48K66:00000003","RequestPath":"/api/contact-mechanisms/types","ConnectionId":"0HNGUKAH48K66","EnvironmentName":"Development","MachineName":"DING","ThreadId":14,"Application":"Flowenter.Api"}
+2025-11-08 15:44:44.797 +07:00 [INF] Now listening on: https://localhost:7062 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 15:44:44.903 +07:00 [INF] Now listening on: http://localhost:5172 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 15:44:45.007 +07:00 [INF] Application started. Press Ctrl+C to shut down. {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 15:44:45.024 +07:00 [INF] Hosting environment: Development {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 15:44:45.039 +07:00 [INF] Content root path: D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 15:45:05.795 +07:00 [INF] ContactMechanismType created: "f3d4d17c-37c3-4e7c-bc32-ce3d49ebf07e" {"SourceContext":"Flowenter.Parties.Services.PartiesServices","ActionId":"2730de87-dee3-4236-b620-b9465f9a6cf7","ActionName":"Flowenter.Api.Controllers.ContactMechanismsController.CreateContactMechanismType (Flowenter.Api)","RequestId":"0HNGUKC9FIFUM:00000005","RequestPath":"/api/contact-mechanisms/types","ConnectionId":"0HNGUKC9FIFUM","EnvironmentName":"Development","MachineName":"DING","ThreadId":11,"Application":"Flowenter.Api"}
+2025-11-08 15:45:21.042 +07:00 [INF] ContactMechanismType created: "b9df1c0a-b01a-4fcc-abeb-e3055259d124" {"SourceContext":"Flowenter.Parties.Services.PartiesServices","ActionId":"2730de87-dee3-4236-b620-b9465f9a6cf7","ActionName":"Flowenter.Api.Controllers.ContactMechanismsController.CreateContactMechanismType (Flowenter.Api)","RequestId":"0HNGUKC9FIFUM:00000009","RequestPath":"/api/contact-mechanisms/types","ConnectionId":"0HNGUKC9FIFUM","EnvironmentName":"Development","MachineName":"DING","ThreadId":14,"Application":"Flowenter.Api"}
+2025-11-08 15:47:57.187 +07:00 [INF] Now listening on: https://localhost:7062 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 15:47:57.360 +07:00 [INF] Now listening on: http://localhost:5172 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 15:47:57.564 +07:00 [INF] Application started. Press Ctrl+C to shut down. {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 15:47:57.578 +07:00 [INF] Hosting environment: Development {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 15:47:57.593 +07:00 [INF] Content root path: D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 15:48:09.981 +07:00 [INF] ContactMechanismType created: "56896aed-caec-402e-b862-0966ee6bcd31" {"SourceContext":"Flowenter.Parties.Services.PartiesServices","ActionId":"776a671b-8671-4b35-85be-07a2ad9cfab2","ActionName":"Flowenter.Api.Controllers.ContactMechanismsController.CreateContactMechanismType (Flowenter.Api)","RequestId":"0HNGUKE4O5P20:00000001","RequestPath":"/api/contact-mechanisms/types","ConnectionId":"0HNGUKE4O5P20","EnvironmentName":"Development","MachineName":"DING","ThreadId":9,"Application":"Flowenter.Api"}
+2025-11-08 15:49:18.012 +07:00 [INF] Now listening on: https://localhost:7062 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 15:49:18.116 +07:00 [INF] Now listening on: http://localhost:5172 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 15:49:18.229 +07:00 [INF] Application started. Press Ctrl+C to shut down. {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 15:49:18.246 +07:00 [INF] Hosting environment: Development {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 15:49:18.263 +07:00 [INF] Content root path: D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 15:55:27.362 +07:00 [INF] Now listening on: https://localhost:7062 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 15:55:27.477 +07:00 [INF] Now listening on: http://localhost:5172 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 15:55:27.612 +07:00 [INF] Application started. Press Ctrl+C to shut down. {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 15:55:27.628 +07:00 [INF] Hosting environment: Development {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 15:55:27.643 +07:00 [INF] Content root path: D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 16:09:38.149 +07:00 [INF] Now listening on: https://localhost:7062 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 16:09:38.257 +07:00 [INF] Now listening on: http://localhost:5172 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 16:09:38.374 +07:00 [INF] Application started. Press Ctrl+C to shut down. {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 16:09:38.389 +07:00 [INF] Hosting environment: Development {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 16:09:38.403 +07:00 [INF] Content root path: D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 16:19:22.530 +07:00 [INF] Now listening on: https://localhost:7062 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 16:19:22.641 +07:00 [INF] Now listening on: http://localhost:5172 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 16:19:22.760 +07:00 [INF] Application started. Press Ctrl+C to shut down. {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 16:19:22.776 +07:00 [INF] Hosting environment: Development {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 16:19:22.799 +07:00 [INF] Content root path: D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 16:20:34.393 +07:00 [INF] Now listening on: https://localhost:7062 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 16:20:34.517 +07:00 [INF] Now listening on: http://localhost:5172 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 16:20:34.636 +07:00 [INF] Application started. Press Ctrl+C to shut down. {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 16:20:34.650 +07:00 [INF] Hosting environment: Development {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 16:20:34.663 +07:00 [INF] Content root path: D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 16:21:44.281 +07:00 [INF] Now listening on: https://localhost:7062 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 16:21:44.395 +07:00 [INF] Now listening on: http://localhost:5172 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 16:21:44.512 +07:00 [INF] Application started. Press Ctrl+C to shut down. {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 16:21:44.528 +07:00 [INF] Hosting environment: Development {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 16:21:44.542 +07:00 [INF] Content root path: D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 16:34:45.057 +07:00 [INF] Now listening on: https://localhost:7062 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 16:34:45.180 +07:00 [INF] Now listening on: http://localhost:5172 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 16:34:45.295 +07:00 [INF] Application started. Press Ctrl+C to shut down. {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 16:34:45.309 +07:00 [INF] Hosting environment: Development {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 16:34:45.324 +07:00 [INF] Content root path: D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 16:40:46.084 +07:00 [INF] Now listening on: https://localhost:7062 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 16:40:46.362 +07:00 [INF] Now listening on: http://localhost:5172 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 16:40:46.651 +07:00 [INF] Application started. Press Ctrl+C to shut down. {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 16:40:46.709 +07:00 [INF] Hosting environment: Development {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 16:40:46.745 +07:00 [INF] Content root path: D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api {"SourceContext":"Microsoft.Hosting.Lifetime","EnvironmentName":"Development","MachineName":"DING","ThreadId":2,"Application":"Flowenter.Api"}
+2025-11-08 16:40:56.273 +07:00 [INF] ContactMechanismType created: "72fb4e21-9a2d-4e97-a358-963128613753" {"SourceContext":"Flowenter.Parties.Services.ContactMechanismServices","ActionId":"e81e2c3a-303a-4e77-874f-48dd869f3a07","ActionName":"Flowenter.Api.Controllers.ContactMechanismsController.CreateContactMechanismType (Flowenter.Api)","RequestId":"0HNGULBI8JKAV:00000003","RequestPath":"/api/contact-mechanisms/types","ConnectionId":"0HNGULBI8JKAV","EnvironmentName":"Development","MachineName":"DING","ThreadId":10,"Application":"Flowenter.Api"}

@@ -47,21 +47,21 @@ public sealed class PartiesContext : DbContext
 
         modelBuilder.Entity<Party>(builder =>
         {
-            builder.HasQueryFilter(pr => pr.TenantId == _tenantProvider.GetTenantId());
+            builder.HasQueryFilter(pr => pr.TenantId == _tenantProvider.GetPartiesTenantId());
         });
         modelBuilder.Entity<Person>();
         modelBuilder.Entity<Organization>();
 
         modelBuilder.Entity<PartyRole>(builder =>
         {
-            builder.HasQueryFilter(pr => pr.TenantId == _tenantProvider.GetTenantId());
+            builder.HasQueryFilter(pr => pr.TenantId == _tenantProvider.GetPartiesTenantId());
         });
         modelBuilder.Entity<Enterprise>();
         modelBuilder.Entity<Customer>();
 
         modelBuilder.Entity<ContactMechanism>(builder =>
         {
-            builder.HasQueryFilter(cm => cm.TenantId == _tenantProvider.GetTenantId());
+            builder.HasQueryFilter(cm => cm.TenantId == _tenantProvider.GetPartiesTenantId());
         });
         modelBuilder.Entity<ElectronicAddress>();
         modelBuilder.Entity<PostalAddress>();
@@ -133,7 +133,7 @@ public sealed class PartiesContext : DbContext
         {
             if (entityEntry.State == EntityState.Added)
             {
-                entityEntry.Property("TenantId").CurrentValue = _tenantProvider.GetTenantId();
+                entityEntry.Property("TenantId").CurrentValue = _tenantProvider.GetPartiesTenantId();
             }
         }
     }

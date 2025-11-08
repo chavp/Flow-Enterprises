@@ -1,8 +1,22 @@
 {
   "version": 2,
-  "dgSpecHash": "thSUPH2EbGk=",
+  "dgSpecHash": "QEjuJ+V2iLE=",
   "success": true,
   "projectFilePath": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.IServices\\Flowenter.Parties.IServices.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\mypar\\.nuget\\packages\\microsoft.aspnetcore.jsonpatch\\9.0.10\\microsoft.aspnetcore.jsonpatch.9.0.10.nupkg.sha512",
+    "C:\\Users\\mypar\\.nuget\\packages\\microsoft.entityframeworkcore\\9.0.10\\microsoft.entityframeworkcore.9.0.10.nupkg.sha512",
+    "C:\\Users\\mypar\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\9.0.10\\microsoft.entityframeworkcore.abstractions.9.0.10.nupkg.sha512",
+    "C:\\Users\\mypar\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\9.0.10\\microsoft.entityframeworkcore.analyzers.9.0.10.nupkg.sha512",
+    "C:\\Users\\mypar\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\9.0.10\\microsoft.extensions.caching.abstractions.9.0.10.nupkg.sha512",
+    "C:\\Users\\mypar\\.nuget\\packages\\microsoft.extensions.caching.memory\\9.0.10\\microsoft.extensions.caching.memory.9.0.10.nupkg.sha512",
+    "C:\\Users\\mypar\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\9.0.10\\microsoft.extensions.dependencyinjection.9.0.10.nupkg.sha512",
+    "C:\\Users\\mypar\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\9.0.10\\microsoft.extensions.dependencyinjection.abstractions.9.0.10.nupkg.sha512",
+    "C:\\Users\\mypar\\.nuget\\packages\\microsoft.extensions.logging\\9.0.10\\microsoft.extensions.logging.9.0.10.nupkg.sha512",
+    "C:\\Users\\mypar\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\9.0.10\\microsoft.extensions.logging.abstractions.9.0.10.nupkg.sha512",
+    "C:\\Users\\mypar\\.nuget\\packages\\microsoft.extensions.options\\9.0.10\\microsoft.extensions.options.9.0.10.nupkg.sha512",
+    "C:\\Users\\mypar\\.nuget\\packages\\microsoft.extensions.primitives\\9.0.10\\microsoft.extensions.primitives.9.0.10.nupkg.sha512",
+    "C:\\Users\\mypar\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512"
+  ],
   "logs": []
 }

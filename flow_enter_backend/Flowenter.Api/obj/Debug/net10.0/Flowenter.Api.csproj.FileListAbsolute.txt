@@ -66,4 +66,6 @@ D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\bin\Debug\net10.0\Se
 D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\bin\Debug\net10.0\Serilog.Sinks.File.dll
 D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\bin\Debug\net10.0\Logs\flowenter-20251107.json
 D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\bin\Debug\net10.0\Logs\flowenter-20251108.json
+D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\bin\Debug\net10.0\Flowenter.Parties.Services.dll
+D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\bin\Debug\net10.0\Flowenter.Parties.Services.pdb
 D:\github\Flow-Enterprises\flow_enter_backend\Flowenter.Api\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt

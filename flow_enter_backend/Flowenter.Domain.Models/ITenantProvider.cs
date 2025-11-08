@@ -6,6 +6,6 @@ namespace Flowenter.Domain.Models;
 
 public interface ITenantProvider
 {
-    Guid? GetTenantId();
-    string GetTenantConnectionString();
+    Guid? GetPartiesTenantId();
+    string GetPartiesTenantConnectionString();
 }
