@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Flowenter.Domain.Models")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ed12865cad64a07744c451310bb22474a4dffe17")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1b5c2ddb4054829b97795ad85a234412bb9200b3")]
 [assembly: System.Reflection.AssemblyProductAttribute("Flowenter.Domain.Models")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Flowenter.Domain.Models")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

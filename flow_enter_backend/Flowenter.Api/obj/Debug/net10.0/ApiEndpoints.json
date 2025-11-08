@@ -29,7 +29,7 @@
     "Parameters": [
       {
         "Name": "createContactMechanismType",
-        "Type": "Flowenter.Parties.IServices.DTOs.CreateContactMechanismType",
+        "Type": "Flowenter.Parties.IServices.Dtos.CreateContactMechanismType",
         "IsRequired": true
       }
     ],
@@ -199,7 +199,7 @@
     "Parameters": [
       {
         "Name": "createGeographicBoundaryType",
-        "Type": "Flowenter.Parties.IServices.DTOs.CreateGeographicBoundaryType",
+        "Type": "Flowenter.Parties.IServices.Dtos.CreateGeographicBoundaryType",
         "IsRequired": true
       }
     ],
@@ -369,7 +369,7 @@
     "Parameters": [
       {
         "Name": "createPartyCategory",
-        "Type": "Flowenter.Parties.IServices.DTOs.CreatePartyCategory",
+        "Type": "Flowenter.Parties.IServices.Dtos.CreatePartyCategory",
         "IsRequired": true
       }
     ],
@@ -539,7 +539,7 @@
     "Parameters": [
       {
         "Name": "createPartyClassification",
-        "Type": "Flowenter.Parties.IServices.DTOs.CreatePartyClassification",
+        "Type": "Flowenter.Parties.IServices.Dtos.CreatePartyClassification",
         "IsRequired": true
       }
     ],
@@ -689,7 +689,7 @@
     "Parameters": [
       {
         "Name": "createDto",
-        "Type": "Flowenter.Parties.IServices.DTOs.CreateEnterpriseDto",
+        "Type": "Flowenter.Parties.IServices.Dtos.EnterpriseDto.CreateEnterpriseDto",
         "IsRequired": true
       }
     ],
@@ -744,7 +744,7 @@
     "Parameters": [
       {
         "Name": "createLegalStructure",
-        "Type": "Flowenter.Parties.IServices.DTOs.CreateLegalStructure",
+        "Type": "Flowenter.Parties.IServices.Dtos.CreateLegalStructure",
         "IsRequired": true
       }
     ],
@@ -949,7 +949,7 @@
     "Parameters": [
       {
         "Name": "createPartyRoleType",
-        "Type": "Flowenter.Parties.IServices.DTOs.CreatePartyRoleType",
+        "Type": "Flowenter.Parties.IServices.Dtos.CreatePartyRoleType",
         "IsRequired": true
       }
     ],
@@ -1119,7 +1119,7 @@
     "Parameters": [
       {
         "Name": "createPartyType",
-        "Type": "Flowenter.Parties.IServices.DTOs.CreatePartyType",
+        "Type": "Flowenter.Parties.IServices.Dtos.CreatePartyType",
         "IsRequired": true
       }
     ],

@@ -1,11 +1,16 @@
 ﻿using Flowenter.Domain.Models;
 using Flowenter.Parties.Models.ContactMechanismModels;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
 namespace Flowenter.Parties.Models.PartyModels;
 
-public abstract class Party : BaseEntity
+[Index(nameof(TenantId))]
+public abstract class Party : BaseEntity, ITenantEnabled
 {
+    [Required]
+    public Guid? TenantId { get; set; }
+
     [Required]
     public Guid? TypeId { get; set; }
     public PartyType? Type { get; set; }

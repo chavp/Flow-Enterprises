@@ -1,4 +1,4 @@
-﻿namespace Flowenter.Parties.IServices.DTOs;
+﻿namespace Flowenter.Parties.IServices.Dtos.EnterpriseDto;
 
 public record CreateEnterpriseDto(string LegalName)
 {

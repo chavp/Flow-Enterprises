@@ -1,3 +1,3 @@
-namespace Flowenter.Parties.IServices.DTOs;
+namespace Flowenter.Parties.IServices.Dtos;
 
 public record CreateGeographicBoundaryType(string? Code, string? Name);

@@ -2434,11 +2434,17 @@
     "schemas": {
       "ContactMechanism": {
         "required": [
+          "tenantId",
           "typeId",
           "createdBy"
         ],
         "type": "object",
         "properties": {
+          "tenantId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "typeId": {
             "type": "string",
             "format": "uuid",
@@ -2710,6 +2716,7 @@
         "required": [
           "legalName",
           "legalStructureId",
+          "tenantId",
           "typeId",
           "partyId",
           "createdBy"
@@ -2775,6 +2782,11 @@
           "fiscalYearStartMonth": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
             "format": "int32"
+          },
+          "tenantId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
           },
           "typeId": {
             "type": "string",
@@ -3062,11 +3074,17 @@
       },
       "Party": {
         "required": [
+          "tenantId",
           "typeId",
           "createdBy"
         ],
         "type": "object",
         "properties": {
+          "tenantId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "typeId": {
             "type": "string",
             "format": "uuid",

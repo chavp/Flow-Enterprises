@@ -33,23 +33,41 @@ public sealed class PartiesContext : DbContext
     // FinancialAccountModels
     public DbSet<FinancialAccount> FinancialAccounts => Set<FinancialAccount>();
 
-    public PartiesContext(DbContextOptions<PartiesContext> options) : base(options)
+    public readonly ITenantProvider _tenantProvider;
+
+    public PartiesContext(DbContextOptions<PartiesContext> options,
+        ITenantProvider tenantProvider) : base(options)
     {
+        _tenantProvider = tenantProvider;
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseNpgsql(_tenantProvider.GetTenantConnectionString());
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("parties");
 
-        modelBuilder.Entity<Party>();
+        modelBuilder.Entity<Party>(builder =>
+        {
+            builder.HasQueryFilter(p => p.TenantId == _tenantProvider.GetTenantId());
+        });
         modelBuilder.Entity<Person>();
         modelBuilder.Entity<Organization>();
 
-        modelBuilder.Entity<PartyRole>();
+        modelBuilder.Entity<PartyRole>(builder =>
+        {
+            builder.HasQueryFilter(pr => pr.TenantId == _tenantProvider.GetTenantId());
+        });
         modelBuilder.Entity<Enterprise>();
         modelBuilder.Entity<Customer>();
 
-        modelBuilder.Entity<ContactMechanism>();
+        modelBuilder.Entity<ContactMechanism>(builder =>
+        {
+            builder.HasQueryFilter(cm => cm.TenantId == _tenantProvider.GetTenantId());
+        });
         modelBuilder.Entity<ElectronicAddress>();
         modelBuilder.Entity<PostalAddress>();
         modelBuilder.Entity<TelecommunicationNumber>();
@@ -113,6 +131,14 @@ public sealed class PartiesContext : DbContext
                     //entityEntry.Property(nameof(BaseEntity.CreatedBy)).CurrentValue = GetCurrentUserId();
                     entityEntry.Property(nameof(BaseEntity.UpdatedBy)).CurrentValue = Environment.MachineName;
                 }
+            }
+        }
+
+        foreach (EntityEntry<ITenantEnabled> entityEntry in ChangeTracker.Entries<ITenantEnabled>())
+        {
+            if (entityEntry.State == EntityState.Added)
+            {
+                entityEntry.Property("TenantId").CurrentValue = _tenantProvider.GetTenantId();
             }
         }
     }

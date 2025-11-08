@@ -11,7 +11,7 @@ public class PartiesDesignTimeDbContextFactory : IDesignTimeDbContextFactory<Par
     public PartiesContext CreateDbContext(string[] args)
     {
         var optionsBuilder = new DbContextOptionsBuilder<PartiesContext>();
-        optionsBuilder.UseNpgsql("Server=localhost;TrustServerCertificate=True;User Id=admin;Password=admin123");
-        return new PartiesContext(optionsBuilder.Options);
+        optionsBuilder.UseNpgsql("Server=localhost;TrustServerCertificate=True;Database=flowenter-dev;User Id=admin;Password=admin123");
+        return new PartiesContext(optionsBuilder.Options, new DevTenantProvider());
     }
 }

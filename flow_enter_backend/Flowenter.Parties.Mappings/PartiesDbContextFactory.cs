@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Flowenter.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,16 +8,18 @@ namespace Flowenter.Parties.Mappings;
 
 public class PartiesDbContextFactory : IDbContextFactory<PartiesContext>
 {
-    private DbContextOptions<PartiesContext> _options;
-    public PartiesDbContextFactory(string connectionString)
+    private readonly ITenantProvider _tenantProvider;
+
+    public PartiesDbContextFactory(ITenantProvider tenantProvider)
     {
-        _options = new DbContextOptionsBuilder<PartiesContext>()
-            .UseNpgsql(connectionString)
-            .Options;
+        _tenantProvider = tenantProvider;
     }
 
     public PartiesContext CreateDbContext()
     {
-        return new PartiesContext(_options);
+        var options = new DbContextOptionsBuilder<PartiesContext>()
+            .Options;
+
+        return new PartiesContext(options, _tenantProvider);
     }
 }

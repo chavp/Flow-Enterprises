@@ -1,4 +1,5 @@
-﻿using Flowenter.Parties.IServices.DTOs;
+﻿using Flowenter.Domain.Models;
+using Flowenter.Parties.IServices.Dtos.EnterpriseDto;
 using Flowenter.Parties.Mappings;
 using Flowenter.Parties.Models.PartyModels;
 using Microsoft.AspNetCore.Mvc;

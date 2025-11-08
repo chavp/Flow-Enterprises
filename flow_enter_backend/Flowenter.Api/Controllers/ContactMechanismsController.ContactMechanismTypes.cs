@@ -1,4 +1,4 @@
-using Flowenter.Parties.IServices.DTOs;
+using Flowenter.Parties.IServices.Dtos;
 using Flowenter.Parties.Models.ContactMechanismModels;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;

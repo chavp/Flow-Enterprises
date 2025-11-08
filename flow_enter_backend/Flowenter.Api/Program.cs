@@ -1,4 +1,7 @@
 using Flowenter.Api.Extensions;
+using Flowenter.Api.Middleware;
+using Flowenter.Api.Services;
+using Flowenter.Domain.Models;
 using Microsoft.OpenApi;
 using Scalar.AspNetCore;
 using Serilog;
@@ -8,10 +11,17 @@ var builder = WebApplication.CreateBuilder(args);
 // Add Serilog logging
 builder.AddSerilogLogging();
 
+// Add services to the container.
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ITenantProvider, TenantProvider>();
+
+builder.Services.Configure<TenantPartiesConnectionStrings>(options =>
+    builder.Configuration.GetSection(nameof(TenantPartiesConnectionStrings)).Bind(options)
+);
+
 // Add database
 builder.AddDatabase();
 
-// Add services to the container.
 builder.Services.AddControllers()
     .AddNewtonsoftJson();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -21,9 +31,13 @@ builder.Services.AddOpenApi(
         options.OpenApiVersion = OpenApiSpecVersion.OpenApi3_0;
     });
 
+
 var app = builder.Build();
 
 app.UseErrorHandling();
+
+// Use your custom middleware
+app.UseMiddleware<CustomHeaderMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -34,6 +48,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(options =>
     {
         options.SwaggerEndpoint("/openapi/v1.json", "Opent API v1");
+        
     });
 
     // https://localhost:7062/api-docs/index.html

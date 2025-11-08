@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Flowenter.Parties.Mappings.Migrations
 {
     [DbContext(typeof(PartiesContext))]
-    [Migration("20251107125712_initParties")]
-    partial class initParties
+    [Migration("20251108025103_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,6 +42,9 @@ namespace Flowenter.Parties.Mappings.Migrations
 
                     b.Property<decimal>("Revision")
                         .HasColumnType("numeric(20,0)");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("TypeId")
                         .HasColumnType("uuid");
@@ -299,6 +302,9 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.Property<decimal>("Revision")
                         .HasColumnType("numeric(20,0)");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid>("TypeId")
                         .HasColumnType("uuid");
 
@@ -310,6 +316,8 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasColumnType("character varying(300)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
 
                     b.HasIndex("TypeId");
 
@@ -428,6 +436,9 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.Property<decimal>("Revision")
                         .HasColumnType("numeric(20,0)");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateOnly>("ThruDate")
                         .HasColumnType("date");
 
@@ -472,6 +483,9 @@ namespace Flowenter.Parties.Mappings.Migrations
 
                     b.Property<decimal>("Revision")
                         .HasColumnType("numeric(20,0)");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateOnly>("ThruDate")
                         .HasColumnType("date");

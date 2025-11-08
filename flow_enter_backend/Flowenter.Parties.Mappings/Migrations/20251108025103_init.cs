@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Flowenter.Parties.Mappings.Migrations
 {
     /// <inheritdoc />
-    public partial class initParties : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -140,6 +140,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uuid", nullable: false),
                     TypeId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -189,6 +190,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uuid", nullable: false),
                     TypeId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -339,6 +341,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uuid", nullable: false),
                     PartyId = table.Column<Guid>(type: "uuid", nullable: false),
                     PartyRoleTypeId = table.Column<Guid>(type: "uuid", nullable: false),
                     ContactMechanismId = table.Column<Guid>(type: "uuid", nullable: false),
@@ -382,6 +385,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uuid", nullable: false),
                     TypeId = table.Column<Guid>(type: "uuid", nullable: false),
                     PartyId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -628,6 +632,12 @@ namespace Flowenter.Parties.Mappings.Migrations
                 table: "Organizations",
                 column: "Name",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Parties_TenantId",
+                schema: "parties",
+                table: "Parties",
+                column: "TenantId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Parties_TypeId",

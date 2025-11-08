@@ -40,6 +40,9 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.Property<decimal>("Revision")
                         .HasColumnType("numeric(20,0)");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid>("TypeId")
                         .HasColumnType("uuid");
 
@@ -296,6 +299,9 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.Property<decimal>("Revision")
                         .HasColumnType("numeric(20,0)");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid>("TypeId")
                         .HasColumnType("uuid");
 
@@ -307,6 +313,8 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasColumnType("character varying(300)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
 
                     b.HasIndex("TypeId");
 
@@ -425,6 +433,9 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.Property<decimal>("Revision")
                         .HasColumnType("numeric(20,0)");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateOnly>("ThruDate")
                         .HasColumnType("date");
 
@@ -469,6 +480,9 @@ namespace Flowenter.Parties.Mappings.Migrations
 
                     b.Property<decimal>("Revision")
                         .HasColumnType("numeric(20,0)");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateOnly>("ThruDate")
                         .HasColumnType("date");
