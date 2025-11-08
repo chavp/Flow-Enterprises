@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Flowenter.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+72fb416d774c2b9fffc681d4446424500f890c83")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+945949dfc9042c714a689a97b1e9248059123e96")]
 [assembly: System.Reflection.AssemblyProductAttribute("Flowenter.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Flowenter.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

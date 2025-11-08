@@ -7,8 +7,7 @@ namespace Flowenter.Parties.IServices.Dtos.EnterpriseDto;
 
 public record EnterpriseDto
 {
-    public Guid OrganizationPartyId { get; init; }
-    public Guid EnterpriseRoleId { get; init; }
+    public Guid EnterpriseId { get; init; }
     public Guid TenantId { get; init; }
     public string LegalName { get; init; }
     public string? Information { get; init; }

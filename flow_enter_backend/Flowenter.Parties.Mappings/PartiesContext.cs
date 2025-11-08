@@ -47,7 +47,7 @@ public sealed class PartiesContext : DbContext
 
         modelBuilder.Entity<Party>(builder =>
         {
-            builder.HasQueryFilter(p => p.TenantId == _tenantProvider.GetTenantId());
+            builder.HasQueryFilter(pr => pr.TenantId == _tenantProvider.GetTenantId());
         });
         modelBuilder.Entity<Person>();
         modelBuilder.Entity<Organization>();

@@ -9,8 +9,7 @@ public static class DtoConverters
     {
         return new EnterpriseDto
         {
-            OrganizationPartyId = enterprise.PartyId.Value,
-            EnterpriseRoleId = enterprise.Id.Value,
+            EnterpriseId = enterprise.Id.Value,
             TenantId = enterprise.TenantId.Value,
             LegalName = enterprise.LegalName,
             Information = enterprise.Information,

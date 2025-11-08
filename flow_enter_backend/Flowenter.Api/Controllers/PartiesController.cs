@@ -3,8 +3,10 @@ using Flowenter.Domain.Models;
 using Flowenter.Parties.IServices.Dtos.EnterpriseDto;
 using Flowenter.Parties.Mappings;
 using Flowenter.Parties.Models.PartyModels;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Flowenter.Parties.Mappings.Extensions;
 
 namespace Flowenter.Api.Controllers
 {
@@ -31,7 +33,10 @@ namespace Flowenter.Api.Controllers
         {
             using var context = _factory.CreateDbContext();
 
-            var enterprises = await context.PartyRoles.OfType<Enterprise>()
+            var toDay = DateOnly.FromDateTime(DateTime.UtcNow);
+            var enterprises = await context.PartyRoles
+                .Effective()
+                .OfType<Enterprise>()
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync(cancellationToken);
@@ -117,6 +122,41 @@ namespace Flowenter.Api.Controllers
                 return NotFound();
             }
             return Ok(partyRole);
+        }
+
+        [HttpPatch("enterprises/{enterprise_id}")]
+        [ProducesResponseType(typeof(Enterprise), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> PatchEnterprise([FromRoute] Guid enterprise_id,
+                [FromBody] JsonPatchDocument<Enterprise> patchDoc
+                , CancellationToken cancellationToken)
+        {
+            if (patchDoc == null)
+            {
+                return BadRequest();
+            }
+
+            using var context = _factory.CreateDbContext();
+
+            var enterprise = await context.PartyRoles.OfType<Enterprise>()
+                .FirstOrDefaultAsync(e => e.Id == enterprise_id, cancellationToken);
+
+            if (enterprise == null)
+            {
+                return NotFound();
+            }
+
+            patchDoc.ApplyTo(enterprise, ModelState);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            await context.SaveChangesAsync(cancellationToken);
+
+            return Ok(enterprise);
         }
     }
 }
