@@ -1,4 +1,5 @@
-﻿using Flowenter.Domain.Models;
+﻿using Flowenter.Api.Extensions;
+using Flowenter.Domain.Models;
 using Flowenter.Parties.IServices.Dtos.EnterpriseDto;
 using Flowenter.Parties.Mappings;
 using Flowenter.Parties.Models.PartyModels;
@@ -21,6 +22,29 @@ namespace Flowenter.Api.Controllers
             _factory = factory;
         }
 
+        [HttpGet("enterprises")]
+        [ProducesResponseType(typeof(List<EnterprisesDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetEnterprises(
+            int pageNumber = 1,
+            int pageSize = 50,
+            CancellationToken cancellationToken = default)
+        {
+            using var context = _factory.CreateDbContext();
+
+            var enterprises = await context.PartyRoles.OfType<Enterprise>()
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync(cancellationToken);
+
+            var resp = new EnterprisesDto
+            {
+                Data = enterprises.Select(e => e.ToDto()).ToList(),
+                TotalCount = await context.PartyRoles.OfType<Enterprise>().CountAsync(cancellationToken),
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+            return Ok(resp);
+        }
 
         [HttpPost("enterprises")]
         [ProducesResponseType(typeof(Enterprise), StatusCodes.Status201Created)]

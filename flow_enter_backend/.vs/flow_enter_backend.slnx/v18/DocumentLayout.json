@@ -3,32 +3,44 @@
   "WorkspaceRootPath": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{81AE8854-6D50-496A-95C6-D1F82D76D803}|Flowenter.Parties.Mappings\\Flowenter.Parties.Mappings.csproj|d:\\github\\flow-enterprises\\flow_enter_backend\\flowenter.parties.mappings\\partiescontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{81AE8854-6D50-496A-95C6-D1F82D76D803}|Flowenter.Parties.Mappings\\Flowenter.Parties.Mappings.csproj|solutionrelative:flowenter.parties.mappings\\partiescontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A66B1C02-A35A-490B-A6FD-05116C2DDF7C}|Flowenter.Api\\Flowenter.Api.csproj|d:\\github\\flow-enterprises\\flow_enter_backend\\flowenter.api\\controllers\\partiescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A66B1C02-A35A-490B-A6FD-05116C2DDF7C}|Flowenter.Api\\Flowenter.Api.csproj|solutionrelative:flowenter.api\\controllers\\partiescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A66B1C02-A35A-490B-A6FD-05116C2DDF7C}|Flowenter.Api\\Flowenter.Api.csproj|d:\\github\\flow-enterprises\\flow_enter_backend\\flowenter.api\\extensions\\dtoconverters.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A66B1C02-A35A-490B-A6FD-05116C2DDF7C}|Flowenter.Api\\Flowenter.Api.csproj|solutionrelative:flowenter.api\\extensions\\dtoconverters.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DEC52951-D494-4AAB-8DA4-1343D4C27248}|Flowenter.Parties.IServices\\Flowenter.Parties.IServices.csproj|d:\\github\\flow-enterprises\\flow_enter_backend\\flowenter.parties.iservices\\dtos\\enterprisedto\\enterprisesdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DEC52951-D494-4AAB-8DA4-1343D4C27248}|Flowenter.Parties.IServices\\Flowenter.Parties.IServices.csproj|solutionrelative:flowenter.parties.iservices\\dtos\\enterprisedto\\enterprisesdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DEC52951-D494-4AAB-8DA4-1343D4C27248}|Flowenter.Parties.IServices\\Flowenter.Parties.IServices.csproj|d:\\github\\flow-enterprises\\flow_enter_backend\\flowenter.parties.iservices\\dtos\\enterprisedto\\enterprisedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DEC52951-D494-4AAB-8DA4-1343D4C27248}|Flowenter.Parties.IServices\\Flowenter.Parties.IServices.csproj|solutionrelative:flowenter.parties.iservices\\dtos\\enterprisedto\\enterprisedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{81AE8854-6D50-496A-95C6-D1F82D76D803}|Flowenter.Parties.Mappings\\Flowenter.Parties.Mappings.csproj|d:\\github\\flow-enterprises\\flow_enter_backend\\flowenter.parties.mappings\\partiesdbcontextfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{81AE8854-6D50-496A-95C6-D1F82D76D803}|Flowenter.Parties.Mappings\\Flowenter.Parties.Mappings.csproj|solutionrelative:flowenter.parties.mappings\\partiesdbcontextfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{4D7254CD-8952-4B30-B8E6-7AA2F915EB14}|Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj|d:\\github\\flow-enterprises\\flow_enter_backend\\flowenter.parties.models\\partymodels\\customer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4D7254CD-8952-4B30-B8E6-7AA2F915EB14}|Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj|solutionrelative:flowenter.parties.models\\partymodels\\customer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A66B1C02-A35A-490B-A6FD-05116C2DDF7C}|Flowenter.Api\\Flowenter.Api.csproj|d:\\github\\flow-enterprises\\flow_enter_backend\\flowenter.api\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{A66B1C02-A35A-490B-A6FD-05116C2DDF7C}|Flowenter.Api\\Flowenter.Api.csproj|solutionrelative:flowenter.api\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{81AE8854-6D50-496A-95C6-D1F82D76D803}|Flowenter.Parties.Mappings\\Flowenter.Parties.Mappings.csproj|d:\\github\\flow-enterprises\\flow_enter_backend\\flowenter.parties.mappings\\partiescontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{81AE8854-6D50-496A-95C6-D1F82D76D803}|Flowenter.Parties.Mappings\\Flowenter.Parties.Mappings.csproj|solutionrelative:flowenter.parties.mappings\\partiescontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A66B1C02-A35A-490B-A6FD-05116C2DDF7C}|Flowenter.Api\\Flowenter.Api.csproj|d:\\github\\flow-enterprises\\flow_enter_backend\\flowenter.api\\services\\tenantprovider.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A66B1C02-A35A-490B-A6FD-05116C2DDF7C}|Flowenter.Api\\Flowenter.Api.csproj|solutionrelative:flowenter.api\\services\\tenantprovider.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A66B1C02-A35A-490B-A6FD-05116C2DDF7C}|Flowenter.Api\\Flowenter.Api.csproj|d:\\github\\flow-enterprises\\flow_enter_backend\\flowenter.api\\controllers\\partiescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A66B1C02-A35A-490B-A6FD-05116C2DDF7C}|Flowenter.Api\\Flowenter.Api.csproj|solutionrelative:flowenter.api\\controllers\\partiescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{81AE8854-6D50-496A-95C6-D1F82D76D803}|Flowenter.Parties.Mappings\\Flowenter.Parties.Mappings.csproj|d:\\github\\flow-enterprises\\flow_enter_backend\\flowenter.parties.mappings\\partiesdesigntimedbcontextfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{81AE8854-6D50-496A-95C6-D1F82D76D803}|Flowenter.Parties.Mappings\\Flowenter.Parties.Mappings.csproj|solutionrelative:flowenter.parties.mappings\\partiesdesigntimedbcontextfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{81AE8854-6D50-496A-95C6-D1F82D76D803}|Flowenter.Parties.Mappings\\Flowenter.Parties.Mappings.csproj|d:\\github\\flow-enterprises\\flow_enter_backend\\flowenter.parties.mappings\\migrations\\20251108025103_init.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{81AE8854-6D50-496A-95C6-D1F82D76D803}|Flowenter.Parties.Mappings\\Flowenter.Parties.Mappings.csproj|solutionrelative:flowenter.parties.mappings\\migrations\\20251108025103_init.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DEC52951-D494-4AAB-8DA4-1343D4C27248}|Flowenter.Parties.IServices\\Flowenter.Parties.IServices.csproj|d:\\github\\flow-enterprises\\flow_enter_backend\\flowenter.parties.iservices\\dtos\\enterprisedto\\enterprisedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DEC52951-D494-4AAB-8DA4-1343D4C27248}|Flowenter.Parties.IServices\\Flowenter.Parties.IServices.csproj|solutionrelative:flowenter.parties.iservices\\dtos\\enterprisedto\\enterprisedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{DEC52951-D494-4AAB-8DA4-1343D4C27248}|Flowenter.Parties.IServices\\Flowenter.Parties.IServices.csproj|d:\\github\\flow-enterprises\\flow_enter_backend\\flowenter.parties.iservices\\dtos\\creategeographicboundarytype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -55,10 +67,6 @@
       "RelativeMoniker": "D:0:0:{4D7254CD-8952-4B30-B8E6-7AA2F915EB14}|Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj|solutionrelative:flowenter.parties.models\\contactmechanismmodels\\contactmechanism.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4D7254CD-8952-4B30-B8E6-7AA2F915EB14}|Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj|d:\\github\\flow-enterprises\\flow_enter_backend\\flowenter.parties.models\\partymodels\\partyrole.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4D7254CD-8952-4B30-B8E6-7AA2F915EB14}|Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj|solutionrelative:flowenter.parties.models\\partymodels\\partyrole.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{4D7254CD-8952-4B30-B8E6-7AA2F915EB14}|Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj|d:\\github\\flow-enterprises\\flow_enter_backend\\flowenter.parties.models\\partymodels\\partycontactmechanism.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4D7254CD-8952-4B30-B8E6-7AA2F915EB14}|Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj|solutionrelative:flowenter.parties.models\\partymodels\\partycontactmechanism.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -69,10 +77,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{4D7254CD-8952-4B30-B8E6-7AA2F915EB14}|Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj|d:\\github\\flow-enterprises\\flow_enter_backend\\flowenter.parties.models\\partymodels\\person.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4D7254CD-8952-4B30-B8E6-7AA2F915EB14}|Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj|solutionrelative:flowenter.parties.models\\partymodels\\person.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CED4BBDC-4F3A-4D2A-9186-109612D60D27}|Flowenter.Domain.Models\\Flowenter.Domain.Models.csproj|d:\\github\\flow-enterprises\\flow_enter_backend\\flowenter.domain.models\\baseentity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CED4BBDC-4F3A-4D2A-9186-109612D60D27}|Flowenter.Domain.Models\\Flowenter.Domain.Models.csproj|solutionrelative:flowenter.domain.models\\baseentity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{4D7254CD-8952-4B30-B8E6-7AA2F915EB14}|Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj|d:\\github\\flow-enterprises\\flow_enter_backend\\flowenter.parties.models\\partymodels\\partytype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -101,10 +105,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{DEC52951-D494-4AAB-8DA4-1343D4C27248}|Flowenter.Parties.IServices\\Flowenter.Parties.IServices.csproj|d:\\github\\flow-enterprises\\flow_enter_backend\\flowenter.parties.iservices\\ipartiesservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{DEC52951-D494-4AAB-8DA4-1343D4C27248}|Flowenter.Parties.IServices\\Flowenter.Parties.IServices.csproj|solutionrelative:flowenter.parties.iservices\\ipartiesservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A66B1C02-A35A-490B-A6FD-05116C2DDF7C}|Flowenter.Api\\Flowenter.Api.csproj|d:\\github\\flow-enterprises\\flow_enter_backend\\flowenter.api\\controllers\\partiescontroller.partytypes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A66B1C02-A35A-490B-A6FD-05116C2DDF7C}|Flowenter.Api\\Flowenter.Api.csproj|solutionrelative:flowenter.api\\controllers\\partiescontroller.partytypes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A66B1C02-A35A-490B-A6FD-05116C2DDF7C}|Flowenter.Api\\Flowenter.Api.csproj|d:\\github\\flow-enterprises\\flow_enter_backend\\flowenter.api\\controllers\\partiescontroller.partyroletypes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -155,14 +155,6 @@
       "RelativeMoniker": "D:0:0:{A66B1C02-A35A-490B-A6FD-05116C2DDF7C}|Flowenter.Api\\Flowenter.Api.csproj|solutionrelative:flowenter.api\\controllers\\geographicboundariescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4D7254CD-8952-4B30-B8E6-7AA2F915EB14}|Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj|d:\\github\\flow-enterprises\\flow_enter_backend\\flowenter.parties.models\\partymodels\\legalstructure.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4D7254CD-8952-4B30-B8E6-7AA2F915EB14}|Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj|solutionrelative:flowenter.parties.models\\partymodels\\legalstructure.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4D7254CD-8952-4B30-B8E6-7AA2F915EB14}|Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj|d:\\github\\flow-enterprises\\flow_enter_backend\\flowenter.parties.models\\partymodels\\enterprise.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4D7254CD-8952-4B30-B8E6-7AA2F915EB14}|Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj|solutionrelative:flowenter.parties.models\\partymodels\\enterprise.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{4D7254CD-8952-4B30-B8E6-7AA2F915EB14}|Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj|d:\\github\\flow-enterprises\\flow_enter_backend\\flowenter.parties.models\\contactmechanismmodels\\telecommunicationnumbercs.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4D7254CD-8952-4B30-B8E6-7AA2F915EB14}|Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj|solutionrelative:flowenter.parties.models\\contactmechanismmodels\\telecommunicationnumbercs.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -187,10 +179,6 @@
       "RelativeMoniker": "D:0:0:{4D7254CD-8952-4B30-B8E6-7AA2F915EB14}|Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj|solutionrelative:flowenter.parties.models\\partymodels\\organization.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4D7254CD-8952-4B30-B8E6-7AA2F915EB14}|Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj|d:\\github\\flow-enterprises\\flow_enter_backend\\flowenter.parties.models\\partymodels\\customer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4D7254CD-8952-4B30-B8E6-7AA2F915EB14}|Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj|solutionrelative:flowenter.parties.models\\partymodels\\customer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{4D7254CD-8952-4B30-B8E6-7AA2F915EB14}|Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj|d:\\github\\flow-enterprises\\flow_enter_backend\\flowenter.parties.models\\partymodels\\financialaccount.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4D7254CD-8952-4B30-B8E6-7AA2F915EB14}|Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj|solutionrelative:flowenter.parties.models\\partymodels\\financialaccount.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -210,63 +198,128 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
+              "Title": "EnterprisesDto.cs",
+              "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.IServices\\Dtos\\EnterpriseDto\\EnterprisesDto.cs",
+              "RelativeDocumentMoniker": "Flowenter.Parties.IServices\\Dtos\\EnterpriseDto\\EnterprisesDto.cs",
+              "ToolTip": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.IServices\\Dtos\\EnterpriseDto\\EnterprisesDto.cs",
+              "RelativeToolTip": "Flowenter.Parties.IServices\\Dtos\\EnterpriseDto\\EnterprisesDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-08T04:19:25.593Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "EnterpriseDto.cs",
+              "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.IServices\\Dtos\\EnterpriseDto\\EnterpriseDto.cs",
+              "RelativeDocumentMoniker": "Flowenter.Parties.IServices\\Dtos\\EnterpriseDto\\EnterpriseDto.cs",
+              "ToolTip": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.IServices\\Dtos\\EnterpriseDto\\EnterpriseDto.cs",
+              "RelativeToolTip": "Flowenter.Parties.IServices\\Dtos\\EnterpriseDto\\EnterpriseDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-08T04:19:13.655Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "PartiesController.cs",
+              "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Api\\Controllers\\PartiesController.cs",
+              "RelativeDocumentMoniker": "Flowenter.Api\\Controllers\\PartiesController.cs",
+              "ToolTip": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Api\\Controllers\\PartiesController.cs",
+              "RelativeToolTip": "Flowenter.Api\\Controllers\\PartiesController.cs",
+              "ViewState": "AgIAABIAAAAAAAAAAAAowB0AAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-08T02:37:27.436Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "PartiesDbContextFactory.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.Mappings\\PartiesDbContextFactory.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Mappings\\PartiesDbContextFactory.cs",
               "ToolTip": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.Mappings\\PartiesDbContextFactory.cs",
               "RelativeToolTip": "Flowenter.Parties.Mappings\\PartiesDbContextFactory.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAABDAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAABCAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-08T03:33:08.329Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
+              "Title": "DtoConverters.cs",
+              "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Api\\Extensions\\DtoConverters.cs",
+              "RelativeDocumentMoniker": "Flowenter.Api\\Extensions\\DtoConverters.cs",
+              "ToolTip": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Api\\Extensions\\DtoConverters.cs",
+              "RelativeToolTip": "Flowenter.Api\\Extensions\\DtoConverters.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-08T04:21:09.541Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "appsettings.Development.json",
+              "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Api\\appsettings.Development.json",
+              "RelativeDocumentMoniker": "Flowenter.Api\\appsettings.Development.json",
+              "ToolTip": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Api\\appsettings.Development.json",
+              "RelativeToolTip": "Flowenter.Api\\appsettings.Development.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-11-08T03:54:59.601Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Customer.cs",
+              "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.Models\\PartyModels\\Customer.cs",
+              "RelativeDocumentMoniker": "Flowenter.Parties.Models\\PartyModels\\Customer.cs",
+              "ToolTip": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.Models\\PartyModels\\Customer.cs",
+              "RelativeToolTip": "Flowenter.Parties.Models\\PartyModels\\Customer.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-07T11:40:08.801Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "PartiesContext.cs",
+              "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.Mappings\\PartiesContext.cs",
+              "RelativeDocumentMoniker": "Flowenter.Parties.Mappings\\PartiesContext.cs",
+              "ToolTip": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.Mappings\\PartiesContext.cs",
+              "RelativeToolTip": "Flowenter.Parties.Mappings\\PartiesContext.cs",
+              "ViewState": "AgIAAF4AAAAAAAAAAAAWwCYAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-08T03:49:59.832Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
               "Title": "TenantProvider.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Api\\Services\\TenantProvider.cs",
               "RelativeDocumentMoniker": "Flowenter.Api\\Services\\TenantProvider.cs",
               "ToolTip": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Api\\Services\\TenantProvider.cs",
               "RelativeToolTip": "Flowenter.Api\\Services\\TenantProvider.cs",
-              "ViewState": "AgIAAAsAAAAAAAAAAAAAwAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABIAAAAAAAAAAAA1wCUAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-08T03:32:31.596Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "PartiesDesignTimeDbContextFactory.cs",
-              "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.Mappings\\PartiesDesignTimeDbContextFactory.cs",
-              "RelativeDocumentMoniker": "Flowenter.Parties.Mappings\\PartiesDesignTimeDbContextFactory.cs",
-              "ToolTip": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.Mappings\\PartiesDesignTimeDbContextFactory.cs",
-              "RelativeToolTip": "Flowenter.Parties.Mappings\\PartiesDesignTimeDbContextFactory.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAuAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-07T08:04:50.428Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "PartiesContext.cs",
-              "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.Mappings\\PartiesContext.cs",
-              "RelativeDocumentMoniker": "Flowenter.Parties.Mappings\\PartiesContext.cs",
-              "ToolTip": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.Mappings\\PartiesContext.cs",
-              "RelativeToolTip": "Flowenter.Parties.Mappings\\PartiesContext.cs",
-              "ViewState": "AgIAAB8AAAAAAAAAAADwvyYAAAA3AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-07T09:38:21.777Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 9,
               "Title": "20251108025103_init.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.Mappings\\Migrations\\20251108025103_init.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Mappings\\Migrations\\20251108025103_init.cs",
@@ -274,25 +327,11 @@
               "RelativeToolTip": "Flowenter.Parties.Mappings\\Migrations\\20251108025103_init.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAABFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-08T02:51:03.449Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-08T02:51:03.449Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "PartiesController.cs",
-              "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Api\\Controllers\\PartiesController.cs",
-              "RelativeDocumentMoniker": "Flowenter.Api\\Controllers\\PartiesController.cs",
-              "ToolTip": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Api\\Controllers\\PartiesController.cs",
-              "RelativeToolTip": "Flowenter.Api\\Controllers\\PartiesController.cs",
-              "ViewState": "AgIAABkAAAAAAAAAAAAQwBwAAAAyAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-08T02:37:27.436Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 10,
               "Title": "CreateGeographicBoundaryType.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.IServices\\Dtos\\CreateGeographicBoundaryType.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.IServices\\Dtos\\CreateGeographicBoundaryType.cs",
@@ -300,12 +339,11 @@
               "RelativeToolTip": "Flowenter.Parties.IServices\\Dtos\\CreateGeographicBoundaryType.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-07T14:33:49.716Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-07T14:33:49.716Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 11,
               "Title": "CreateContactMechanismType.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.IServices\\Dtos\\CreateContactMechanismType.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.IServices\\Dtos\\CreateContactMechanismType.cs",
@@ -313,25 +351,11 @@
               "RelativeToolTip": "Flowenter.Parties.IServices\\Dtos\\CreateContactMechanismType.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-07T14:32:56.139Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-07T14:32:56.139Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "EnterpriseDto.cs",
-              "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.IServices\\Dtos\\EnterpriseDto\\EnterpriseDto.cs",
-              "RelativeDocumentMoniker": "Flowenter.Parties.IServices\\Dtos\\EnterpriseDto\\EnterpriseDto.cs",
-              "ToolTip": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.IServices\\Dtos\\EnterpriseDto\\EnterpriseDto.cs",
-              "RelativeToolTip": "Flowenter.Parties.IServices\\Dtos\\EnterpriseDto\\EnterpriseDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAbAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-08T02:34:46.79Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 12,
               "Title": "CustomHeaderMiddleware.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Api\\Middleware\\CustomHeaderMiddleware.cs",
               "RelativeDocumentMoniker": "Flowenter.Api\\Middleware\\CustomHeaderMiddleware.cs",
@@ -339,12 +363,11 @@
               "RelativeToolTip": "Flowenter.Api\\Middleware\\CustomHeaderMiddleware.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-08T02:21:06.442Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-08T02:21:06.442Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 14,
               "Title": "ErrorHandlingMiddleware.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Api\\Middleware\\ErrorHandlingMiddleware.cs",
               "RelativeDocumentMoniker": "Flowenter.Api\\Middleware\\ErrorHandlingMiddleware.cs",
@@ -352,12 +375,11 @@
               "RelativeToolTip": "Flowenter.Api\\Middleware\\ErrorHandlingMiddleware.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-08T02:23:54.647Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-08T02:23:54.647Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 13,
               "Title": "Tenants.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Domain.Models\\Tenants.cs",
               "RelativeDocumentMoniker": "Flowenter.Domain.Models\\Tenants.cs",
@@ -365,25 +387,11 @@
               "RelativeToolTip": "Flowenter.Domain.Models\\Tenants.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-08T02:25:25.445Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-08T02:25:25.445Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "PartyRole.cs",
-              "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.Models\\PartyModels\\PartyRole.cs",
-              "RelativeDocumentMoniker": "Flowenter.Parties.Models\\PartyModels\\PartyRole.cs",
-              "ToolTip": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.Models\\PartyModels\\PartyRole.cs",
-              "RelativeToolTip": "Flowenter.Parties.Models\\PartyModels\\PartyRole.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-08T01:19:59.151Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 16,
               "Title": "PartyContactMechanism.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.Models\\PartyModels\\PartyContactMechanism.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\PartyModels\\PartyContactMechanism.cs",
@@ -391,12 +399,11 @@
               "RelativeToolTip": "Flowenter.Parties.Models\\PartyModels\\PartyContactMechanism.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-08T01:22:13.818Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-08T01:22:13.818Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 17,
               "Title": "Party.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.Models\\PartyModels\\Party.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\PartyModels\\Party.cs",
@@ -404,12 +411,11 @@
               "RelativeToolTip": "Flowenter.Parties.Models\\PartyModels\\Party.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-07T10:14:13.744Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-07T10:14:13.744Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 15,
               "Title": "ContactMechanism.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.Models\\ContactMechanismModels\\ContactMechanism.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\ContactMechanismModels\\ContactMechanism.cs",
@@ -417,25 +423,11 @@
               "RelativeToolTip": "Flowenter.Parties.Models\\ContactMechanismModels\\ContactMechanism.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAuwAcAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-08T01:23:14.505Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-08T01:23:14.505Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
-              "Title": "BaseEntity.cs",
-              "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Domain.Models\\BaseEntity.cs",
-              "RelativeDocumentMoniker": "Flowenter.Domain.Models\\BaseEntity.cs",
-              "ToolTip": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Domain.Models\\BaseEntity.cs",
-              "RelativeToolTip": "Flowenter.Domain.Models\\BaseEntity.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-08T01:16:41.517Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 19,
               "Title": "PartyType.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.Models\\PartyModels\\PartyType.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\PartyModels\\PartyType.cs",
@@ -443,12 +435,11 @@
               "RelativeToolTip": "Flowenter.Parties.Models\\PartyModels\\PartyType.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-08T01:20:50.384Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-08T01:20:50.384Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 18,
               "Title": "Person.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.Models\\PartyModels\\Person.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\PartyModels\\Person.cs",
@@ -456,12 +447,11 @@
               "RelativeToolTip": "Flowenter.Parties.Models\\PartyModels\\Person.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-07T12:55:36.072Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-07T12:55:36.072Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 20,
               "Title": "LoggingExtensions.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Api\\Extensions\\LoggingExtensions.cs",
               "RelativeDocumentMoniker": "Flowenter.Api\\Extensions\\LoggingExtensions.cs",
@@ -473,7 +463,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 21,
               "Title": "NotFoundException.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Domain.Models\\Exceptions\\NotFoundException.cs",
               "RelativeDocumentMoniker": "Flowenter.Domain.Models\\Exceptions\\NotFoundException.cs",
@@ -485,7 +475,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 22,
               "Title": "BusinessException.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Domain.Models\\Exceptions\\BusinessException.cs",
               "RelativeDocumentMoniker": "Flowenter.Domain.Models\\Exceptions\\BusinessException.cs",
@@ -497,7 +487,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 23,
               "Title": "Flowenter.Domain.Models.csproj",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Domain.Models\\Flowenter.Domain.Models.csproj",
               "RelativeDocumentMoniker": "Flowenter.Domain.Models\\Flowenter.Domain.Models.csproj",
@@ -505,25 +495,11 @@
               "RelativeToolTip": "Flowenter.Domain.Models\\Flowenter.Domain.Models.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-11-07T14:45:26.436Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-07T14:45:26.436Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 25,
-              "Title": "PartiesController.PartyTypes.cs",
-              "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Api\\Controllers\\PartiesController.PartyTypes.cs",
-              "RelativeDocumentMoniker": "Flowenter.Api\\Controllers\\PartiesController.PartyTypes.cs",
-              "ToolTip": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Api\\Controllers\\PartiesController.PartyTypes.cs",
-              "RelativeToolTip": "Flowenter.Api\\Controllers\\PartiesController.PartyTypes.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAfAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-07T14:37:08.36Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 24,
               "Title": "IPartiesServices.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.IServices\\IPartiesServices.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.IServices\\IPartiesServices.cs",
@@ -535,7 +511,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 24,
               "Title": "PartiesController.LegalStructures.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Api\\Controllers\\PartiesController.LegalStructures.cs",
               "RelativeDocumentMoniker": "Flowenter.Api\\Controllers\\PartiesController.LegalStructures.cs",
@@ -543,8 +519,7 @@
               "RelativeToolTip": "Flowenter.Api\\Controllers\\PartiesController.LegalStructures.cs",
               "ViewState": "AgIAADgAAAAAAAAAAAAgwAcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-07T10:20:12.415Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-07T10:20:12.415Z"
             },
             {
               "$type": "Document",
@@ -556,8 +531,7 @@
               "RelativeToolTip": "Flowenter.Api\\Controllers\\PartiesController.PartyClassifications.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-07T10:40:33.739Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-07T10:40:33.739Z"
             },
             {
               "$type": "Document",
@@ -569,8 +543,7 @@
               "RelativeToolTip": "Flowenter.Api\\Controllers\\PartiesController.PartyCategories.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-07T10:29:58.728Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-07T10:29:58.728Z"
             },
             {
               "$type": "Document",
@@ -582,8 +555,7 @@
               "RelativeToolTip": "Flowenter.Api\\Controllers\\PartiesController.PartyRoleTypes.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-07T10:07:10.269Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-07T10:07:10.269Z"
             },
             {
               "$type": "Document",
@@ -595,8 +567,7 @@
               "RelativeToolTip": "Flowenter.Api\\Controllers\\GeographicBoundariesController.GeographicBoundaryTypes.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-07T10:18:35.865Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-07T10:18:35.865Z"
             },
             {
               "$type": "Document",
@@ -608,8 +579,7 @@
               "RelativeToolTip": "Flowenter.Api\\Controllers\\ContactMechanismsController.ContactMechanismTypes.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAGAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-07T14:12:04.83Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-07T14:12:04.83Z"
             },
             {
               "$type": "Document",
@@ -633,8 +603,7 @@
               "RelativeToolTip": "Flowenter.Parties.IServices\\Dtos\\CreatePartyType.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-07T14:34:19.902Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-07T14:34:19.902Z"
             },
             {
               "$type": "Document",
@@ -646,8 +615,7 @@
               "RelativeToolTip": "Flowenter.Parties.IServices\\Dtos\\CreatePartyRoleType.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-07T14:34:16.746Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-07T14:34:16.746Z"
             },
             {
               "$type": "Document",
@@ -659,8 +627,7 @@
               "RelativeToolTip": "Flowenter.Parties.IServices\\Dtos\\CreatePartyClassification.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-07T14:34:10.097Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-07T14:34:10.097Z"
             },
             {
               "$type": "Document",
@@ -672,8 +639,7 @@
               "RelativeToolTip": "Flowenter.Parties.IServices\\Dtos\\CreatePartyCategory.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-07T14:34:04.235Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-07T14:34:04.235Z"
             },
             {
               "$type": "Document",
@@ -685,8 +651,7 @@
               "RelativeToolTip": "Flowenter.Parties.IServices\\Dtos\\CreateLegalStructure.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-07T14:34:01.361Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-07T14:34:01.361Z"
             },
             {
               "$type": "Document",
@@ -702,31 +667,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 38,
-              "Title": "LegalStructure.cs",
-              "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.Models\\PartyModels\\LegalStructure.cs",
-              "RelativeDocumentMoniker": "Flowenter.Parties.Models\\PartyModels\\LegalStructure.cs",
-              "ToolTip": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.Models\\PartyModels\\LegalStructure.cs",
-              "RelativeToolTip": "Flowenter.Parties.Models\\PartyModels\\LegalStructure.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAhAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-07T10:36:39.977Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 39,
-              "Title": "Enterprise.cs",
-              "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.Models\\PartyModels\\Enterprise.cs",
-              "RelativeDocumentMoniker": "Flowenter.Parties.Models\\PartyModels\\Enterprise.cs",
-              "ToolTip": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.Models\\PartyModels\\Enterprise.cs",
-              "RelativeToolTip": "Flowenter.Parties.Models\\PartyModels\\Enterprise.cs",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAAABcAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-07T12:54:48.078Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 43,
+              "DocumentIndex": 41,
               "Title": "GeographicBoundary.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.Models\\GeographicBoundaryModels\\GeographicBoundary.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\GeographicBoundaryModels\\GeographicBoundary.cs",
@@ -738,7 +679,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 42,
+              "DocumentIndex": 40,
               "Title": "ElectronicAddress.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.Models\\ContactMechanismModels\\ElectronicAddress.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\ContactMechanismModels\\ElectronicAddress.cs",
@@ -750,7 +691,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 41,
+              "DocumentIndex": 39,
               "Title": "PostalAddress.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.Models\\ContactMechanismModels\\PostalAddress.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\ContactMechanismModels\\PostalAddress.cs",
@@ -762,7 +703,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 40,
+              "DocumentIndex": 38,
               "Title": "TelecommunicationNumbercs.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.Models\\ContactMechanismModels\\TelecommunicationNumbercs.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\ContactMechanismModels\\TelecommunicationNumbercs.cs",
@@ -774,7 +715,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 44,
+              "DocumentIndex": 42,
               "Title": "Country.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.Models\\GeographicBoundaryModels\\Country.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\GeographicBoundaryModels\\Country.cs",
@@ -786,7 +727,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 45,
+              "DocumentIndex": 43,
               "Title": "Organization.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.Models\\PartyModels\\Organization.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\PartyModels\\Organization.cs",
@@ -798,19 +739,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 46,
-              "Title": "Customer.cs",
-              "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.Models\\PartyModels\\Customer.cs",
-              "RelativeDocumentMoniker": "Flowenter.Parties.Models\\PartyModels\\Customer.cs",
-              "ToolTip": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.Models\\PartyModels\\Customer.cs",
-              "RelativeToolTip": "Flowenter.Parties.Models\\PartyModels\\Customer.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-07T11:40:08.801Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 47,
+              "DocumentIndex": 44,
               "Title": "FinancialAccount.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.Models\\PartyModels\\FinancialAccount.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\PartyModels\\FinancialAccount.cs",
@@ -822,7 +751,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 48,
+              "DocumentIndex": 45,
               "Title": "ModelBuilderExtensions.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.Mappings\\Extensions\\ModelBuilderExtensions.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Mappings\\Extensions\\ModelBuilderExtensions.cs",
@@ -834,7 +763,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 49,
+              "DocumentIndex": 46,
               "Title": "PartyRoleType.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\flow_enter_backend\\Flowenter.Parties.Models\\PartyModels\\PartyRoleType.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\PartyModels\\PartyRoleType.cs",

@@ -666,6 +666,62 @@
       }
     },
     "/api/parties/enterprises": {
+      "get": {
+        "tags": [
+          "Parties"
+        ],
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "format": "int32",
+              "default": 50
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EnterprisesDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EnterprisesDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EnterprisesDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "post": {
         "tags": [
           "Parties"
@@ -2855,6 +2911,118 @@
           "revision": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
             "format": "uint64"
+          }
+        }
+      },
+      "EnterpriseDto": {
+        "required": [
+          "createdBy"
+        ],
+        "type": "object",
+        "properties": {
+          "organizationPartyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "enterpriseRoleId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "tenantId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "legalName": {
+            "type": "string"
+          },
+          "information": {
+            "type": "string",
+            "nullable": true
+          },
+          "logo": {
+            "type": "string",
+            "format": "byte"
+          },
+          "brandName": {
+            "type": "string",
+            "nullable": true
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          },
+          "legalStructureId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "businessRegistrationNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "taxId": {
+            "type": "string",
+            "nullable": true
+          },
+          "fiscalYearStartMonth": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "format": "int32"
+          },
+          "fromDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "thruDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAtUtc": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "createdBy": {
+            "maxLength": 300,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "updatedBy": {
+            "maxLength": 300,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "revision": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "format": "uint64"
+          }
+        }
+      },
+      "EnterprisesDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EnterpriseDto"
+            }
+          },
+          "totalCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "format": "int32"
+          },
+          "pageSize": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "format": "int32"
           }
         }
       },

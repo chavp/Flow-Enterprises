@@ -681,6 +681,37 @@
   },
   {
     "ContainingType": "Flowenter.Api.Controllers.PartiesController",
+    "Method": "GetEnterprises",
+    "RelativePath": "api/parties/enterprises",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "pageNumber",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "pageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[Flowenter.Parties.IServices.Dtos.EnterpriseDto.EnterprisesDto, Flowenter.Parties.IServices, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Flowenter.Api.Controllers.PartiesController",
     "Method": "CreateEnterprise",
     "RelativePath": "api/parties/enterprises",
     "HttpMethod": "POST",

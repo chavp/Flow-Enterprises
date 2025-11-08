@@ -41,11 +41,6 @@ public sealed class PartiesContext : DbContext
         _tenantProvider = tenantProvider;
     }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder.UseNpgsql(_tenantProvider.GetTenantConnectionString());
-    }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("parties");
