@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Flowenter.Parties.Models.PartyModels;
 
-[Index(nameof(FirstName), nameof(MiddleName), nameof(LastName), nameof(LanguageId), IsUnique = true)]
+[Index(nameof(FirstName), nameof(MiddleName), nameof(LastName))]
 public sealed class PersonName : EffectiveEntity
 {
     protected PersonName() { }

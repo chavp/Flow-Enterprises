@@ -5,11 +5,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Flowenter.Parties.Models.PartyModels;
 
-[Index(nameof(TenantId))]
-public abstract class Party : BaseEntity, ITenantEnabled
+public abstract class Party : BaseEntity
 {
-    [Required]
-    public Guid? TenantId { get; set; }
 
     [Required]
     public Guid? TypeId { get; set; }

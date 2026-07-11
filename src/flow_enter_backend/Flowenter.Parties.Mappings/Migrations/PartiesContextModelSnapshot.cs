@@ -44,9 +44,6 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.Property<decimal>("Revision")
                         .HasColumnType("decimal(20,0)");
 
-                    b.Property<Guid>("TenantId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("TypeId")
                         .HasColumnType("uniqueidentifier");
 
@@ -310,6 +307,24 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .IsUnique();
 
                     b.ToTable("Languages", "parties");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("99999999-9999-9999-9999-999999999999"),
+                            Code = "TH",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "seed",
+                            Revision = 0m
+                        },
+                        new
+                        {
+                            Id = new Guid("88888888-8888-8888-8888-888888888888"),
+                            Code = "EN",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "seed",
+                            Revision = 0m
+                        });
                 });
 
             modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.LegalStructure", b =>
@@ -417,9 +432,6 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.Property<decimal>("Revision")
                         .HasColumnType("decimal(20,0)");
 
-                    b.Property<Guid>("TenantId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("TypeId")
                         .HasColumnType("uniqueidentifier");
 
@@ -431,8 +443,6 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("TenantId");
 
                     b.HasIndex("TypeId");
 
@@ -563,9 +573,6 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.Property<decimal>("Revision")
                         .HasColumnType("decimal(20,0)");
 
-                    b.Property<Guid>("TenantId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateOnly>("ThruDate")
                         .HasColumnType("date");
 
@@ -678,6 +685,17 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .IsUnique();
 
                     b.ToTable("PartyRelationshipTypes", "parties");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("ffffffff-ffff-ffff-ffff-ffffffffffff"),
+                            Code = "EMPLOYMENT",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "seed",
+                            Name = "Employment",
+                            Revision = 0m
+                        });
                 });
 
             modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.PartyRole", b =>
@@ -706,9 +724,6 @@ namespace Flowenter.Parties.Mappings.Migrations
 
                     b.Property<decimal>("Revision")
                         .HasColumnType("decimal(20,0)");
-
-                    b.Property<Guid>("TenantId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateOnly>("ThruDate")
                         .HasColumnType("date");
@@ -787,6 +802,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                             Code = "ENTERPRISE",
                             CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             CreatedBy = "seed",
+                            Description = "บทบาทกิจการ/นิติบุคคล",
                             Name = "Enterprise",
                             Revision = 0m
                         },
@@ -796,7 +812,148 @@ namespace Flowenter.Parties.Mappings.Migrations
                             Code = "CUSTOMER",
                             CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             CreatedBy = "seed",
+                            Description = "บทบาทลูกค้า",
                             Name = "Customer",
+                            Revision = 0m
+                        },
+                        new
+                        {
+                            Id = new Guid("aaaaaaaa-1111-1111-1111-111111111111"),
+                            Code = "ADMINISTRATOR",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "seed",
+                            Description = "ผู้บริหารหรือผู้จัดการสถานดูแล",
+                            Name = "Administrator",
+                            Revision = 0m
+                        },
+                        new
+                        {
+                            Id = new Guid("aaaaaaaa-2222-2222-2222-222222222222"),
+                            Code = "CARE_MANAGER",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "seed",
+                            Description = "ผู้จัดการดูแลผู้ป่วยหรือผู้จัดการเคส",
+                            Name = "Care Manager",
+                            Revision = 0m
+                        },
+                        new
+                        {
+                            Id = new Guid("aaaaaaaa-3333-3333-3333-333333333333"),
+                            Code = "NURSE",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "seed",
+                            Description = "พยาบาล",
+                            Name = "Nurse",
+                            Revision = 0m
+                        },
+                        new
+                        {
+                            Id = new Guid("aaaaaaaa-4444-4444-4444-444444444444"),
+                            Code = "CAREGIVER",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "seed",
+                            Description = "ผู้ดูแล",
+                            Name = "Caregiver",
+                            Revision = 0m
+                        },
+                        new
+                        {
+                            Id = new Guid("aaaaaaaa-5555-5555-5555-555555555555"),
+                            Code = "PHYSICIAN",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "seed",
+                            Description = "แพทย์",
+                            Name = "Physician",
+                            Revision = 0m
+                        },
+                        new
+                        {
+                            Id = new Guid("aaaaaaaa-6666-6666-6666-666666666666"),
+                            Code = "PHARMACIST",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "seed",
+                            Description = "เภสัชกร",
+                            Name = "Pharmacist",
+                            Revision = 0m
+                        },
+                        new
+                        {
+                            Id = new Guid("aaaaaaaa-7777-7777-7777-777777777777"),
+                            Code = "DIETITIAN",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "seed",
+                            Description = "นักกำหนดอาหารหรือนักโภชนาการ",
+                            Name = "Dietitian",
+                            Revision = 0m
+                        },
+                        new
+                        {
+                            Id = new Guid("aaaaaaaa-8888-8888-8888-888888888888"),
+                            Code = "KITCHEN_STAFF",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "seed",
+                            Description = "พนักงานครัว",
+                            Name = "Kitchen Staff",
+                            Revision = 0m
+                        },
+                        new
+                        {
+                            Id = new Guid("aaaaaaaa-9999-9999-9999-999999999999"),
+                            Code = "HOUSEKEEPING_STAFF",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "seed",
+                            Description = "พนักงานทำความสะอาด",
+                            Name = "Housekeeping Staff",
+                            Revision = 0m
+                        },
+                        new
+                        {
+                            Id = new Guid("bbbbbbbb-1111-1111-1111-111111111111"),
+                            Code = "MAINTENANCE_STAFF",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "seed",
+                            Description = "ช่างซ่อมบำรุง",
+                            Name = "Maintenance Staff",
+                            Revision = 0m
+                        },
+                        new
+                        {
+                            Id = new Guid("bbbbbbbb-2222-2222-2222-222222222222"),
+                            Code = "LAUNDRY_STAFF",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "seed",
+                            Description = "พนักงานซักรีด",
+                            Name = "Laundry Staff",
+                            Revision = 0m
+                        },
+                        new
+                        {
+                            Id = new Guid("bbbbbbbb-3333-3333-3333-333333333333"),
+                            Code = "RECEPTIONIST",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "seed",
+                            Description = "พนักงานต้อนรับ",
+                            Name = "Receptionist",
+                            Revision = 0m
+                        },
+                        new
+                        {
+                            Id = new Guid("bbbbbbbb-4444-4444-4444-444444444444"),
+                            Code = "PATIENT",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "seed",
+                            Description = "ผู้ป่วย",
+                            Name = "Patient",
+                            Revision = 0m
+                        },
+                        new
+                        {
+                            Id = new Guid("bbbbbbbb-5555-5555-5555-555555555555"),
+                            Code = "SECURITY_GUARD",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "seed",
+                            Description = "เจ้าหน้าที่รักษาความปลอดภัย",
+                            Name = "Security Guard",
                             Revision = 0m
                         });
                 });
@@ -927,9 +1084,7 @@ namespace Flowenter.Parties.Mappings.Migrations
 
                     b.HasIndex("PersonId");
 
-                    b.HasIndex("FirstName", "MiddleName", "LastName", "LanguageId")
-                        .IsUnique()
-                        .HasFilter("[MiddleName] IS NOT NULL");
+                    b.HasIndex("FirstName", "MiddleName", "LastName");
 
                     b.ToTable("PersonNames", "parties");
                 });

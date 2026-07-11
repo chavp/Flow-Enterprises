@@ -10,7 +10,7 @@ public static class DtoConverters
         return new EnterpriseDto
         {
             EnterpriseId = enterprise.Id.Value,
-            TenantId = enterprise.TenantId.Value,
+            //TenantId = enterprise.TenantId.Value,
             LegalName = enterprise.LegalName,
             Information = enterprise.Information,
             Logo = enterprise.Logo,

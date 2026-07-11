@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Flowenter.Parties.Mappings.Migrations
 {
     /// <inheritdoc />
-    public partial class initOrders : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -54,6 +54,25 @@ namespace Flowenter.Parties.Mappings.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_GeographicBoundaryTypes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Languages",
+                schema: "parties",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false),
+                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    Revision = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Languages", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -103,6 +122,26 @@ namespace Flowenter.Parties.Mappings.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PartyRelationshipTypes",
+                schema: "parties",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    Revision = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PartyRelationshipTypes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PartyRoleTypes",
                 schema: "parties",
                 columns: table => new
@@ -148,7 +187,6 @@ namespace Flowenter.Parties.Mappings.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -195,12 +233,39 @@ namespace Flowenter.Parties.Mappings.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PartyRelationships",
+                schema: "parties",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PartyRelationshipTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    Revision = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    FromDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    ThruDate = table.Column<DateOnly>(type: "date", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PartyRelationships", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PartyRelationships_PartyRelationshipTypes_PartyRelationshipTypeId",
+                        column: x => x.PartyRelationshipTypeId,
+                        principalSchema: "parties",
+                        principalTable: "PartyRelationshipTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Parties",
                 schema: "parties",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -248,6 +313,8 @@ namespace Flowenter.Parties.Mappings.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Nationality = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Numerric = table.Column<int>(type: "int", nullable: true),
                     IsoCode2 = table.Column<string>(type: "nvarchar(2)", maxLength: 2, nullable: false),
                     IsoCode3 = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: false)
                 },
@@ -354,7 +421,6 @@ namespace Flowenter.Parties.Mappings.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PartyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PartyRoleTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ContactMechanismId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -399,7 +465,6 @@ namespace Flowenter.Parties.Mappings.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PartyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -436,10 +501,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
-                    MiddleName = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
-                    BirthDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    DateOfBirth = table.Column<DateOnly>(type: "date", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -541,6 +603,39 @@ namespace Flowenter.Parties.Mappings.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Employments",
+                schema: "parties",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    EmployerId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    EmployeeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Employments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Employments_PartyRelationships_Id",
+                        column: x => x.Id,
+                        principalSchema: "parties",
+                        principalTable: "PartyRelationships",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Employments_PartyRoles_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalSchema: "parties",
+                        principalTable: "PartyRoles",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Employments_PartyRoles_EmployerId",
+                        column: x => x.EmployerId,
+                        principalSchema: "parties",
+                        principalTable: "PartyRoles",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Enterprises",
                 schema: "parties",
                 columns: table => new
@@ -575,6 +670,60 @@ namespace Flowenter.Parties.Mappings.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "PersonNames",
+                schema: "parties",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PersonId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    FirstName = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    MiddleName = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true),
+                    LastName = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    LanguageId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    Revision = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    FromDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    ThruDate = table.Column<DateOnly>(type: "date", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PersonNames", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PersonNames_Languages_LanguageId",
+                        column: x => x.LanguageId,
+                        principalSchema: "parties",
+                        principalTable: "Languages",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PersonNames_People_PersonId",
+                        column: x => x.PersonId,
+                        principalSchema: "parties",
+                        principalTable: "People",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.InsertData(
+                schema: "parties",
+                table: "GeographicBoundaryTypes",
+                columns: new[] { "Id", "Code", "CreatedAtUtc", "CreatedBy", "Description", "Name", "Revision", "UpdatedAtUtc", "UpdatedBy" },
+                values: new object[] { new Guid("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"), "COUNTRY", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", null, "Country", 0m, null, null });
+
+            migrationBuilder.InsertData(
+                schema: "parties",
+                table: "Languages",
+                columns: new[] { "Id", "Code", "CreatedAtUtc", "CreatedBy", "Description", "Revision", "UpdatedAtUtc", "UpdatedBy" },
+                values: new object[,]
+                {
+                    { new Guid("88888888-8888-8888-8888-888888888888"), "EN", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", null, 0m, null, null },
+                    { new Guid("99999999-9999-9999-9999-999999999999"), "TH", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", null, 0m, null, null }
+                });
+
             migrationBuilder.InsertData(
                 schema: "parties",
                 table: "LegalStructures",
@@ -589,12 +738,32 @@ namespace Flowenter.Parties.Mappings.Migrations
 
             migrationBuilder.InsertData(
                 schema: "parties",
+                table: "PartyRelationshipTypes",
+                columns: new[] { "Id", "Code", "CreatedAtUtc", "CreatedBy", "Description", "Name", "Revision", "UpdatedAtUtc", "UpdatedBy" },
+                values: new object[] { new Guid("ffffffff-ffff-ffff-ffff-ffffffffffff"), "EMPLOYMENT", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", null, "Employment", 0m, null, null });
+
+            migrationBuilder.InsertData(
+                schema: "parties",
                 table: "PartyRoleTypes",
                 columns: new[] { "Id", "Code", "CreatedAtUtc", "CreatedBy", "Description", "Name", "Revision", "UpdatedAtUtc", "UpdatedBy" },
                 values: new object[,]
                 {
-                    { new Guid("cccccccc-cccc-cccc-cccc-cccccccccccc"), "ENTERPRISE", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", null, "Enterprise", 0m, null, null },
-                    { new Guid("dddddddd-dddd-dddd-dddd-dddddddddddd"), "CUSTOMER", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", null, "Customer", 0m, null, null }
+                    { new Guid("aaaaaaaa-1111-1111-1111-111111111111"), "ADMINISTRATOR", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", "ผู้บริหารหรือผู้จัดการสถานดูแล", "Administrator", 0m, null, null },
+                    { new Guid("aaaaaaaa-2222-2222-2222-222222222222"), "CARE_MANAGER", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", "ผู้จัดการดูแลผู้ป่วยหรือผู้จัดการเคส", "Care Manager", 0m, null, null },
+                    { new Guid("aaaaaaaa-3333-3333-3333-333333333333"), "NURSE", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", "พยาบาล", "Nurse", 0m, null, null },
+                    { new Guid("aaaaaaaa-4444-4444-4444-444444444444"), "CAREGIVER", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", "ผู้ดูแล", "Caregiver", 0m, null, null },
+                    { new Guid("aaaaaaaa-5555-5555-5555-555555555555"), "PHYSICIAN", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", "แพทย์", "Physician", 0m, null, null },
+                    { new Guid("aaaaaaaa-6666-6666-6666-666666666666"), "PHARMACIST", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", "เภสัชกร", "Pharmacist", 0m, null, null },
+                    { new Guid("aaaaaaaa-7777-7777-7777-777777777777"), "DIETITIAN", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", "นักกำหนดอาหารหรือนักโภชนาการ", "Dietitian", 0m, null, null },
+                    { new Guid("aaaaaaaa-8888-8888-8888-888888888888"), "KITCHEN_STAFF", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", "พนักงานครัว", "Kitchen Staff", 0m, null, null },
+                    { new Guid("aaaaaaaa-9999-9999-9999-999999999999"), "HOUSEKEEPING_STAFF", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", "พนักงานทำความสะอาด", "Housekeeping Staff", 0m, null, null },
+                    { new Guid("bbbbbbbb-1111-1111-1111-111111111111"), "MAINTENANCE_STAFF", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", "ช่างซ่อมบำรุง", "Maintenance Staff", 0m, null, null },
+                    { new Guid("bbbbbbbb-2222-2222-2222-222222222222"), "LAUNDRY_STAFF", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", "พนักงานซักรีด", "Laundry Staff", 0m, null, null },
+                    { new Guid("bbbbbbbb-3333-3333-3333-333333333333"), "RECEPTIONIST", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", "พนักงานต้อนรับ", "Receptionist", 0m, null, null },
+                    { new Guid("bbbbbbbb-4444-4444-4444-444444444444"), "PATIENT", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", "ผู้ป่วย", "Patient", 0m, null, null },
+                    { new Guid("bbbbbbbb-5555-5555-5555-555555555555"), "SECURITY_GUARD", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", "เจ้าหน้าที่รักษาความปลอดภัย", "Security Guard", 0m, null, null },
+                    { new Guid("cccccccc-cccc-cccc-cccc-cccccccccccc"), "ENTERPRISE", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", "บทบาทกิจการ/นิติบุคคล", "Enterprise", 0m, null, null },
+                    { new Guid("dddddddd-dddd-dddd-dddd-dddddddddddd"), "CUSTOMER", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", "บทบาทลูกค้า", "Customer", 0m, null, null }
                 });
 
             migrationBuilder.InsertData(
@@ -635,6 +804,18 @@ namespace Flowenter.Parties.Mappings.Migrations
                 column: "Address");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Employments_EmployeeId",
+                schema: "parties",
+                table: "Employments",
+                column: "EmployeeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Employments_EmployerId",
+                schema: "parties",
+                table: "Employments",
+                column: "EmployerId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Enterprises_LegalName",
                 schema: "parties",
                 table: "Enterprises",
@@ -669,6 +850,13 @@ namespace Flowenter.Parties.Mappings.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Languages_Code",
+                schema: "parties",
+                table: "Languages",
+                column: "Code",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_LegalStructures_Code",
                 schema: "parties",
                 table: "LegalStructures",
@@ -682,12 +870,6 @@ namespace Flowenter.Parties.Mappings.Migrations
                 column: "Name",
                 unique: true,
                 filter: "[Name] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Parties_TenantId",
-                schema: "parties",
-                table: "Parties",
-                column: "TenantId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Parties_TypeId",
@@ -740,6 +922,19 @@ namespace Flowenter.Parties.Mappings.Migrations
                 column: "PartyRoleTypeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PartyRelationships_PartyRelationshipTypeId",
+                schema: "parties",
+                table: "PartyRelationships",
+                column: "PartyRelationshipTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PartyRelationshipTypes_Code",
+                schema: "parties",
+                table: "PartyRelationshipTypes",
+                column: "Code",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PartyRoles_PartyId",
                 schema: "parties",
                 table: "PartyRoles",
@@ -767,12 +962,22 @@ namespace Flowenter.Parties.Mappings.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_People_FirstName_MiddleName_LastName",
+                name: "IX_PersonNames_FirstName_MiddleName_LastName",
                 schema: "parties",
-                table: "People",
-                columns: new[] { "FirstName", "MiddleName", "LastName" },
-                unique: true,
-                filter: "[FirstName] IS NOT NULL AND [MiddleName] IS NOT NULL AND [LastName] IS NOT NULL");
+                table: "PersonNames",
+                columns: new[] { "FirstName", "MiddleName", "LastName" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PersonNames_LanguageId",
+                schema: "parties",
+                table: "PersonNames",
+                column: "LanguageId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PersonNames_PersonId",
+                schema: "parties",
+                table: "PersonNames",
+                column: "PersonId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PostalAddresses_CountryId",
@@ -801,6 +1006,10 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties");
 
             migrationBuilder.DropTable(
+                name: "Employments",
+                schema: "parties");
+
+            migrationBuilder.DropTable(
                 name: "Enterprises",
                 schema: "parties");
 
@@ -821,7 +1030,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties");
 
             migrationBuilder.DropTable(
-                name: "People",
+                name: "PersonNames",
                 schema: "parties");
 
             migrationBuilder.DropTable(
@@ -830,6 +1039,10 @@ namespace Flowenter.Parties.Mappings.Migrations
 
             migrationBuilder.DropTable(
                 name: "TelecommunicationNumbers",
+                schema: "parties");
+
+            migrationBuilder.DropTable(
+                name: "PartyRelationships",
                 schema: "parties");
 
             migrationBuilder.DropTable(
@@ -845,6 +1058,14 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties");
 
             migrationBuilder.DropTable(
+                name: "Languages",
+                schema: "parties");
+
+            migrationBuilder.DropTable(
+                name: "People",
+                schema: "parties");
+
+            migrationBuilder.DropTable(
                 name: "ContactMechanisms",
                 schema: "parties");
 
@@ -853,11 +1074,15 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties");
 
             migrationBuilder.DropTable(
-                name: "Parties",
+                name: "PartyRelationshipTypes",
                 schema: "parties");
 
             migrationBuilder.DropTable(
                 name: "PartyRoleTypes",
+                schema: "parties");
+
+            migrationBuilder.DropTable(
+                name: "Parties",
                 schema: "parties");
 
             migrationBuilder.DropTable(

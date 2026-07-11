@@ -9,10 +9,8 @@ namespace Flowenter.Parties.Models.PartyModels;
 [Index(nameof(PartyId), nameof(PartyRoleTypeId), nameof(ContactMechanismId)
     , nameof(FromDate)
     , IsUnique = true)]
-public sealed class PartyContactMechanism : EffectiveEntity, ITenantEnabled
+public sealed class PartyContactMechanism : EffectiveEntity
 {
-    [Required]
-    public Guid? TenantId { get; set; }
 
     [Required]
     public Guid? PartyId { get; set; }

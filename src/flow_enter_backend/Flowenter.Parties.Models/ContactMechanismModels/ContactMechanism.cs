@@ -4,10 +4,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Flowenter.Parties.Models.ContactMechanismModels;
 
-public abstract class ContactMechanism : BaseEntity, ITenantEnabled
+public abstract class ContactMechanism : BaseEntity
 {
-    [Required]
-    public Guid? TenantId { get; set; }
 
     [Required]
     public Guid? TypeId { get; set; }

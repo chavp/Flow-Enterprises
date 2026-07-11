@@ -8,11 +8,8 @@ using System.Text;
 namespace Flowenter.Parties.Models.PartyModels;
 
 [Index(nameof(TypeId), nameof(PartyId), nameof(FromDate), IsUnique = true)]
-public abstract class PartyRole : EffectiveEntity, ITenantEnabled
+public abstract class PartyRole : EffectiveEntity
 {
-    [Required]
-    public Guid? TenantId { get; set; }
-
     [Required]
     public Guid? TypeId { get; set; }
     public PartyRoleType? Type { get; set; }
