@@ -311,11 +311,20 @@ public class EnterprisesController : ControllerBase
                 detail: $"PartyRelationshipType '{PartyRelationshipType.Employment}' not found. Run database migration/seeding.");
         }
 
-        var partyRoleType = await context.PartyRoleTypes
-            .SingleOrDefaultAsync(type => type.Id == createDto.PartyRoleTypeId, cancellationToken);
-        if (partyRoleType == null)
+        var selectedRoleTypeIds = createDto.PartyRoleTypeIds
+            .Distinct()
+            .ToList();
+        if (selectedRoleTypeIds.Count == 0)
         {
-            return BadRequest($"PartyRoleType '{createDto.PartyRoleTypeId}' not found.");
+            return BadRequest("At least one PartyRoleType is required.");
+        }
+
+        var partyRoleTypes = await context.PartyRoleTypes
+            .Where(type => type.Id.HasValue && selectedRoleTypeIds.Contains(type.Id.Value))
+            .ToListAsync(cancellationToken);
+        if (partyRoleTypes.Count != selectedRoleTypeIds.Count)
+        {
+            return BadRequest("One or more PartyRoleTypes were not found.");
         }
 
         var language = createDto.LanguageId.HasValue
@@ -351,26 +360,44 @@ public class EnterprisesController : ControllerBase
             LanguageId = language.Id
         };
 
-        var employeeRole = new Customer
-        {
-            Id = Guid.NewGuid(),
-            TypeId = partyRoleType.Id,
-            PartyId = person.Id
-        };
+        var firstPartyRoleType = partyRoleTypes.First();
+        var firstEmployeeRole = default(Customer);
+        var firstEmployment = default(Employment);
 
-        var employment = new Employment(enterpriseRole.Id!.Value, employeeRole.Id!.Value, employmentRelationshipType)
-        {
-            Id = Guid.NewGuid(),
-            PartyRelationshipTypeId = employmentRelationshipType.Id,
-            EmployerId = enterpriseRole.Id,
-            EmployeeId = employeeRole.Id
-        };
+        await context.AddRangeAsync(person, personName);
 
-        await context.AddRangeAsync(person, personName, employeeRole, employment);
+        foreach (var partyRoleType in partyRoleTypes)
+        {
+            var employeeRole = new Customer
+            {
+                Id = Guid.NewGuid(),
+                TypeId = partyRoleType.Id,
+                PartyId = person.Id
+            };
+
+            var employment = new Employment(enterpriseRole.Id!.Value, employeeRole.Id!.Value, employmentRelationshipType)
+            {
+                Id = Guid.NewGuid(),
+                PartyRelationshipTypeId = employmentRelationshipType.Id,
+                EmployerId = enterpriseRole.Id,
+                EmployeeId = employeeRole.Id
+            };
+
+            await context.AddRangeAsync(employeeRole, employment);
+
+            if (firstEmployeeRole == null && firstEmployment == null && firstPartyRoleType.Id == partyRoleType.Id)
+            {
+                firstEmployeeRole = employeeRole;
+                firstEmployment = employment;
+            }
+        }
         await context.SaveChangesAsync(cancellationToken);
         await tran.CommitAsync(cancellationToken);
 
-        _logger.LogInformation("Employment created: {EmploymentId} for enterprise {EnterpriseRoleId}", employment.Id, enterprise_role_id);
+        _logger.LogInformation(
+            "Employment(s) created for enterprise {EnterpriseRoleId} with {RoleCount} party role(s)",
+            enterprise_role_id,
+            partyRoleTypes.Count);
 
         var fullName = string.Join(" ",
             new[] { personName.FirstName, personName.MiddleName, personName.LastName }
@@ -378,25 +405,25 @@ public class EnterprisesController : ControllerBase
 
         var response = new EmploymentDto
         {
-            EmploymentId = employment.Id!.Value,
-            EmployerId = employment.EmployerId!.Value,
-            EmployeePartyRoleId = employeeRole.Id!.Value,
+            EmploymentId = firstEmployment!.Id!.Value,
+            EmployerId = firstEmployment.EmployerId!.Value,
+            EmployeePartyRoleId = firstEmployeeRole!.Id!.Value,
             EmployeePartyId = person.Id!.Value,
             FirstName = personName.FirstName ?? string.Empty,
             MiddleName = personName.MiddleName,
             LastName = personName.LastName ?? string.Empty,
             EmployeeFullName = fullName,
-            PartyRoleTypeId = partyRoleType.Id!.Value,
-            PartyRoleTypeCode = partyRoleType.Code ?? string.Empty,
-            PartyRoleTypeName = partyRoleType.Name ?? string.Empty,
-            FromDate = employment.FromDate,
-            ThruDate = employment.ThruDate,
-            CreatedAtUtc = employment.CreatedAtUtc,
-            UpdatedAtUtc = employment.UpdatedAtUtc,
-            Revision = employment.Revision
+            PartyRoleTypeId = firstPartyRoleType.Id!.Value,
+            PartyRoleTypeCode = firstPartyRoleType.Code ?? string.Empty,
+            PartyRoleTypeName = firstPartyRoleType.Name ?? string.Empty,
+            FromDate = firstEmployment.FromDate,
+            ThruDate = firstEmployment.ThruDate,
+            CreatedAtUtc = firstEmployment.CreatedAtUtc,
+            UpdatedAtUtc = firstEmployment.UpdatedAtUtc,
+            Revision = firstEmployment.Revision
         };
 
-        return Created($"/api/parties/enterprises/{enterprise_role_id}/employments/{employment.Id}", response);
+        return Created($"/api/parties/enterprises/{enterprise_role_id}/employments/{firstEmployment.Id}", response);
     }
 
     [HttpPut("{enterprise_role_id:guid}/employments/{employment_id:guid}")]
@@ -440,14 +467,21 @@ public class EnterprisesController : ControllerBase
                 detail: $"Person '{employeeRole.PartyId}' not found for Employment '{employment_id}'.");
         }
 
-        var partyRoleType = await context.PartyRoleTypes
-            .SingleOrDefaultAsync(type => type.Id == updateDto.PartyRoleTypeId, cancellationToken);
-        if (partyRoleType == null)
+        var selectedRoleTypeIds = updateDto.PartyRoleTypeIds
+            .Distinct()
+            .ToList();
+        if (selectedRoleTypeIds.Count == 0)
         {
-            return BadRequest($"PartyRoleType '{updateDto.PartyRoleTypeId}' not found.");
+            return BadRequest("At least one PartyRoleType is required.");
         }
 
-        employeeRole.TypeId = partyRoleType.Id;
+        var selectedPartyRoleTypes = await context.PartyRoleTypes
+            .Where(type => type.Id.HasValue && selectedRoleTypeIds.Contains(type.Id.Value))
+            .ToListAsync(cancellationToken);
+        if (selectedPartyRoleTypes.Count != selectedRoleTypeIds.Count)
+        {
+            return BadRequest("One or more PartyRoleTypes were not found.");
+        }
 
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
         var personName = await context.PersonNames
@@ -492,30 +526,113 @@ public class EnterprisesController : ControllerBase
             personName.LastName = updateDto.LastName.Trim();
         }
 
+        var relatedEmployments = await (
+            from employmentItem in context.PartyRelationships.OfType<Employment>()
+            join role in context.PartyRoles on employmentItem.EmployeeId equals role.Id
+            where employmentItem.EmployerId == enterprise_role_id
+                  && role.PartyId == person.Id
+            select new
+            {
+                Employment = employmentItem,
+                EmployeeRole = role
+            })
+            .ToListAsync(cancellationToken);
+
+        var existingByRoleTypeId = relatedEmployments
+            .Where(item => item.EmployeeRole.TypeId.HasValue)
+            .GroupBy(item => item.EmployeeRole.TypeId!.Value)
+            .ToDictionary(group => group.Key, group => group.First());
+
+        var selectedRoleTypeSet = selectedRoleTypeIds.ToHashSet();
+        var selectedPartyRoleTypeMap = selectedPartyRoleTypes
+            .Where(item => item.Id.HasValue)
+            .ToDictionary(item => item.Id!.Value, item => item);
+
+        foreach (var relatedEmployment in relatedEmployments)
+        {
+            var typeId = relatedEmployment.EmployeeRole.TypeId;
+            if (!typeId.HasValue || selectedRoleTypeSet.Contains(typeId.Value))
+            {
+                continue;
+            }
+
+            context.PartyRelationships.Remove(relatedEmployment.Employment);
+            context.PartyRoles.Remove(relatedEmployment.EmployeeRole);
+        }
+
+        var employmentRelationshipType = await context.PartyRelationshipTypes
+            .SingleOrDefaultAsync(type => type.Code == PartyRelationshipType.Employment, cancellationToken);
+        if (employmentRelationshipType == null)
+        {
+            return Problem(
+                statusCode: StatusCodes.Status500InternalServerError,
+                title: "Missing master data",
+                detail: $"PartyRelationshipType '{PartyRelationshipType.Employment}' not found. Run database migration/seeding.");
+        }
+
+        var createdEmployments = new Dictionary<Guid, (Employment Employment, Customer EmployeeRole)>();
+        foreach (var selectedRoleTypeId in selectedRoleTypeIds)
+        {
+            if (existingByRoleTypeId.ContainsKey(selectedRoleTypeId))
+            {
+                continue;
+            }
+
+            var employeeRoleToAdd = new Customer
+            {
+                Id = Guid.NewGuid(),
+                TypeId = selectedRoleTypeId,
+                PartyId = person.Id
+            };
+
+            var employmentToAdd = new Employment(enterprise_role_id, employeeRoleToAdd.Id!.Value, employmentRelationshipType)
+            {
+                Id = Guid.NewGuid(),
+                PartyRelationshipTypeId = employmentRelationshipType.Id,
+                EmployerId = enterprise_role_id,
+                EmployeeId = employeeRoleToAdd.Id
+            };
+
+            await context.AddRangeAsync(employeeRoleToAdd, employmentToAdd);
+            createdEmployments[selectedRoleTypeId] = (employmentToAdd, employeeRoleToAdd);
+        }
+
         await context.SaveChangesAsync(cancellationToken);
 
         var fullName = string.Join(" ",
             new[] { personName.FirstName, personName.MiddleName, personName.LastName }
                 .Where(part => !string.IsNullOrWhiteSpace(part)));
 
+        var primaryRoleTypeId = selectedRoleTypeIds.First();
+        var primaryRoleType = selectedPartyRoleTypeMap[primaryRoleTypeId];
+        var selectedExisting = existingByRoleTypeId.TryGetValue(primaryRoleTypeId, out var existingItem)
+            ? existingItem
+            : null;
+        var selectedCreated = createdEmployments.TryGetValue(primaryRoleTypeId, out var createdItem)
+            ? createdItem
+            : default;
+
+        var responseEmployment = selectedExisting?.Employment ?? selectedCreated.Employment;
+        var responseEmployeeRoleId = selectedExisting?.EmployeeRole.Id ?? selectedCreated.EmployeeRole.Id;
+
         return Ok(new EmploymentDto
         {
-            EmploymentId = employment.Id!.Value,
-            EmployerId = employment.EmployerId!.Value,
-            EmployeePartyRoleId = employeeRole.Id!.Value,
+            EmploymentId = responseEmployment.Id!.Value,
+            EmployerId = responseEmployment.EmployerId!.Value,
+            EmployeePartyRoleId = responseEmployeeRoleId!.Value,
             EmployeePartyId = person.Id!.Value,
             FirstName = personName.FirstName ?? string.Empty,
             MiddleName = personName.MiddleName,
             LastName = personName.LastName ?? string.Empty,
             EmployeeFullName = fullName,
-            PartyRoleTypeId = partyRoleType.Id!.Value,
-            PartyRoleTypeCode = partyRoleType.Code ?? string.Empty,
-            PartyRoleTypeName = partyRoleType.Name ?? string.Empty,
-            FromDate = employment.FromDate,
-            ThruDate = employment.ThruDate,
-            CreatedAtUtc = employment.CreatedAtUtc,
-            UpdatedAtUtc = employment.UpdatedAtUtc,
-            Revision = employment.Revision
+            PartyRoleTypeId = primaryRoleType.Id!.Value,
+            PartyRoleTypeCode = primaryRoleType.Code ?? string.Empty,
+            PartyRoleTypeName = primaryRoleType.Name ?? string.Empty,
+            FromDate = responseEmployment.FromDate,
+            ThruDate = responseEmployment.ThruDate,
+            CreatedAtUtc = responseEmployment.CreatedAtUtc,
+            UpdatedAtUtc = responseEmployment.UpdatedAtUtc,
+            Revision = responseEmployment.Revision
         });
     }
 
@@ -537,7 +654,14 @@ public class EnterprisesController : ControllerBase
             return NotFound();
         }
 
+        var employeeRole = await context.PartyRoles
+            .FirstOrDefaultAsync(item => item.Id == employment.EmployeeId, cancellationToken);
+
         context.PartyRelationships.Remove(employment);
+        if (employeeRole != null)
+        {
+            context.PartyRoles.Remove(employeeRole);
+        }
         await context.SaveChangesAsync(cancellationToken);
 
         return NoContent();

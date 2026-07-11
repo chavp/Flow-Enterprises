@@ -13,8 +13,8 @@ public record CreateEmploymentDto
     [Required, StringLength(500)]
     public string LastName { get; init; } = string.Empty;
 
-    [Required]
-    public Guid PartyRoleTypeId { get; init; }
+    [Required, MinLength(1)]
+    public List<Guid> PartyRoleTypeIds { get; init; } = [];
 
     public Guid? LanguageId { get; init; }
     public DateOnly? DateOfBirth { get; init; }

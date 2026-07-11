@@ -289,6 +289,17 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
     }));
 
   const employments = employmentsQuery.data ?? [];
+  const roleTypeIdsByEmployee = useMemo(() => {
+    const map = new Map<string, string[]>();
+    for (const employment of employments) {
+      const roleTypeIds = map.get(employment.employeePartyId) ?? [];
+      if (!roleTypeIds.includes(employment.partyRoleTypeId)) {
+        roleTypeIds.push(employment.partyRoleTypeId);
+      }
+      map.set(employment.employeePartyId, roleTypeIds);
+    }
+    return map;
+  }, [employments]);
 
   if (peopleEnterprise) {
     return (
@@ -381,7 +392,10 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                                             firstName: employment.firstName,
                                             middleName: employment.middleName,
                                             lastName: employment.lastName,
-                                            partyRoleTypeId: employment.partyRoleTypeId
+                                            partyRoleTypeIds:
+                                              roleTypeIdsByEmployee.get(employment.employeePartyId) ?? [
+                                                employment.partyRoleTypeId
+                                              ]
                                           });
                                         }}
                                       >
@@ -446,15 +460,16 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                   <Input maxLength={500} />
                 </Form.Item>
                 <Form.Item
-                  name="partyRoleTypeId"
-                  label="Party Role Type"
-                  rules={[{ required: true, message: "Party role type is required" }]}
+                  name="partyRoleTypeIds"
+                  label="Party Roles"
+                  rules={[{ required: true, message: "At least one party role is required" }]}
                 >
                   <Select
+                    mode="multiple"
                     showSearch
                     options={roleTypeOptions}
                     loading={partyRoleTypesQuery.isLoading}
-                    placeholder="Select party role type"
+                    placeholder="Select party roles"
                     optionFilterProp="label"
                   />
                 </Form.Item>
@@ -495,15 +510,16 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                   <Input maxLength={500} />
                 </Form.Item>
                 <Form.Item
-                  name="partyRoleTypeId"
-                  label="Party Role Type"
-                  rules={[{ required: true, message: "Party role type is required" }]}
+                  name="partyRoleTypeIds"
+                  label="Party Roles"
+                  rules={[{ required: true, message: "At least one party role is required" }]}
                 >
                   <Select
+                    mode="multiple"
                     showSearch
                     options={roleTypeOptions}
                     loading={partyRoleTypesQuery.isLoading}
-                    placeholder="Select party role type"
+                    placeholder="Select party roles"
                     optionFilterProp="label"
                   />
                 </Form.Item>

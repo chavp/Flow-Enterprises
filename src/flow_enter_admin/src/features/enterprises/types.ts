@@ -78,7 +78,7 @@ export type CreateEmploymentRequest = {
   firstName: string;
   middleName?: string;
   lastName: string;
-  partyRoleTypeId: string;
+  partyRoleTypeIds: string[];
 };
 
 export type UpdateEmploymentRequest = CreateEmploymentRequest;

@@ -3600,7 +3600,7 @@
         "required": [
           "firstName",
           "lastName",
-          "partyRoleTypeId"
+          "partyRoleTypeIds"
         ],
         "type": "object",
         "properties": {
@@ -3620,9 +3620,13 @@
             "minLength": 0,
             "type": "string"
           },
-          "partyRoleTypeId": {
-            "type": "string",
-            "format": "uuid"
+          "partyRoleTypeIds": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
           },
           "languageId": {
             "type": "string",
@@ -4776,7 +4780,7 @@
         "required": [
           "firstName",
           "lastName",
-          "partyRoleTypeId"
+          "partyRoleTypeIds"
         ],
         "type": "object",
         "properties": {
@@ -4796,9 +4800,13 @@
             "minLength": 0,
             "type": "string"
           },
-          "partyRoleTypeId": {
-            "type": "string",
-            "format": "uuid"
+          "partyRoleTypeIds": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         }
       }

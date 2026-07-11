@@ -13,6 +13,6 @@ public record UpdateEmploymentDto
     [Required, StringLength(500)]
     public string LastName { get; init; } = string.Empty;
 
-    [Required]
-    public Guid PartyRoleTypeId { get; init; }
+    [Required, MinLength(1)]
+    public List<Guid> PartyRoleTypeIds { get; init; } = [];
 }
