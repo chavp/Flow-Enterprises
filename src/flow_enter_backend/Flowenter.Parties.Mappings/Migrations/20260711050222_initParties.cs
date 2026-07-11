@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Flowenter.Parties.Mappings.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class initParties : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,14 +19,15 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Code = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    CreatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedBy = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
-                    UpdatedBy = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
-                    Revision = table.Column<decimal>(type: "numeric(20,0)", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    Revision = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -38,14 +39,15 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Code = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    CreatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedBy = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
-                    UpdatedBy = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
-                    Revision = table.Column<decimal>(type: "numeric(20,0)", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    Revision = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -57,14 +59,15 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Code = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    CreatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedBy = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
-                    UpdatedBy = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
-                    Revision = table.Column<decimal>(type: "numeric(20,0)", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    Revision = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -76,14 +79,15 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    GroupById = table.Column<Guid>(type: "uuid", nullable: true),
-                    CreatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedBy = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
-                    UpdatedBy = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
-                    Revision = table.Column<decimal>(type: "numeric(20,0)", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    GroupById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    Revision = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -101,14 +105,15 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Code = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    CreatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedBy = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
-                    UpdatedBy = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
-                    Revision = table.Column<decimal>(type: "numeric(20,0)", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    Revision = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -120,14 +125,15 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Code = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    CreatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedBy = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
-                    UpdatedBy = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
-                    Revision = table.Column<decimal>(type: "numeric(20,0)", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    Revision = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -139,14 +145,15 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    TenantId = table.Column<Guid>(type: "uuid", nullable: false),
-                    TypeId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedBy = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
-                    UpdatedBy = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
-                    Revision = table.Column<decimal>(type: "numeric(20,0)", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    Revision = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -165,13 +172,14 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    TypeId = table.Column<Guid>(type: "uuid", nullable: true),
-                    CreatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedBy = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
-                    UpdatedBy = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
-                    Revision = table.Column<decimal>(type: "numeric(20,0)", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    Revision = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -189,14 +197,15 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    TenantId = table.Column<Guid>(type: "uuid", nullable: false),
-                    TypeId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedBy = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
-                    UpdatedBy = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
-                    Revision = table.Column<decimal>(type: "numeric(20,0)", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    Revision = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -215,8 +224,8 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Address = table.Column<string>(type: "character varying(320)", maxLength: 320, nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(320)", maxLength: 320, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -235,10 +244,10 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    IsoCode2 = table.Column<string>(type: "character varying(2)", maxLength: 2, nullable: false),
-                    IsoCode3 = table.Column<string>(type: "character varying(3)", maxLength: 3, nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    IsoCode2 = table.Column<string>(type: "nvarchar(2)", maxLength: 2, nullable: false),
+                    IsoCode3 = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -257,18 +266,19 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    Number = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Type = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
-                    Currency = table.Column<string>(type: "character varying(5)", maxLength: 5, nullable: false),
-                    Balance = table.Column<decimal>(type: "numeric", nullable: false),
-                    OwnerId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedBy = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
-                    UpdatedBy = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
-                    Revision = table.Column<decimal>(type: "numeric(20,0)", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Number = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Currency = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false),
+                    Balance = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    OwnerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    Revision = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -287,8 +297,8 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -307,14 +317,15 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    PartyId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CategoryId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedBy = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
-                    UpdatedBy = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
-                    Revision = table.Column<decimal>(type: "numeric(20,0)", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PartyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    Revision = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -340,16 +351,17 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    TenantId = table.Column<Guid>(type: "uuid", nullable: false),
-                    PartyId = table.Column<Guid>(type: "uuid", nullable: false),
-                    PartyRoleTypeId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ContactMechanismId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedBy = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
-                    UpdatedBy = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
-                    Revision = table.Column<decimal>(type: "numeric(20,0)", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PartyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PartyRoleTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ContactMechanismId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    Revision = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     FromDate = table.Column<DateOnly>(type: "date", nullable: false),
                     ThruDate = table.Column<DateOnly>(type: "date", nullable: false)
                 },
@@ -384,15 +396,16 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    TenantId = table.Column<Guid>(type: "uuid", nullable: false),
-                    TypeId = table.Column<Guid>(type: "uuid", nullable: false),
-                    PartyId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedBy = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
-                    UpdatedBy = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
-                    Revision = table.Column<decimal>(type: "numeric(20,0)", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PartyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    Revision = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     FromDate = table.Column<DateOnly>(type: "date", nullable: false),
                     ThruDate = table.Column<DateOnly>(type: "date", nullable: false)
                 },
@@ -420,11 +433,11 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    FirstName = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
-                    MiddleName = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
-                    LastName = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
-                    BirthDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    MiddleName = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    BirthDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -443,18 +456,18 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    CountryId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Address = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
-                    ZipCode = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
-                    Street = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
-                    City = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
-                    State = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
-                    House = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
-                    HouseNumber = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
-                    District = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
-                    SubDistrict = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
-                    Province = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CountryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    ZipCode = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    Street = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true),
+                    City = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true),
+                    State = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true),
+                    House = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    HouseNumber = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    District = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true),
+                    SubDistrict = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true),
+                    Province = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -480,12 +493,12 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    CountryId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Number = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false),
-                    CountryCode = table.Column<string>(type: "character varying(3)", maxLength: 3, nullable: true),
-                    AreaCode = table.Column<string>(type: "character varying(3)", maxLength: 3, nullable: true),
-                    AskForName = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CountryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Number = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
+                    CountryCode = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: true),
+                    AreaCode = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: true),
+                    AskForName = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -511,7 +524,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -530,16 +543,16 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    LegalName = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    Information = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
-                    Logo = table.Column<byte[]>(type: "bytea", nullable: true),
-                    BrandName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
-                    Notes = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
-                    LegalStructureId = table.Column<Guid>(type: "uuid", nullable: false),
-                    BusinessRegistrationNumber = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
-                    TaxId = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
-                    FiscalYearStartMonth = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LegalName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Information = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    Logo = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    BrandName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Notes = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    LegalStructureId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    BusinessRegistrationNumber = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    TaxId = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    FiscalYearStartMonth = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -578,7 +591,8 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties",
                 table: "Countries",
                 column: "Name",
-                unique: true);
+                unique: true,
+                filter: "[Name] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ElectronicAddresses_Address",
@@ -591,7 +605,8 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties",
                 table: "Enterprises",
                 column: "LegalName",
-                unique: true);
+                unique: true,
+                filter: "[LegalName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Enterprises_LegalStructureId",
@@ -631,7 +646,8 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties",
                 table: "Organizations",
                 column: "Name",
-                unique: true);
+                unique: true,
+                filter: "[Name] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Parties_TenantId",
@@ -677,7 +693,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                 column: "ContactMechanismId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PartyContactMechanisms_PartyId_PartyRoleTypeId_ContactMecha~",
+                name: "IX_PartyContactMechanisms_PartyId_PartyRoleTypeId_ContactMechanismId_FromDate",
                 schema: "parties",
                 table: "PartyContactMechanisms",
                 columns: new[] { "PartyId", "PartyRoleTypeId", "ContactMechanismId", "FromDate" },
@@ -721,7 +737,8 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties",
                 table: "People",
                 columns: new[] { "FirstName", "MiddleName", "LastName" },
-                unique: true);
+                unique: true,
+                filter: "[FirstName] IS NOT NULL AND [MiddleName] IS NOT NULL AND [LastName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PostalAddresses_CountryId",
@@ -734,7 +751,8 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties",
                 table: "TelecommunicationNumbers",
                 columns: new[] { "CountryId", "Number" },
-                unique: true);
+                unique: true,
+                filter: "[CountryId] IS NOT NULL AND [Number] IS NOT NULL");
         }
 
         /// <inheritdoc />

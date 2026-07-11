@@ -1,0 +1,20 @@
+Organization
+ ├── Department
+ │     ├── Nursing
+ │     ├── Kitchen
+ │     ├── Housekeeping
+ │     ├── Maintenance
+ │     └── Administration
+ │
+ ├── Position
+ │     ├── Nurse
+ │     ├── Caregiver
+ │     ├── Cook
+ │     ├── Housekeeper
+ │     └── Receptionist
+ │
+ └── System Role
+       ├── Admin
+       ├── Manager
+       ├── Staff
+       └── ReadOnly

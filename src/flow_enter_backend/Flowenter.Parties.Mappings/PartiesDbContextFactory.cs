@@ -19,7 +19,7 @@ public class PartiesDbContextFactory : IDbContextFactory<PartiesContext>
     public PartiesContext CreateDbContext()
     {
         var options = new DbContextOptionsBuilder<PartiesContext>()
-            .UseNpgsql(_tenantProvider.GetPartiesTenantConnectionString())
+            .UseSqlServer(_tenantProvider.GetPartiesTenantConnectionString())
             .Options;
 
         return new PartiesContext(options, _tenantProvider);

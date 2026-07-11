@@ -14,4 +14,7 @@
     <Project Path="Flowenter.Parties.Services/Flowenter.Parties.Services.csproj" Id="739868e7-da10-45ec-9872-48c0557f4c0a" />
   </Folder>
   <Folder Name="/Core/Products/" />
+  <Folder Name="/Test/">
+    <Project Path="../../test/Parties.Tests/Parties.Tests.csproj" Id="37e8b310-e18d-4e73-b9a4-547be4404581" />
+  </Folder>
 </Solution>
