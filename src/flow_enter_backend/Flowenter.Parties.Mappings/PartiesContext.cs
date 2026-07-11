@@ -145,8 +145,7 @@ public sealed class PartiesContext : DbContext
             {
                 Id = Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc"),
                 Code = PartyRoleType.Enterprise,
-                Name = "Enterprise",
-                Description = "บทบาทกิจการ/นิติบุคคล",
+                Name = "กิจการ/นิติบุคคล",
                 CreatedBy = "seed",
                 CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 Revision = 0
@@ -155,8 +154,7 @@ public sealed class PartiesContext : DbContext
             {
                 Id = Guid.Parse("dddddddd-dddd-dddd-dddd-dddddddddddd"),
                 Code = PartyRoleType.Customer,
-                Name = "Customer",
-                Description = "บทบาทลูกค้า",
+                Name = "ลูกค้า",
                 CreatedBy = "seed",
                 CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 Revision = 0
@@ -165,8 +163,7 @@ public sealed class PartiesContext : DbContext
             {
                 Id = Guid.Parse("aaaaaaaa-1111-1111-1111-111111111111"),
                 Code = PartyRoleType.Administrator,
-                Name = "Administrator",
-                Description = "ผู้บริหารหรือผู้จัดการสถานดูแล",
+                Name = "ผู้บริหารหรือผู้จัดการสถานดูแล",
                 CreatedBy = "seed",
                 CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 Revision = 0
@@ -175,8 +172,7 @@ public sealed class PartiesContext : DbContext
             {
                 Id = Guid.Parse("aaaaaaaa-2222-2222-2222-222222222222"),
                 Code = PartyRoleType.CareManager,
-                Name = "Care Manager",
-                Description = "ผู้จัดการดูแลผู้ป่วยหรือผู้จัดการเคส",
+                Name = "ผู้จัดการดูแลผู้ป่วยหรือผู้จัดการเคส",
                 CreatedBy = "seed",
                 CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 Revision = 0
@@ -185,8 +181,7 @@ public sealed class PartiesContext : DbContext
             {
                 Id = Guid.Parse("aaaaaaaa-3333-3333-3333-333333333333"),
                 Code = PartyRoleType.Nurse,
-                Name = "Nurse",
-                Description = "พยาบาล",
+                Name = "พยาบาล",
                 CreatedBy = "seed",
                 CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 Revision = 0
@@ -195,8 +190,7 @@ public sealed class PartiesContext : DbContext
             {
                 Id = Guid.Parse("aaaaaaaa-4444-4444-4444-444444444444"),
                 Code = PartyRoleType.Caregiver,
-                Name = "Caregiver",
-                Description = "ผู้ดูแล",
+                Name = "ผู้ดูแล",
                 CreatedBy = "seed",
                 CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 Revision = 0
@@ -205,8 +199,7 @@ public sealed class PartiesContext : DbContext
             {
                 Id = Guid.Parse("aaaaaaaa-5555-5555-5555-555555555555"),
                 Code = PartyRoleType.Physician,
-                Name = "Physician",
-                Description = "แพทย์",
+                Name = "แพทย์",
                 CreatedBy = "seed",
                 CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 Revision = 0
@@ -215,8 +208,7 @@ public sealed class PartiesContext : DbContext
             {
                 Id = Guid.Parse("aaaaaaaa-6666-6666-6666-666666666666"),
                 Code = PartyRoleType.Pharmacist,
-                Name = "Pharmacist",
-                Description = "เภสัชกร",
+                Name = "เภสัชกร",
                 CreatedBy = "seed",
                 CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 Revision = 0
@@ -225,8 +217,7 @@ public sealed class PartiesContext : DbContext
             {
                 Id = Guid.Parse("aaaaaaaa-7777-7777-7777-777777777777"),
                 Code = PartyRoleType.Dietitian,
-                Name = "Dietitian",
-                Description = "นักกำหนดอาหารหรือนักโภชนาการ",
+                Name = "นักกำหนดอาหารหรือนักโภชนาการ",
                 CreatedBy = "seed",
                 CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 Revision = 0
@@ -235,8 +226,7 @@ public sealed class PartiesContext : DbContext
             {
                 Id = Guid.Parse("aaaaaaaa-8888-8888-8888-888888888888"),
                 Code = PartyRoleType.KitchenStaff,
-                Name = "Kitchen Staff",
-                Description = "พนักงานครัว",
+                Name = "พนักงานครัว",
                 CreatedBy = "seed",
                 CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 Revision = 0
@@ -245,8 +235,7 @@ public sealed class PartiesContext : DbContext
             {
                 Id = Guid.Parse("aaaaaaaa-9999-9999-9999-999999999999"),
                 Code = PartyRoleType.HousekeepingStaff,
-                Name = "Housekeeping Staff",
-                Description = "พนักงานทำความสะอาด",
+                Name = "พนักงานทำความสะอาด",
                 CreatedBy = "seed",
                 CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 Revision = 0
@@ -255,8 +244,7 @@ public sealed class PartiesContext : DbContext
             {
                 Id = Guid.Parse("bbbbbbbb-1111-1111-1111-111111111111"),
                 Code = PartyRoleType.MaintenanceStaff,
-                Name = "Maintenance Staff",
-                Description = "ช่างซ่อมบำรุง",
+                Name = "ช่างซ่อมบำรุง",
                 CreatedBy = "seed",
                 CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 Revision = 0
@@ -265,8 +253,7 @@ public sealed class PartiesContext : DbContext
             {
                 Id = Guid.Parse("bbbbbbbb-2222-2222-2222-222222222222"),
                 Code = PartyRoleType.LaundryStaff,
-                Name = "Laundry Staff",
-                Description = "พนักงานซักรีด",
+                Name = "พนักงานซักรีด",
                 CreatedBy = "seed",
                 CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 Revision = 0
@@ -275,8 +262,7 @@ public sealed class PartiesContext : DbContext
             {
                 Id = Guid.Parse("bbbbbbbb-3333-3333-3333-333333333333"),
                 Code = PartyRoleType.Receptionist,
-                Name = "Receptionist",
-                Description = "พนักงานต้อนรับ",
+                Name = "พนักงานต้อนรับ",
                 CreatedBy = "seed",
                 CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 Revision = 0
@@ -285,8 +271,7 @@ public sealed class PartiesContext : DbContext
             {
                 Id = Guid.Parse("bbbbbbbb-4444-4444-4444-444444444444"),
                 Code = PartyRoleType.Patient,
-                Name = "Patient",
-                Description = "ผู้ป่วย",
+                Name = "ผู้ป่วย",
                 CreatedBy = "seed",
                 CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 Revision = 0
@@ -295,8 +280,7 @@ public sealed class PartiesContext : DbContext
             {
                 Id = Guid.Parse("bbbbbbbb-5555-5555-5555-555555555555"),
                 Code = PartyRoleType.SecurityGuard,
-                Name = "Security Guard",
-                Description = "เจ้าหน้าที่รักษาความปลอดภัย",
+                Name = "เจ้าหน้าที่รักษาความปลอดภัย",
                 CreatedBy = "seed",
                 CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 Revision = 0
@@ -308,7 +292,7 @@ public sealed class PartiesContext : DbContext
             {
                 Id = Guid.Parse("ffffffff-ffff-ffff-ffff-ffffffffffff"),
                 Code = PartyRelationshipType.Employment,
-                Name = "Employment",
+                Name = "การจ้างงาน",
                 CreatedBy = "seed",
                 CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 Revision = 0

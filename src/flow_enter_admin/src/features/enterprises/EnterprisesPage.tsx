@@ -462,7 +462,8 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                                                     </td>
                                                     <td>
                                                       <DatePicker
-                                                        format="YYYY-MM-DD"
+                                                        format="DD/MM/YYYY"
+                                                        style={{ width: 150 }}
                                                         value={dayjs(draft.fromDate)}
                                                         onChange={(value) => {
                                                           if (!value) {
@@ -480,7 +481,8 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                                                     </td>
                                                     <td>
                                                       <DatePicker
-                                                        format="YYYY-MM-DD"
+                                                        format="DD/MM/YYYY"
+                                                        style={{ width: 150 }}
                                                         value={dayjs(draft.thruDate)}
                                                         onChange={(value) => {
                                                           if (!value) {
