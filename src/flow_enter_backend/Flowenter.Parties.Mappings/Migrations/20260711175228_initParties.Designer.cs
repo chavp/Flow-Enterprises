@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Flowenter.Parties.Mappings.Migrations
 {
     [DbContext(typeof(PartiesContext))]
-    [Migration("20260711173444_facRoomBed")]
-    partial class facRoomBed
+    [Migration("20260711175228_initParties")]
+    partial class initParties
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -164,6 +164,134 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.UseTptMappingStrategy();
                 });
 
+            modelBuilder.Entity("Flowenter.Parties.Models.FacilityModels.FacilityRole", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<Guid>("FacilityRoleTypeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateOnly>("FromDateUtc")
+                        .HasColumnType("date");
+
+                    b.Property<decimal>("Revision")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<DateOnly>("ThruDateUtc")
+                        .HasColumnType("date");
+
+                    b.Property<DateTime?>("UpdatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FacilityRoleTypeId");
+
+                    b.ToTable("FacilityRoles", "parties");
+                });
+
+            modelBuilder.Entity("Flowenter.Parties.Models.FacilityModels.FacilityRoleType", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<decimal>("Revision")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<DateTime?>("UpdatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.ToTable("FacilityRoleTypes", "parties");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("51515151-5151-5151-5151-515151515151"),
+                            Code = "OWN",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "seed",
+                            Name = "Own",
+                            Revision = 0m
+                        },
+                        new
+                        {
+                            Id = new Guid("62626262-6262-6262-6262-626262626262"),
+                            Code = "RENT",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "seed",
+                            Name = "Rent",
+                            Revision = 0m
+                        },
+                        new
+                        {
+                            Id = new Guid("73737373-7373-7373-7373-737373737373"),
+                            Code = "LEASE",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "seed",
+                            Name = "Lease",
+                            Revision = 0m
+                        },
+                        new
+                        {
+                            Id = new Guid("84848484-8484-8484-8484-848484848484"),
+                            Code = "USE",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "seed",
+                            Name = "Use",
+                            Revision = 0m
+                        });
+                });
+
             modelBuilder.Entity("Flowenter.Parties.Models.FacilityModels.FacilityType", b =>
                 {
                     b.Property<Guid>("Id")
@@ -208,6 +336,26 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .IsUnique();
 
                     b.ToTable("FacilityTypes", "parties");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("12121212-1212-1212-1212-121212121212"),
+                            Code = "ROOM",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "seed",
+                            Name = "Room",
+                            Revision = 0m
+                        },
+                        new
+                        {
+                            Id = new Guid("34343434-3434-3434-3434-343434343434"),
+                            Code = "BED",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "seed",
+                            Name = "Bed",
+                            Revision = 0m
+                        });
                 });
 
             modelBuilder.Entity("Flowenter.Parties.Models.GeographicBoundaryModels.GeographicBoundary", b =>
@@ -1500,6 +1648,17 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.Navigation("FacilityType");
 
                     b.Navigation("PartOf");
+                });
+
+            modelBuilder.Entity("Flowenter.Parties.Models.FacilityModels.FacilityRole", b =>
+                {
+                    b.HasOne("Flowenter.Parties.Models.FacilityModels.FacilityRoleType", "FacilityRoleType")
+                        .WithMany()
+                        .HasForeignKey("FacilityRoleTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FacilityRoleType");
                 });
 
             modelBuilder.Entity("Flowenter.Parties.Models.GeographicBoundaryModels.GeographicBoundary", b =>

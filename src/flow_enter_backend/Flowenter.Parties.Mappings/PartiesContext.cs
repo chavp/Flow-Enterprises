@@ -49,6 +49,8 @@ public sealed class PartiesContext : DbContext
     // Facilities
     public DbSet<FacilityType> FacilityTypes => Set<FacilityType>();
     public DbSet<Facility> Facilities => Set<Facility>();
+    public DbSet<FacilityRoleType> FacilityRoleTypes => Set<FacilityRoleType>();
+    public DbSet<FacilityRole> FacilityRoles => Set<FacilityRole>();
 
     public PartiesContext(DbContextOptions<PartiesContext> options,
         ITenantProvider tenantProvider) : base(options)
@@ -315,6 +317,66 @@ public sealed class PartiesContext : DbContext
                 Id = Guid.Parse("ffffffff-ffff-ffff-ffff-ffffffffffff"),
                 Code = PartyRelationshipType.Employment,
                 Name = "การจ้างงาน",
+                CreatedBy = "seed",
+                CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                Revision = 0
+            }
+        ]);
+
+        modelBuilder.Entity<FacilityType>().HasData([
+            new FacilityType
+            {
+                Id = Guid.Parse("12121212-1212-1212-1212-121212121212"),
+                Code = FacilityType.Room,
+                Name = "Room",
+                CreatedBy = "seed",
+                CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                Revision = 0
+            },
+            new FacilityType
+            {
+                Id = Guid.Parse("34343434-3434-3434-3434-343434343434"),
+                Code = FacilityType.Bed,
+                Name = "Bed",
+                CreatedBy = "seed",
+                CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                Revision = 0
+            }
+        ]);
+
+        modelBuilder.Entity<FacilityRoleType>().HasData([
+            new FacilityRoleType
+            {
+                Id = Guid.Parse("51515151-5151-5151-5151-515151515151"),
+                Code = FacilityRoleType.Own,
+                Name = "Own",
+                CreatedBy = "seed",
+                CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                Revision = 0
+            },
+            new FacilityRoleType
+            {
+                Id = Guid.Parse("62626262-6262-6262-6262-626262626262"),
+                Code = FacilityRoleType.Rent,
+                Name = "Rent",
+                CreatedBy = "seed",
+                CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                Revision = 0
+            },
+            new FacilityRoleType
+            {
+                Id = Guid.Parse("73737373-7373-7373-7373-737373737373"),
+                Code = FacilityRoleType.Lease,
+                Name = "Lease",
+                CreatedBy = "seed",
+                CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                Revision = 0
+            },
+            new FacilityRoleType
+            {
+                Id = Guid.Parse("84848484-8484-8484-8484-848484848484"),
+                Code = FacilityRoleType.Use,
+                Name = "Use",
                 CreatedBy = "seed",
                 CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 Revision = 0

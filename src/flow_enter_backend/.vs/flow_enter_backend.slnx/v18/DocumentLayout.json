@@ -3,12 +3,28 @@
   "WorkspaceRootPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Mappings\\Migrations\\20260711173444_facRoomBed.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Flowenter.Parties.Mappings\\Migrations\\20260711173444_facRoomBed.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Mappings\\Migrations\\20260711175228_initParties.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Flowenter.Parties.Mappings\\Migrations\\20260711175228_initParties.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{81AE8854-6D50-496A-95C6-D1F82D76D803}|Flowenter.Parties.Mappings\\Flowenter.Parties.Mappings.csproj|d:\\github\\flow-enterprises\\src\\flow_enter_backend\\flowenter.parties.mappings\\partiescontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{81AE8854-6D50-496A-95C6-D1F82D76D803}|Flowenter.Parties.Mappings\\Flowenter.Parties.Mappings.csproj|solutionrelative:flowenter.parties.mappings\\partiescontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4D7254CD-8952-4B30-B8E6-7AA2F915EB14}|Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj|d:\\github\\flow-enterprises\\src\\flow_enter_backend\\flowenter.parties.models\\facilitymodels\\facilityrole.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4D7254CD-8952-4B30-B8E6-7AA2F915EB14}|Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj|solutionrelative:flowenter.parties.models\\facilitymodels\\facilityrole.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4D7254CD-8952-4B30-B8E6-7AA2F915EB14}|Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj|d:\\github\\flow-enterprises\\src\\flow_enter_backend\\flowenter.parties.models\\facilitymodels\\facilityroletype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4D7254CD-8952-4B30-B8E6-7AA2F915EB14}|Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj|solutionrelative:flowenter.parties.models\\facilitymodels\\facilityroletype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4D7254CD-8952-4B30-B8E6-7AA2F915EB14}|Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj|d:\\github\\flow-enterprises\\src\\flow_enter_backend\\flowenter.parties.models\\facilitymodels\\facilitytype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4D7254CD-8952-4B30-B8E6-7AA2F915EB14}|Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj|solutionrelative:flowenter.parties.models\\facilitymodels\\facilitytype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Mappings\\Migrations\\20260711173444_facRoomBed.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Flowenter.Parties.Mappings\\Migrations\\20260711173444_facRoomBed.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{81AE8854-6D50-496A-95C6-D1F82D76D803}|Flowenter.Parties.Mappings\\Flowenter.Parties.Mappings.csproj|d:\\github\\flow-enterprises\\src\\flow_enter_backend\\flowenter.parties.mappings\\extensions\\queryableextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -41,10 +57,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Mappings\\Migrations\\20260711170419_initParties.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Flowenter.Parties.Mappings\\Migrations\\20260711170419_initParties.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4D7254CD-8952-4B30-B8E6-7AA2F915EB14}|Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj|d:\\github\\flow-enterprises\\src\\flow_enter_backend\\flowenter.parties.models\\facilitymodels\\facilitytype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4D7254CD-8952-4B30-B8E6-7AA2F915EB14}|Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj|solutionrelative:flowenter.parties.models\\facilitymodels\\facilitytype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{4D7254CD-8952-4B30-B8E6-7AA2F915EB14}|Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj|d:\\github\\flow-enterprises\\src\\flow_enter_backend\\flowenter.parties.models\\facilitymodels\\facility.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -294,32 +306,84 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "20260711175228_initParties.cs",
+              "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Mappings\\Migrations\\20260711175228_initParties.cs",
+              "RelativeDocumentMoniker": "Flowenter.Parties.Mappings\\Migrations\\20260711175228_initParties.cs",
+              "ToolTip": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Mappings\\Migrations\\20260711175228_initParties.cs",
+              "RelativeToolTip": "Flowenter.Parties.Mappings\\Migrations\\20260711175228_initParties.cs",
+              "ViewState": "AgIAANAAAAAAAAAAAAAQwNsAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-11T17:52:28.421Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "FacilityRoleType.cs",
+              "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\FacilityModels\\FacilityRoleType.cs",
+              "RelativeDocumentMoniker": "Flowenter.Parties.Models\\FacilityModels\\FacilityRoleType.cs",
+              "ToolTip": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\FacilityModels\\FacilityRoleType.cs",
+              "RelativeToolTip": "Flowenter.Parties.Models\\FacilityModels\\FacilityRoleType.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-11T17:43:17.601Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "20260711173444_facRoomBed.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Mappings\\Migrations\\20260711173444_facRoomBed.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Mappings\\Migrations\\20260711173444_facRoomBed.cs",
               "ToolTip": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Mappings\\Migrations\\20260711173444_facRoomBed.cs",
               "RelativeToolTip": "Flowenter.Parties.Mappings\\Migrations\\20260711173444_facRoomBed.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAsAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-07-11T17:34:44.809Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "QueryableExtensions.cs",
-              "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Mappings\\Extensions\\QueryableExtensions.cs",
-              "RelativeDocumentMoniker": "Flowenter.Parties.Mappings\\Extensions\\QueryableExtensions.cs",
-              "ToolTip": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Mappings\\Extensions\\QueryableExtensions.cs",
-              "RelativeToolTip": "Flowenter.Parties.Mappings\\Extensions\\QueryableExtensions.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAUwBEAAAAbAAAAAAAAAA==",
+              "DocumentIndex": 8,
+              "Title": "EnterprisesController.cs",
+              "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Api\\Controllers\\EnterprisesController.cs",
+              "RelativeDocumentMoniker": "Flowenter.Api\\Controllers\\EnterprisesController.cs",
+              "ToolTip": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Api\\Controllers\\EnterprisesController.cs",
+              "RelativeToolTip": "Flowenter.Api\\Controllers\\EnterprisesController.cs",
+              "ViewState": "AgIAAIUAAAAAAAAAAAAYwFEAAAAwAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-11T17:20:31.818Z",
+              "WhenOpened": "2026-07-11T13:35:21.452Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 1,
+              "Title": "PartiesContext.cs",
+              "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Mappings\\PartiesContext.cs",
+              "RelativeDocumentMoniker": "Flowenter.Parties.Mappings\\PartiesContext.cs",
+              "ToolTip": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Mappings\\PartiesContext.cs",
+              "RelativeToolTip": "Flowenter.Parties.Mappings\\PartiesContext.cs",
+              "ViewState": "AgIAAC4AAAAAAAAAAAAUwDwAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-11T13:07:37.951Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "FacilityRole.cs",
+              "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\FacilityModels\\FacilityRole.cs",
+              "RelativeDocumentMoniker": "Flowenter.Parties.Models\\FacilityModels\\FacilityRole.cs",
+              "ToolTip": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\FacilityModels\\FacilityRole.cs",
+              "RelativeToolTip": "Flowenter.Parties.Models\\FacilityModels\\FacilityRole.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-11T17:47:45.781Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
               "Title": "Employment.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\PartyModels\\Employment.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\PartyModels\\Employment.cs",
@@ -333,19 +397,32 @@
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "EnterprisesController.cs",
-              "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Api\\Controllers\\EnterprisesController.cs",
-              "RelativeDocumentMoniker": "Flowenter.Api\\Controllers\\EnterprisesController.cs",
-              "ToolTip": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Api\\Controllers\\EnterprisesController.cs",
-              "RelativeToolTip": "Flowenter.Api\\Controllers\\EnterprisesController.cs",
-              "ViewState": "AgIAAIUAAAAAAAAAAAAYwFEAAAAwAAAAAAAAAA==",
+              "Title": "FacilityType.cs",
+              "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\FacilityModels\\FacilityType.cs",
+              "RelativeDocumentMoniker": "Flowenter.Parties.Models\\FacilityModels\\FacilityType.cs",
+              "ToolTip": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\FacilityModels\\FacilityType.cs",
+              "RelativeToolTip": "Flowenter.Parties.Models\\FacilityModels\\FacilityType.cs",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAUwAkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-11T13:35:21.452Z",
+              "WhenOpened": "2026-07-11T16:35:06.298Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 6,
+              "Title": "QueryableExtensions.cs",
+              "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Mappings\\Extensions\\QueryableExtensions.cs",
+              "RelativeDocumentMoniker": "Flowenter.Parties.Mappings\\Extensions\\QueryableExtensions.cs",
+              "ToolTip": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Mappings\\Extensions\\QueryableExtensions.cs",
+              "RelativeToolTip": "Flowenter.Parties.Mappings\\Extensions\\QueryableExtensions.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAUwBEAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-11T17:20:31.818Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "Room.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\FacilityModels\\Room.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\FacilityModels\\Room.cs",
@@ -358,20 +435,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "PartiesContext.cs",
-              "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Mappings\\PartiesContext.cs",
-              "RelativeDocumentMoniker": "Flowenter.Parties.Mappings\\PartiesContext.cs",
-              "ToolTip": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Mappings\\PartiesContext.cs",
-              "RelativeToolTip": "Flowenter.Parties.Mappings\\PartiesContext.cs",
-              "ViewState": "AgIAAGIAAAAAAAAAAAAuwHUAAAAwAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-11T13:07:37.951Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 9,
               "Title": "20260711172228_initParties.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Mappings\\Migrations\\20260711172228_initParties.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Mappings\\Migrations\\20260711172228_initParties.cs",
@@ -384,7 +448,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 14,
               "Title": "Facility.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\FacilityModels\\Facility.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\FacilityModels\\Facility.cs",
@@ -397,7 +461,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 10,
               "Title": "EffectiveEntity.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Domain.Models\\EffectiveEntity.cs",
               "RelativeDocumentMoniker": "Flowenter.Domain.Models\\EffectiveEntity.cs",
@@ -410,20 +474,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "FacilityType.cs",
-              "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\FacilityModels\\FacilityType.cs",
-              "RelativeDocumentMoniker": "Flowenter.Parties.Models\\FacilityModels\\FacilityType.cs",
-              "ToolTip": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\FacilityModels\\FacilityType.cs",
-              "RelativeToolTip": "Flowenter.Parties.Models\\FacilityModels\\FacilityType.cs",
-              "ViewState": "AgIAAAQAAAAAAAAAAAAUwBMAAAAlAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-11T16:35:06.298Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 11,
               "Title": "Enterprise.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\PartyModels\\Enterprise.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\PartyModels\\Enterprise.cs",
@@ -436,7 +487,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 13,
               "Title": "20260711170419_initParties.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Mappings\\Migrations\\20260711170419_initParties.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Mappings\\Migrations\\20260711170419_initParties.cs",
@@ -449,7 +500,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 15,
               "Title": "20260711165857_facilities.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Mappings\\Migrations\\20260711165857_facilities.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Mappings\\Migrations\\20260711165857_facilities.cs",
@@ -462,7 +513,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 17,
               "Title": "Person.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\PartyModels\\Person.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\PartyModels\\Person.cs",
@@ -475,7 +526,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 18,
               "Title": "Bed.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\FacilityModels\\Bed.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\FacilityModels\\Bed.cs",
@@ -488,7 +539,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 16,
               "Title": "GenderType.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\PartyModels\\GenderType.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\PartyModels\\GenderType.cs",
@@ -501,7 +552,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 19,
               "Title": "PartyType.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\PartyModels\\PartyType.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\PartyModels\\PartyType.cs",
@@ -514,7 +565,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 20,
               "Title": "PartyRoleType.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\PartyModels\\PartyRoleType.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\PartyModels\\PartyRoleType.cs",
@@ -527,7 +578,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 21,
               "Title": "Customer.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\PartyModels\\Customer.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\PartyModels\\Customer.cs",
@@ -540,7 +591,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 22,
               "Title": "DevTenantProvider.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Mappings\\DevTenantProvider.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Mappings\\DevTenantProvider.cs",
@@ -553,7 +604,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 23,
               "Title": "PartiesDbContextFactory.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Mappings\\PartiesDbContextFactory.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Mappings\\PartiesDbContextFactory.cs",
@@ -566,7 +617,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 24,
               "Title": "TestParties.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\test\\Parties.Tests\\TestParties.cs",
               "RelativeDocumentMoniker": "..\\..\\test\\Parties.Tests\\TestParties.cs",
@@ -579,7 +630,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 26,
               "Title": "PartyRole.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\PartyModels\\PartyRole.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\PartyModels\\PartyRole.cs",
@@ -592,7 +643,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 24,
+              "DocumentIndex": 27,
               "Title": "PartyRelationshipType.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\PartyModels\\PartyRelationshipType.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\PartyModels\\PartyRelationshipType.cs",
@@ -605,7 +656,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 25,
               "Title": "Party.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\PartyModels\\Party.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\PartyModels\\Party.cs",
@@ -618,7 +669,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 25,
+              "DocumentIndex": 28,
               "Title": "PartyContactMechanism.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\PartyModels\\PartyContactMechanism.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\PartyModels\\PartyContactMechanism.cs",
@@ -631,7 +682,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 26,
+              "DocumentIndex": 29,
               "Title": "PartyClassification.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\PartyModels\\PartyClassification.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\PartyModels\\PartyClassification.cs",
@@ -644,7 +695,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 27,
+              "DocumentIndex": 30,
               "Title": "PartyCategory.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\PartyModels\\PartyCategory.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\PartyModels\\PartyCategory.cs",
@@ -657,7 +708,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 28,
+              "DocumentIndex": 31,
               "Title": "Organization.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\PartyModels\\Organization.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\PartyModels\\Organization.cs",
@@ -670,7 +721,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 29,
+              "DocumentIndex": 32,
               "Title": "LegalStructure.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\PartyModels\\LegalStructure.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\PartyModels\\LegalStructure.cs",
@@ -683,7 +734,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 30,
+              "DocumentIndex": 33,
               "Title": "Language.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\PartyModels\\Language.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\PartyModels\\Language.cs",
@@ -696,7 +747,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 31,
+              "DocumentIndex": 34,
               "Title": "FinancialAccount.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\PartyModels\\FinancialAccount.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\PartyModels\\FinancialAccount.cs",
@@ -709,7 +760,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 32,
+              "DocumentIndex": 35,
               "Title": "TelecommunicationNumbercs.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\ContactMechanismModels\\TelecommunicationNumbercs.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\ContactMechanismModels\\TelecommunicationNumbercs.cs",
@@ -722,7 +773,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 33,
+              "DocumentIndex": 36,
               "Title": "PostalAddress.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\ContactMechanismModels\\PostalAddress.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\ContactMechanismModels\\PostalAddress.cs",
@@ -735,7 +786,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 34,
+              "DocumentIndex": 37,
               "Title": "ElectronicAddress.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\ContactMechanismModels\\ElectronicAddress.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\ContactMechanismModels\\ElectronicAddress.cs",
@@ -748,7 +799,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 35,
+              "DocumentIndex": 38,
               "Title": "ContactMechanismType.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\ContactMechanismModels\\ContactMechanismType.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\ContactMechanismModels\\ContactMechanismType.cs",
@@ -761,7 +812,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 36,
+              "DocumentIndex": 39,
               "Title": "ContactMechanism.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\ContactMechanismModels\\ContactMechanism.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\ContactMechanismModels\\ContactMechanism.cs",
@@ -774,7 +825,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 37,
+              "DocumentIndex": 40,
               "Title": "GeographicBoundaryType.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\GeographicBoundaryModels\\GeographicBoundaryType.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\GeographicBoundaryModels\\GeographicBoundaryType.cs",
@@ -787,7 +838,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 38,
+              "DocumentIndex": 41,
               "Title": "GeographicBoundary.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\GeographicBoundaryModels\\GeographicBoundary.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\GeographicBoundaryModels\\GeographicBoundary.cs",
@@ -800,7 +851,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 39,
+              "DocumentIndex": 42,
               "Title": "Country.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\GeographicBoundaryModels\\Country.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Models\\GeographicBoundaryModels\\Country.cs",
@@ -813,7 +864,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 40,
+              "DocumentIndex": 43,
               "Title": "PartiesController.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Api\\Controllers\\PartiesController.cs",
               "RelativeDocumentMoniker": "Flowenter.Api\\Controllers\\PartiesController.cs",
@@ -826,7 +877,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 42,
+              "DocumentIndex": 45,
               "Title": "GeographicBoundariesController.GeographicBoundaryTypes.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Api\\Controllers\\GeographicBoundariesController.GeographicBoundaryTypes.cs",
               "RelativeDocumentMoniker": "Flowenter.Api\\Controllers\\GeographicBoundariesController.GeographicBoundaryTypes.cs",
@@ -839,7 +890,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 41,
+              "DocumentIndex": 44,
               "Title": "GeographicBoundariesController.Countries.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Api\\Controllers\\GeographicBoundariesController.Countries.cs",
               "RelativeDocumentMoniker": "Flowenter.Api\\Controllers\\GeographicBoundariesController.Countries.cs",
@@ -852,7 +903,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 43,
+              "DocumentIndex": 46,
               "Title": "ContactMechanismsController.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Api\\Controllers\\ContactMechanismsController.cs",
               "RelativeDocumentMoniker": "Flowenter.Api\\Controllers\\ContactMechanismsController.cs",
@@ -865,7 +916,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 44,
+              "DocumentIndex": 47,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Api\\Program.cs",
               "RelativeDocumentMoniker": "Flowenter.Api\\Program.cs",
@@ -878,7 +929,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 45,
+              "DocumentIndex": 48,
               "Title": "appsettings.Development.json",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Api\\appsettings.Development.json",
               "RelativeDocumentMoniker": "Flowenter.Api\\appsettings.Development.json",
@@ -891,7 +942,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 46,
+              "DocumentIndex": 49,
               "Title": "appsettings.json",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Api\\appsettings.json",
               "RelativeDocumentMoniker": "Flowenter.Api\\appsettings.json",
@@ -904,7 +955,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 49,
+              "DocumentIndex": 52,
               "Title": "Maybe.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Domain.Models\\Maybe.cs",
               "RelativeDocumentMoniker": "Flowenter.Domain.Models\\Maybe.cs",
@@ -916,7 +967,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 48,
+              "DocumentIndex": 51,
               "Title": "ITenantProvider.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Domain.Models\\ITenantProvider.cs",
               "RelativeDocumentMoniker": "Flowenter.Domain.Models\\ITenantProvider.cs",
@@ -928,7 +979,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 47,
+              "DocumentIndex": 50,
               "Title": "ITenantEnabled.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Domain.Models\\ITenantEnabled.cs",
               "RelativeDocumentMoniker": "Flowenter.Domain.Models\\ITenantEnabled.cs",
@@ -940,7 +991,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 51,
+              "DocumentIndex": 54,
               "Title": "ContactMechanismsController.ContactMechanismTypes.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Api\\Controllers\\ContactMechanismsController.ContactMechanismTypes.cs",
               "RelativeDocumentMoniker": "Flowenter.Api\\Controllers\\ContactMechanismsController.ContactMechanismTypes.cs",
@@ -953,7 +1004,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 50,
+              "DocumentIndex": 53,
               "Title": "Tenants.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Domain.Models\\Tenants.cs",
               "RelativeDocumentMoniker": "Flowenter.Domain.Models\\Tenants.cs",
@@ -965,7 +1016,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 52,
+              "DocumentIndex": 55,
               "Title": "ContactMechanismServices.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Services\\ContactMechanismServices.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.Services\\ContactMechanismServices.cs",
@@ -977,7 +1028,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 53,
+              "DocumentIndex": 56,
               "Title": "CreateContactMechanismType.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.IServices\\DTOs\\ContactMechanismDto\\CreateContactMechanismType.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.IServices\\DTOs\\ContactMechanismDto\\CreateContactMechanismType.cs",
@@ -989,7 +1040,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 55,
+              "DocumentIndex": 58,
               "Title": "TenantPartiesConnectionStrings.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Api\\Services\\TenantPartiesConnectionStrings.cs",
               "RelativeDocumentMoniker": "Flowenter.Api\\Services\\TenantPartiesConnectionStrings.cs",
@@ -1001,7 +1052,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 56,
+              "DocumentIndex": 59,
               "Title": "EnterprisesDto.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.IServices\\DTOs\\EnterpriseDto\\EnterprisesDto.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.IServices\\DTOs\\EnterpriseDto\\EnterprisesDto.cs",
@@ -1013,7 +1064,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 54,
+              "DocumentIndex": 57,
               "Title": "TenantProvider.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Api\\Services\\TenantProvider.cs",
               "RelativeDocumentMoniker": "Flowenter.Api\\Services\\TenantProvider.cs",
@@ -1025,7 +1076,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 57,
+              "DocumentIndex": 60,
               "Title": "CreateGeographicBoundaryType.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.IServices\\DTOs\\CreateGeographicBoundaryType.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.IServices\\DTOs\\CreateGeographicBoundaryType.cs",
@@ -1037,7 +1088,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 58,
+              "DocumentIndex": 61,
               "Title": "CustomHeaderMiddleware.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Api\\Middleware\\CustomHeaderMiddleware.cs",
               "RelativeDocumentMoniker": "Flowenter.Api\\Middleware\\CustomHeaderMiddleware.cs",
@@ -1049,7 +1100,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 59,
+              "DocumentIndex": 62,
               "Title": "ErrorHandlingMiddleware.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Api\\Middleware\\ErrorHandlingMiddleware.cs",
               "RelativeDocumentMoniker": "Flowenter.Api\\Middleware\\ErrorHandlingMiddleware.cs",
@@ -1061,7 +1112,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 60,
+              "DocumentIndex": 63,
               "Title": "LoggingExtensions.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Api\\Extensions\\LoggingExtensions.cs",
               "RelativeDocumentMoniker": "Flowenter.Api\\Extensions\\LoggingExtensions.cs",
@@ -1073,7 +1124,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 61,
+              "DocumentIndex": 64,
               "Title": "NotFoundException.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Domain.Models\\Exceptions\\NotFoundException.cs",
               "RelativeDocumentMoniker": "Flowenter.Domain.Models\\Exceptions\\NotFoundException.cs",
@@ -1085,7 +1136,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 62,
+              "DocumentIndex": 65,
               "Title": "BusinessException.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Domain.Models\\Exceptions\\BusinessException.cs",
               "RelativeDocumentMoniker": "Flowenter.Domain.Models\\Exceptions\\BusinessException.cs",
@@ -1097,7 +1148,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 63,
+              "DocumentIndex": 66,
               "Title": "Flowenter.Domain.Models.csproj",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Domain.Models\\Flowenter.Domain.Models.csproj",
               "RelativeDocumentMoniker": "Flowenter.Domain.Models\\Flowenter.Domain.Models.csproj",
@@ -1110,7 +1161,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 65,
+              "DocumentIndex": 68,
               "Title": "PartiesController.PartyClassifications.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Api\\Controllers\\PartiesController.PartyClassifications.cs",
               "RelativeDocumentMoniker": "Flowenter.Api\\Controllers\\PartiesController.PartyClassifications.cs",
@@ -1123,7 +1174,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 64,
+              "DocumentIndex": 67,
               "Title": "PartiesController.PartyRoleTypes.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Api\\Controllers\\PartiesController.PartyRoleTypes.cs",
               "RelativeDocumentMoniker": "Flowenter.Api\\Controllers\\PartiesController.PartyRoleTypes.cs",
@@ -1136,7 +1187,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 66,
+              "DocumentIndex": 69,
               "Title": "CreatePartyRoleType.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.IServices\\DTOs\\CreatePartyRoleType.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.IServices\\DTOs\\CreatePartyRoleType.cs",
@@ -1148,7 +1199,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 67,
+              "DocumentIndex": 70,
               "Title": "CreatePartyClassification.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.IServices\\DTOs\\CreatePartyClassification.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.IServices\\DTOs\\CreatePartyClassification.cs",
@@ -1160,7 +1211,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 68,
+              "DocumentIndex": 71,
               "Title": "CreatePartyCategory.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.IServices\\DTOs\\CreatePartyCategory.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.IServices\\DTOs\\CreatePartyCategory.cs",
@@ -1172,7 +1223,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 69,
+              "DocumentIndex": 72,
               "Title": "CreateLegalStructure.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.IServices\\DTOs\\CreateLegalStructure.cs",
               "RelativeDocumentMoniker": "Flowenter.Parties.IServices\\DTOs\\CreateLegalStructure.cs",
