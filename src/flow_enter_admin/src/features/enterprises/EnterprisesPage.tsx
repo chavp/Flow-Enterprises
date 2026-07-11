@@ -26,23 +26,27 @@ import {
 import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 import {
+  createEnterpriseBed,
   createEnperprise,
   createEnterpriseRoom,
+  deleteEnterprise,
   deleteEnterpriseRoom,
   deleteEnterpriseEmployment,
   createEnterpriseEmployment,
+  fetchEnterpriseBeds,
   fetchEnterpriseEmployments,
   fetchEnterprises,
   fetchLegalStructures,
   fetchPartyRoleTypes,
   fetchEnterpriseRooms,
+  updateEnterpriseBed,
   updateEnterpriseEmploymentEffectiveDate,
   updateEnterpriseEmployment,
   updateEnterpriseRoom,
   updateEnperprise
 } from "../../api/enterprises";
 import { TopDrawerForm } from "../../components/TopDrawerForm";
-import { CreateEmploymentRequest, CreateEnterpriseRequest, CreateRoomRequest, Enterprise, Employment, Room } from "./types";
+import { Bed, CreateBedRequest, CreateEmploymentRequest, CreateEnterpriseRequest, CreateRoomRequest, Enterprise, Employment, Room } from "./types";
 
 const { Title, Text } = Typography;
 
@@ -53,6 +57,7 @@ type EnterprisesPageProps = {
 type FormValues = CreateEnterpriseRequest;
 type EmploymentFormValues = CreateEmploymentRequest;
 type RoomFormValues = CreateRoomRequest;
+type BedFormValues = CreateBedRequest;
 type EmploymentGroup = {
   employeePartyId: string;
   employeeFullName: string;
@@ -89,6 +94,9 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
   const [roomSearchText, setRoomSearchText] = useState("");
   const [isCreateRoomOpen, setCreateRoomOpen] = useState(false);
   const [editingRoom, setEditingRoom] = useState<Room | null>(null);
+  const [bedSearchText, setBedSearchText] = useState("");
+  const [isCreateBedOpen, setCreateBedOpen] = useState(false);
+  const [editingBed, setEditingBed] = useState<Bed | null>(null);
   const [effectiveDateDrafts, setEffectiveDateDrafts] = useState<
     Record<string, { fromDate: string; thruDate: string }>
   >({});
@@ -99,6 +107,8 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
   const [editEmploymentForm] = Form.useForm<EmploymentFormValues>();
   const [createRoomForm] = Form.useForm<RoomFormValues>();
   const [editRoomForm] = Form.useForm<RoomFormValues>();
+  const [createBedForm] = Form.useForm<BedFormValues>();
+  const [editBedForm] = Form.useForm<BedFormValues>();
 
   const enterprisesQuery = useQuery({
     queryKey: ["enterprises", pageIndex, pageSize, apiBaseUrl],
@@ -128,6 +138,18 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
     enabled: Boolean(peopleEnterprise)
   });
 
+  const roomOptionsQuery = useQuery({
+    queryKey: ["enterprise-room-options", peopleEnterprise?.enterpriseId, apiBaseUrl],
+    queryFn: () => fetchEnterpriseRooms(peopleEnterprise!.enterpriseId, "", apiBaseUrl),
+    enabled: Boolean(peopleEnterprise)
+  });
+
+  const bedsQuery = useQuery({
+    queryKey: ["enterprise-beds", peopleEnterprise?.enterpriseId, bedSearchText, apiBaseUrl],
+    queryFn: () => fetchEnterpriseBeds(peopleEnterprise!.enterpriseId, bedSearchText, apiBaseUrl),
+    enabled: Boolean(peopleEnterprise)
+  });
+
   const createMutation = useMutation({
     mutationFn: (values: FormValues) => createEnperprise(values, apiBaseUrl),
     onSuccess: async () => {
@@ -138,6 +160,19 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
     },
     onError: (error) => {
       messageApi.error(error instanceof Error ? error.message : "Create failed");
+    }
+  });
+
+  const deleteEnterpriseMutation = useMutation({
+    mutationFn: async (enterpriseId: string) => {
+      await deleteEnterprise(enterpriseId, apiBaseUrl);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["enterprises"] });
+      messageApi.success("Enterprise deleted");
+    },
+    onError: (error) => {
+      messageApi.error(error instanceof Error ? error.message : "Delete enterprise failed");
     }
   });
 
@@ -291,6 +326,9 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
       await queryClient.invalidateQueries({
         queryKey: ["enterprise-rooms", peopleEnterprise.enterpriseId, roomSearchText, apiBaseUrl]
       });
+      await queryClient.invalidateQueries({
+        queryKey: ["enterprise-room-options", peopleEnterprise.enterpriseId, apiBaseUrl]
+      });
       setCreateRoomOpen(false);
       createRoomForm.resetFields();
       messageApi.success("Room added");
@@ -315,6 +353,12 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
 
       await queryClient.invalidateQueries({
         queryKey: ["enterprise-rooms", peopleEnterprise.enterpriseId, roomSearchText, apiBaseUrl]
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["enterprise-room-options", peopleEnterprise.enterpriseId, apiBaseUrl]
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["enterprise-beds", peopleEnterprise.enterpriseId, bedSearchText, apiBaseUrl]
       });
       setEditingRoom(null);
       editRoomForm.resetFields();
@@ -341,10 +385,66 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
       await queryClient.invalidateQueries({
         queryKey: ["enterprise-rooms", peopleEnterprise.enterpriseId, roomSearchText, apiBaseUrl]
       });
+      await queryClient.invalidateQueries({
+        queryKey: ["enterprise-room-options", peopleEnterprise.enterpriseId, apiBaseUrl]
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["enterprise-beds", peopleEnterprise.enterpriseId, bedSearchText, apiBaseUrl]
+      });
       messageApi.success("Room deleted");
     },
     onError: (error) => {
       messageApi.error(error instanceof Error ? error.message : "Delete room failed");
+    }
+  });
+
+  const createBedMutation = useMutation({
+    mutationFn: async (values: BedFormValues) => {
+      if (!peopleEnterprise) {
+        return;
+      }
+
+      await createEnterpriseBed(peopleEnterprise.enterpriseId, values, apiBaseUrl);
+    },
+    onSuccess: async () => {
+      if (!peopleEnterprise) {
+        return;
+      }
+
+      await queryClient.invalidateQueries({
+        queryKey: ["enterprise-beds", peopleEnterprise.enterpriseId, bedSearchText, apiBaseUrl]
+      });
+      setCreateBedOpen(false);
+      createBedForm.resetFields();
+      messageApi.success("Bed added");
+    },
+    onError: (error) => {
+      messageApi.error(error instanceof Error ? error.message : "Create bed failed");
+    }
+  });
+
+  const updateBedMutation = useMutation({
+    mutationFn: async (values: BedFormValues) => {
+      if (!peopleEnterprise || !editingBed) {
+        return;
+      }
+
+      await updateEnterpriseBed(peopleEnterprise.enterpriseId, editingBed.bedId, values, apiBaseUrl);
+    },
+    onSuccess: async () => {
+      if (!peopleEnterprise) {
+        return;
+      }
+
+      await queryClient.invalidateQueries({
+        queryKey: ["enterprise-beds", peopleEnterprise.enterpriseId, bedSearchText, apiBaseUrl]
+      });
+      setEditingBed(null);
+      editBedForm.resetFields();
+      messageApi.success("Bed updated");
+    },
+    onError: (error) => {
+      messageApi.error(error instanceof Error ? error.message : "Update bed failed");
     }
   });
 
@@ -401,11 +501,22 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
             <Button size="small" onClick={() => setPeopleEnterprise(row.original)}>
               Manage People
             </Button>
+            <Popconfirm
+              title="Delete enterprise?"
+              description="This will remove enterprise and all related data."
+              okText="Delete"
+              okButtonProps={{ danger: true, loading: deleteEnterpriseMutation.isPending }}
+              onConfirm={() => deleteEnterpriseMutation.mutate(row.original.enterpriseId)}
+            >
+              <Button size="small" danger>
+                Delete
+              </Button>
+            </Popconfirm>
           </Space>
         )
       }
     ],
-    [editForm]
+    [deleteEnterpriseMutation, editForm]
   );
 
   const enterprises = enterprisesQuery.data?.data ?? [];
@@ -437,6 +548,11 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
 
   const employments = employmentsQuery.data ?? [];
   const rooms = roomsQuery.data ?? [];
+  const roomOptions = (roomOptionsQuery.data ?? []).map((item) => ({
+    value: item.roomId,
+    label: item.number
+  }));
+  const beds = bedsQuery.data ?? [];
   const employmentGroups = useMemo<EmploymentGroup[]>(() => {
     const map = new Map<string, EmploymentGroup>();
     for (const employment of employments) {
@@ -485,15 +601,20 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                   setPeopleEnterprise(null);
                   setEditingEmployment(null);
                   setEditingRoom(null);
+                  setEditingBed(null);
                   setCreateEmploymentOpen(false);
                   setCreateRoomOpen(false);
+                  setCreateBedOpen(false);
                   setRoomSearchText("");
+                  setBedSearchText("");
                   setEffectiveDateDrafts({});
                   setPeopleTabKey("people");
                   employmentForm.resetFields();
                   editEmploymentForm.resetFields();
                   createRoomForm.resetFields();
                   editRoomForm.resetFields();
+                  createBedForm.resetFields();
+                  editBedForm.resetFields();
                 }}
               >
                 Back to Enterprises
@@ -679,73 +800,138 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                   label: "Facilities",
                   children: (
                     <Space direction="vertical" size="middle" style={{ width: "100%" }}>
-                      <Space style={{ width: "100%", justifyContent: "space-between" }}>
-                        <Input.Search
-                          allowClear
-                          placeholder="Search room number"
-                          value={roomSearchText}
-                          onChange={(event) => setRoomSearchText(event.target.value)}
-                          style={{ maxWidth: 320 }}
-                        />
-                        <Button type="primary" onClick={() => setCreateRoomOpen(true)}>
-                          Add Room
-                        </Button>
-                      </Space>
+                      <Card size="small" title="Rooms">
+                        <Space direction="vertical" size="middle" style={{ width: "100%" }}>
+                          <Space style={{ width: "100%", justifyContent: "space-between" }}>
+                            <Input.Search
+                              allowClear
+                              placeholder="Search room number"
+                              value={roomSearchText}
+                              onChange={(event) => setRoomSearchText(event.target.value)}
+                              style={{ maxWidth: 320 }}
+                            />
+                            <Button type="primary" onClick={() => setCreateRoomOpen(true)}>
+                              Add Room
+                            </Button>
+                          </Space>
 
-                      {roomsQuery.isError ? (
-                        <Alert
-                          type="error"
-                          message="Failed to load rooms"
-                          description={roomsQuery.error instanceof Error ? roomsQuery.error.message : "Unknown error"}
-                          showIcon
-                        />
-                      ) : roomsQuery.isLoading ? (
-                        <Spin />
-                      ) : rooms.length === 0 ? (
-                        <Empty description="No rooms found." />
-                      ) : (
-                        <div className="tanstack-table-wrapper">
-                          <table className="tanstack-table">
-                            <thead>
-                              <tr>
-                                <th>Room Number</th>
-                                <th>Actions</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {rooms.map((room) => (
-                                <tr key={room.roomId}>
-                                  <td>{room.number}</td>
-                                  <td>
-                                    <Space>
-                                      <Button
-                                        size="small"
-                                        onClick={() => {
-                                          setEditingRoom(room);
-                                          editRoomForm.setFieldsValue({ number: room.number });
-                                        }}
-                                      >
-                                        Edit
-                                      </Button>
-                                      <Popconfirm
-                                        title="Delete room?"
-                                        description="This removes the room from this enterprise."
-                                        okText="Delete"
-                                        okButtonProps={{ danger: true, loading: deleteRoomMutation.isPending }}
-                                        onConfirm={() => deleteRoomMutation.mutate(room.roomId)}
-                                      >
-                                        <Button size="small" danger>
-                                          Delete
+                          {roomsQuery.isError ? (
+                            <Alert
+                              type="error"
+                              message="Failed to load rooms"
+                              description={roomsQuery.error instanceof Error ? roomsQuery.error.message : "Unknown error"}
+                              showIcon
+                            />
+                          ) : roomsQuery.isLoading ? (
+                            <Spin />
+                          ) : rooms.length === 0 ? (
+                            <Empty description="No rooms found." />
+                          ) : (
+                            <div className="tanstack-table-wrapper">
+                              <table className="tanstack-table">
+                                <thead>
+                                  <tr>
+                                    <th>Room Number</th>
+                                    <th>Actions</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {rooms.map((room) => (
+                                    <tr key={room.roomId}>
+                                      <td>{room.number}</td>
+                                      <td>
+                                        <Space>
+                                          <Button
+                                            size="small"
+                                            onClick={() => {
+                                              setEditingRoom(room);
+                                              editRoomForm.setFieldsValue({ number: room.number });
+                                            }}
+                                          >
+                                            Edit
+                                          </Button>
+                                          <Popconfirm
+                                            title="Delete room?"
+                                            description="This removes the room from this enterprise."
+                                            okText="Delete"
+                                            okButtonProps={{ danger: true, loading: deleteRoomMutation.isPending }}
+                                            onConfirm={() => deleteRoomMutation.mutate(room.roomId)}
+                                          >
+                                            <Button size="small" danger>
+                                              Delete
+                                            </Button>
+                                          </Popconfirm>
+                                        </Space>
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          )}
+                        </Space>
+                      </Card>
+
+                      <Card size="small" title="Beds">
+                        <Space direction="vertical" size="middle" style={{ width: "100%" }}>
+                          <Space style={{ width: "100%", justifyContent: "space-between" }}>
+                            <Input.Search
+                              allowClear
+                              placeholder="Search bed or room number"
+                              value={bedSearchText}
+                              onChange={(event) => setBedSearchText(event.target.value)}
+                              style={{ maxWidth: 320 }}
+                            />
+                            <Button type="primary" onClick={() => setCreateBedOpen(true)}>
+                              Add Bed
+                            </Button>
+                          </Space>
+
+                          {bedsQuery.isError ? (
+                            <Alert
+                              type="error"
+                              message="Failed to load beds"
+                              description={bedsQuery.error instanceof Error ? bedsQuery.error.message : "Unknown error"}
+                              showIcon
+                            />
+                          ) : bedsQuery.isLoading ? (
+                            <Spin />
+                          ) : beds.length === 0 ? (
+                            <Empty description="No beds found." />
+                          ) : (
+                            <div className="tanstack-table-wrapper">
+                              <table className="tanstack-table">
+                                <thead>
+                                  <tr>
+                                    <th>Bed Number</th>
+                                    <th>Room</th>
+                                    <th>Actions</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {beds.map((bed) => (
+                                    <tr key={bed.bedId}>
+                                      <td>{bed.number}</td>
+                                      <td>{bed.roomNumber}</td>
+                                      <td>
+                                        <Button
+                                          size="small"
+                                          onClick={() => {
+                                            setEditingBed(bed);
+                                            editBedForm.setFieldsValue({ number: bed.number, roomId: bed.roomId });
+                                          }}
+                                        >
+                                          Edit
                                         </Button>
-                                      </Popconfirm>
-                                    </Space>
-                                  </td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
-                      )}
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          )}
+                        </Space>
+                      </Card>
                     </Space>
                   )
                 }
@@ -892,6 +1078,76 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                   rules={[{ required: true, message: "Room number is required" }]}
                 >
                   <Input maxLength={100} />
+                </Form.Item>
+              </Form>
+            </TopDrawerForm>
+
+            <TopDrawerForm
+              open={isCreateBedOpen}
+              title="Add Bed"
+              submitText="Add"
+              onClose={() => {
+                setCreateBedOpen(false);
+                createBedForm.resetFields();
+              }}
+              onSubmit={() => createBedForm.submit()}
+              loading={createBedMutation.isPending}
+            >
+              <Form<BedFormValues> form={createBedForm} layout="vertical" onFinish={(values) => createBedMutation.mutate(values)}>
+                <Form.Item
+                  name="number"
+                  label="Bed Number"
+                  rules={[{ required: true, message: "Bed number is required" }]}
+                >
+                  <Input maxLength={100} />
+                </Form.Item>
+                <Form.Item
+                  name="roomId"
+                  label="Room"
+                  rules={[{ required: true, message: "Room is required" }]}
+                >
+                  <Select
+                    showSearch
+                    options={roomOptions}
+                    loading={roomOptionsQuery.isLoading}
+                    placeholder="Select room"
+                    optionFilterProp="label"
+                  />
+                </Form.Item>
+              </Form>
+            </TopDrawerForm>
+
+            <TopDrawerForm
+              open={Boolean(editingBed)}
+              title="Edit Bed"
+              submitText="Update"
+              onClose={() => {
+                setEditingBed(null);
+                editBedForm.resetFields();
+              }}
+              onSubmit={() => editBedForm.submit()}
+              loading={updateBedMutation.isPending}
+            >
+              <Form<BedFormValues> form={editBedForm} layout="vertical" onFinish={(values) => updateBedMutation.mutate(values)}>
+                <Form.Item
+                  name="number"
+                  label="Bed Number"
+                  rules={[{ required: true, message: "Bed number is required" }]}
+                >
+                  <Input maxLength={100} />
+                </Form.Item>
+                <Form.Item
+                  name="roomId"
+                  label="Room"
+                  rules={[{ required: true, message: "Room is required" }]}
+                >
+                  <Select
+                    showSearch
+                    options={roomOptions}
+                    loading={roomOptionsQuery.isLoading}
+                    placeholder="Select room"
+                    optionFilterProp="label"
+                  />
                 </Form.Item>
               </Form>
             </TopDrawerForm>

@@ -1,5 +1,7 @@
 import { requestJson } from "./http";
 import {
+  Bed,
+  CreateBedRequest,
   CreateEmploymentRequest,
   CreateEnterpriseRequest,
   CreateRoomRequest,
@@ -11,6 +13,7 @@ import {
   Room,
   UpdateEmploymentEffectiveDateRequest,
   UpdateEmploymentRequest,
+  UpdateBedRequest,
   UpdateRoomRequest,
   UpdateEnterpriseRequest
 } from "../features/enterprises/types";
@@ -71,6 +74,10 @@ export async function updateEnperprise(payload: UpdateEnterpriseRequest, apiBase
     },
     apiBaseUrl
   );
+}
+
+export async function deleteEnterprise(enterpriseId: string, apiBaseUrl?: string): Promise<void> {
+  await requestJson(`/api/parties/enterprises/${enterpriseId}`, { method: "DELETE" }, apiBaseUrl);
 }
 
 export async function fetchPartyRoleTypes(apiBaseUrl?: string): Promise<PartyRoleType[]> {
@@ -181,6 +188,48 @@ export async function deleteEnterpriseRoom(
   await requestJson(
     `/api/parties/enterprises/${enterpriseId}/facilities/rooms/${roomId}`,
     { method: "DELETE" },
+    apiBaseUrl
+  );
+}
+
+export async function fetchEnterpriseBeds(
+  enterpriseId: string,
+  searchText: string,
+  apiBaseUrl?: string
+): Promise<Bed[]> {
+  const query = new URLSearchParams();
+  if (searchText.trim().length > 0) {
+    query.set("searchText", searchText.trim());
+  }
+
+  return requestJson<Bed[]>(
+    `/api/parties/enterprises/${enterpriseId}/facilities/beds${query.toString() ? `?${query.toString()}` : ""}`,
+    { method: "GET" },
+    apiBaseUrl
+  );
+}
+
+export async function createEnterpriseBed(
+  enterpriseId: string,
+  payload: CreateBedRequest,
+  apiBaseUrl?: string
+): Promise<void> {
+  await requestJson(
+    `/api/parties/enterprises/${enterpriseId}/facilities/beds`,
+    { method: "POST", body: JSON.stringify(payload) },
+    apiBaseUrl
+  );
+}
+
+export async function updateEnterpriseBed(
+  enterpriseId: string,
+  bedId: string,
+  payload: UpdateBedRequest,
+  apiBaseUrl?: string
+): Promise<void> {
+  await requestJson(
+    `/api/parties/enterprises/${enterpriseId}/facilities/beds/${bedId}`,
+    { method: "PUT", body: JSON.stringify(payload) },
     apiBaseUrl
   );
 }

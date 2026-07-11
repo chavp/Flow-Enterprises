@@ -101,3 +101,20 @@ export type CreateRoomRequest = {
 };
 
 export type UpdateRoomRequest = CreateRoomRequest;
+
+export type Bed = {
+  bedId: string;
+  number: string;
+  roomId: string;
+  roomNumber: string;
+  createdAtUtc: string;
+  updatedAtUtc?: string;
+  revision: number;
+};
+
+export type CreateBedRequest = {
+  number: string;
+  roomId: string;
+};
+
+export type UpdateBedRequest = CreateBedRequest;

@@ -181,6 +181,209 @@ public class EnterprisesController : ControllerBase
         return Ok(organization);
     }
 
+    [HttpDelete("{organization_id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteEnterprise(
+        [FromRoute] Guid organization_id,
+        CancellationToken cancellationToken)
+    {
+        using var context = _factory.CreateDbContext();
+        await using var transaction = await context.Database.BeginTransactionAsync(cancellationToken);
+
+        var enterprise = await context.PartyRoles
+            .OfType<Enterprise>()
+            .FirstOrDefaultAsync(item => item.Id == organization_id, cancellationToken);
+        if (enterprise == null || !enterprise.PartyId.HasValue || !enterprise.TypeId.HasValue)
+        {
+            return NotFound();
+        }
+
+        var enterpriseRoleId = enterprise.Id!.Value;
+        var enterprisePartyId = enterprise.PartyId.Value;
+        var enterprisePartyRoleTypeId = enterprise.TypeId.Value;
+
+        var relatedEmployments = await context.PartyRelationships
+            .OfType<Employment>()
+            .Where(item => item.EmployerId == enterpriseRoleId || item.EmployeeId == enterpriseRoleId)
+            .ToListAsync(cancellationToken);
+
+        var removedEmployeeRoleIds = relatedEmployments
+            .Where(item => item.EmployeeId.HasValue)
+            .Select(item => item.EmployeeId!.Value)
+            .Distinct()
+            .ToList();
+
+        var removedEmployeePartyIds = await context.PartyRoles
+            .Where(item => item.Id.HasValue && removedEmployeeRoleIds.Contains(item.Id.Value))
+            .Select(item => item.PartyId)
+            .Where(item => item.HasValue)
+            .Select(item => item!.Value)
+            .Distinct()
+            .ToListAsync(cancellationToken);
+
+        if (relatedEmployments.Count > 0)
+        {
+            context.PartyRelationships.RemoveRange(relatedEmployments);
+        }
+
+        var employeeRoles = await context.PartyRoles
+            .Where(item => item.Id.HasValue && removedEmployeeRoleIds.Contains(item.Id.Value))
+            .ToListAsync(cancellationToken);
+        if (employeeRoles.Count > 0)
+        {
+            context.PartyRoles.RemoveRange(employeeRoles);
+        }
+
+        foreach (var partyId in removedEmployeePartyIds)
+        {
+            var hasRemainingPartyRoles = await context.PartyRoles
+                .AnyAsync(item => item.PartyId == partyId
+                                  && item.Id.HasValue
+                                  && !removedEmployeeRoleIds.Contains(item.Id.Value),
+                    cancellationToken);
+            if (hasRemainingPartyRoles)
+            {
+                continue;
+            }
+
+            var personNames = await context.PersonNames
+                .Where(item => item.PersonId == partyId)
+                .ToListAsync(cancellationToken);
+            if (personNames.Count > 0)
+            {
+                context.PersonNames.RemoveRange(personNames);
+            }
+
+            var party = await context.Parties
+                .FirstOrDefaultAsync(item => item.Id == partyId, cancellationToken);
+            if (party != null)
+            {
+                context.Parties.Remove(party);
+            }
+        }
+
+        var enterpriseFacilityRoles = await context.FacilityRoles
+            .Where(item => item.PartyId == enterprisePartyId && item.PartyRoleTypeId == enterprisePartyRoleTypeId)
+            .ToListAsync(cancellationToken);
+
+        var affectedFacilityIds = enterpriseFacilityRoles
+            .Where(item => item.Id.HasValue)
+            .Select(item => item.Id!.Value)
+            .Distinct()
+            .ToList();
+
+        if (enterpriseFacilityRoles.Count > 0)
+        {
+            context.FacilityRoles.RemoveRange(enterpriseFacilityRoles);
+        }
+
+        var orphanBedIds = new List<Guid>();
+        var orphanRoomIds = new List<Guid>();
+        foreach (var facilityId in affectedFacilityIds)
+        {
+            var hasOtherFacilityRoleReferences = await context.FacilityRoles
+                .AnyAsync(item =>
+                    item.Id == facilityId
+                    && (item.PartyId != enterprisePartyId || item.PartyRoleTypeId != enterprisePartyRoleTypeId), cancellationToken);
+
+            if (hasOtherFacilityRoleReferences)
+            {
+                continue;
+            }
+
+            var orphanBedId = await context.Facilities
+                .OfType<Bed>()
+                .Where(item => item.Id == facilityId)
+                .Select(item => item.Id!.Value)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (orphanBedId != Guid.Empty)
+            {
+                orphanBedIds.Add(orphanBedId);
+                continue;
+            }
+
+            var orphanRoomId = await context.Facilities
+                .OfType<Room>()
+                .Where(item => item.Id == facilityId)
+                .Select(item => item.Id!.Value)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (orphanRoomId != Guid.Empty)
+            {
+                orphanRoomIds.Add(orphanRoomId);
+            }
+        }
+
+        if (orphanBedIds.Count > 0)
+        {
+            var orphanBeds = await context.Facilities
+                .OfType<Bed>()
+                .Where(item => item.Id.HasValue && orphanBedIds.Contains(item.Id.Value))
+                .ToListAsync(cancellationToken);
+            if (orphanBeds.Count > 0)
+            {
+                context.Facilities.RemoveRange(orphanBeds);
+            }
+        }
+
+        if (orphanRoomIds.Count > 0)
+        {
+            var removableRoomIds = new List<Guid>();
+            foreach (var roomId in orphanRoomIds.Distinct())
+            {
+                var hasBedReference = await context.Facilities
+                    .OfType<Bed>()
+                    .AnyAsync(item => item.RoomId == roomId && (!item.Id.HasValue || !orphanBedIds.Contains(item.Id.Value)),
+                        cancellationToken);
+                if (hasBedReference)
+                {
+                    continue;
+                }
+
+                var hasPartOfReference = await context.Facilities
+                    .AnyAsync(item => item.PartOfId == roomId, cancellationToken);
+                if (hasPartOfReference)
+                {
+                    continue;
+                }
+
+                removableRoomIds.Add(roomId);
+            }
+
+            if (removableRoomIds.Count > 0)
+            {
+                var orphanRooms = await context.Facilities
+                    .OfType<Room>()
+                    .Where(item => item.Id.HasValue && removableRoomIds.Contains(item.Id.Value))
+                    .ToListAsync(cancellationToken);
+                if (orphanRooms.Count > 0)
+                {
+                    context.Facilities.RemoveRange(orphanRooms);
+                }
+            }
+        }
+
+        context.PartyRoles.Remove(enterprise);
+
+        var hasOtherPartyRoles = await context.PartyRoles
+            .AnyAsync(item => item.PartyId == enterprisePartyId && item.Id != enterpriseRoleId, cancellationToken);
+        if (!hasOtherPartyRoles)
+        {
+            var enterpriseParty = await context.Parties
+                .FirstOrDefaultAsync(item => item.Id == enterprisePartyId, cancellationToken);
+            if (enterpriseParty != null)
+            {
+                context.Parties.Remove(enterpriseParty);
+            }
+        }
+
+        await context.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+        return NoContent();
+    }
+
     [HttpGet("{enterprise_role_id:guid}/employments")]
     [ProducesResponseType(typeof(List<EmploymentDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -1004,6 +1207,210 @@ public class EnterprisesController : ControllerBase
 
         await context.SaveChangesAsync(cancellationToken);
         return NoContent();
+    }
+
+    [HttpGet("{enterprise_role_id:guid}/facilities/beds")]
+    [ProducesResponseType(typeof(List<BedDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetEnterpriseBeds(
+        [FromRoute] Guid enterprise_role_id,
+        [FromQuery] string? searchText,
+        CancellationToken cancellationToken)
+    {
+        using var context = _factory.CreateDbContext();
+
+        var enterprise = await context.PartyRoles
+            .OfType<Enterprise>()
+            .Select(e => new { e.Id, e.PartyId, e.TypeId })
+            .FirstOrDefaultAsync(e => e.Id == enterprise_role_id, cancellationToken);
+        if (enterprise == null || !enterprise.PartyId.HasValue || !enterprise.TypeId.HasValue)
+        {
+            return NotFound();
+        }
+
+        var query = context.Facilities
+            .OfType<Bed>()
+            .Where(bed => context.FacilityRoles.Any(role =>
+                role.Id == bed.Id
+                && role.PartyId == enterprise.PartyId
+                && role.PartyRoleTypeId == enterprise.TypeId));
+
+        if (!string.IsNullOrWhiteSpace(searchText))
+        {
+            var keyword = searchText.Trim();
+            query = query.Where(bed =>
+                (bed.Number != null && bed.Number.Contains(keyword))
+                || (bed.Room != null && bed.Room.Number != null && bed.Room.Number.Contains(keyword)));
+        }
+
+        var beds = await query
+            .OrderBy(bed => bed.Number)
+            .Select(bed => new BedDto
+            {
+                BedId = bed.Id!.Value,
+                Number = bed.Number ?? string.Empty,
+                RoomId = bed.RoomId!.Value,
+                RoomNumber = bed.Room != null && bed.Room.Number != null ? bed.Room.Number : string.Empty,
+                CreatedAtUtc = bed.CreatedAtUtc,
+                UpdatedAtUtc = bed.UpdatedAtUtc,
+                Revision = bed.Revision
+            })
+            .ToListAsync(cancellationToken);
+
+        return Ok(beds);
+    }
+
+    [HttpPost("{enterprise_role_id:guid}/facilities/beds")]
+    [ProducesResponseType(typeof(BedDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> CreateEnterpriseBed(
+        [FromRoute] Guid enterprise_role_id,
+        [FromBody] CreateBedDto createDto,
+        CancellationToken cancellationToken)
+    {
+        using var context = _factory.CreateDbContext();
+
+        var enterprise = await context.PartyRoles
+            .OfType<Enterprise>()
+            .Select(e => new { e.Id, e.PartyId, e.TypeId })
+            .FirstOrDefaultAsync(e => e.Id == enterprise_role_id, cancellationToken);
+        if (enterprise == null || !enterprise.PartyId.HasValue || !enterprise.TypeId.HasValue)
+        {
+            return NotFound();
+        }
+
+        var room = await context.Facilities
+            .OfType<Room>()
+            .FirstOrDefaultAsync(item =>
+                    item.Id == createDto.RoomId
+                    && context.FacilityRoles.Any(role =>
+                        role.Id == item.Id
+                        && role.PartyId == enterprise.PartyId
+                        && role.PartyRoleTypeId == enterprise.TypeId),
+                cancellationToken);
+        if (room == null)
+        {
+            return NotFound();
+        }
+
+        var bedFacilityType = await context.FacilityTypes
+            .SingleOrDefaultAsync(item => item.Code == FacilityType.Bed, cancellationToken);
+        if (bedFacilityType == null)
+        {
+            return Problem(
+                statusCode: StatusCodes.Status500InternalServerError,
+                title: "Missing master data",
+                detail: $"FacilityType '{FacilityType.Bed}' not found. Run database migration/seeding.");
+        }
+
+        var ownFacilityRoleType = await context.FacilityRoleTypes
+            .SingleOrDefaultAsync(item => item.Code == FacilityRoleType.Own, cancellationToken);
+        if (ownFacilityRoleType == null)
+        {
+            return Problem(
+                statusCode: StatusCodes.Status500InternalServerError,
+                title: "Missing master data",
+                detail: $"FacilityRoleType '{FacilityRoleType.Own}' not found. Run database migration/seeding.");
+        }
+
+        var bed = new Bed
+        {
+            Id = Guid.NewGuid(),
+            Number = createDto.Number.Trim(),
+            FacilityTypeId = bedFacilityType.Id,
+            RoomId = room.Id
+        };
+
+        var facilityRole = new FacilityRole
+        {
+            Id = bed.Id,
+            FacilityRoleTypeId = ownFacilityRoleType.Id,
+            PartyId = enterprise.PartyId,
+            PartyRoleTypeId = enterprise.TypeId
+        };
+
+        await context.AddAsync(bed, cancellationToken);
+        await context.AddAsync(facilityRole, cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
+
+        return Created($"/api/parties/enterprises/{enterprise_role_id}/facilities/beds/{bed.Id}", new BedDto
+        {
+            BedId = bed.Id!.Value,
+            Number = bed.Number ?? string.Empty,
+            RoomId = room.Id!.Value,
+            RoomNumber = room.Number ?? string.Empty,
+            CreatedAtUtc = bed.CreatedAtUtc,
+            UpdatedAtUtc = bed.UpdatedAtUtc,
+            Revision = bed.Revision
+        });
+    }
+
+    [HttpPut("{enterprise_role_id:guid}/facilities/beds/{bed_id:guid}")]
+    [ProducesResponseType(typeof(BedDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateEnterpriseBed(
+        [FromRoute] Guid enterprise_role_id,
+        [FromRoute] Guid bed_id,
+        [FromBody] UpdateBedDto updateDto,
+        CancellationToken cancellationToken)
+    {
+        using var context = _factory.CreateDbContext();
+
+        var enterprise = await context.PartyRoles
+            .OfType<Enterprise>()
+            .Select(e => new { e.Id, e.PartyId, e.TypeId })
+            .FirstOrDefaultAsync(e => e.Id == enterprise_role_id, cancellationToken);
+        if (enterprise == null || !enterprise.PartyId.HasValue || !enterprise.TypeId.HasValue)
+        {
+            return NotFound();
+        }
+
+        var bed = await context.Facilities
+            .OfType<Bed>()
+            .Include(item => item.Room)
+            .FirstOrDefaultAsync(item =>
+                    item.Id == bed_id
+                    && context.FacilityRoles.Any(role =>
+                        role.Id == item.Id
+                        && role.PartyId == enterprise.PartyId
+                        && role.PartyRoleTypeId == enterprise.TypeId),
+                cancellationToken);
+        if (bed == null)
+        {
+            return NotFound();
+        }
+
+        var room = await context.Facilities
+            .OfType<Room>()
+            .FirstOrDefaultAsync(item =>
+                    item.Id == updateDto.RoomId
+                    && context.FacilityRoles.Any(role =>
+                        role.Id == item.Id
+                        && role.PartyId == enterprise.PartyId
+                        && role.PartyRoleTypeId == enterprise.TypeId),
+                cancellationToken);
+        if (room == null)
+        {
+            return NotFound();
+        }
+
+        bed.Number = updateDto.Number.Trim();
+        bed.RoomId = room.Id;
+
+        await context.SaveChangesAsync(cancellationToken);
+
+        return Ok(new BedDto
+        {
+            BedId = bed.Id!.Value,
+            Number = bed.Number ?? string.Empty,
+            RoomId = room.Id!.Value,
+            RoomNumber = room.Number ?? string.Empty,
+            CreatedAtUtc = bed.CreatedAtUtc,
+            UpdatedAtUtc = bed.UpdatedAtUtc,
+            Revision = bed.Revision
+        });
     }
 
     [HttpGet("legal-structures")]

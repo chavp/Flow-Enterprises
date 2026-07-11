@@ -1147,6 +1147,149 @@
   },
   {
     "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "Method": "GetEnterpriseBeds",
+    "RelativePath": "api/parties/enterprises/{enterprise_role_id}/facilities/beds",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "enterprise_role_id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "searchText",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[Flowenter.Parties.IServices.Dtos.EnterpriseDto.BedDto, Flowenter.Parties.IServices, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 404
+      }
+    ]
+  },
+  {
+    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "Method": "CreateEnterpriseBed",
+    "RelativePath": "api/parties/enterprises/{enterprise_role_id}/facilities/beds",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "enterprise_role_id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "createDto",
+        "Type": "Flowenter.Parties.IServices.Dtos.EnterpriseDto.CreateBedDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Flowenter.Parties.IServices.Dtos.EnterpriseDto.BedDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 201
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 400
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 404
+      }
+    ]
+  },
+  {
+    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "Method": "UpdateEnterpriseBed",
+    "RelativePath": "api/parties/enterprises/{enterprise_role_id}/facilities/beds/{bed_id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "enterprise_role_id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "bed_id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "updateDto",
+        "Type": "Flowenter.Parties.IServices.Dtos.EnterpriseDto.UpdateBedDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Flowenter.Parties.IServices.Dtos.EnterpriseDto.BedDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 400
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 404
+      }
+    ]
+  },
+  {
+    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
     "Method": "GetEnterpriseRooms",
     "RelativePath": "api/parties/enterprises/{enterprise_role_id}/facilities/rooms",
     "HttpMethod": "GET",
@@ -1566,6 +1709,37 @@
           "text/json"
         ],
         "StatusCode": 400
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 404
+      }
+    ]
+  },
+  {
+    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "Method": "DeleteEnterprise",
+    "RelativePath": "api/parties/enterprises/{organization_id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "organization_id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 204
       },
       {
         "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
