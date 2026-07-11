@@ -20,46 +20,46 @@ import {
   message
 } from "antd";
 import { useMemo, useState } from "react";
-import { createOrganization, fetchLegalStructures, fetchOrganizations, updateOrganization } from "../../api/organizations";
-import { CreateOrganizationRequest, Organization } from "./types";
+import { createEnperprise, fetchLegalStructures, fetchEnterprises, updateEnperprise } from "../../api/enterprises";
+import { CreateEnterpriseRequest, Enterprise } from "./types";
 
 const { Title, Text } = Typography;
 
-type OrganizationsPageProps = {
+type EnterprisesPageProps = {
   apiBaseUrl?: string;
 };
 
-type FormValues = CreateOrganizationRequest;
+type FormValues = CreateEnterpriseRequest;
 
 const defaultPageSize = 10;
 
-export function OrganizationsPage({ apiBaseUrl }: OrganizationsPageProps) {
+export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
   const queryClient = useQueryClient();
   const [messageApi, contextHolder] = message.useMessage();
   const [pageIndex, setPageIndex] = useState(0);
   const [pageSize, setPageSize] = useState(defaultPageSize);
   const [isCreateOpen, setCreateOpen] = useState(false);
-  const [editingOrganization, setEditingOrganization] = useState<Organization | null>(null);
+  const [editingEnterprise, setEditingEnterprise] = useState<Enterprise | null>(null);
   const [createForm] = Form.useForm<FormValues>();
   const [editForm] = Form.useForm<FormValues>();
 
-  const organizationsQuery = useQuery({
-    queryKey: ["organizations", pageIndex, pageSize, apiBaseUrl],
-    queryFn: () => fetchOrganizations(pageIndex + 1, pageSize, apiBaseUrl)
+  const enterprisesQuery = useQuery({
+    queryKey: ["enterprises", pageIndex, pageSize, apiBaseUrl],
+    queryFn: () => fetchEnterprises(pageIndex + 1, pageSize, apiBaseUrl)
   });
 
   const legalStructuresQuery = useQuery({
-    queryKey: ["legal-structures", apiBaseUrl],
+    queryKey: ["enterprises/legal-structures", apiBaseUrl],
     queryFn: () => fetchLegalStructures(apiBaseUrl)
   });
 
   const createMutation = useMutation({
-    mutationFn: (values: FormValues) => createOrganization(values, apiBaseUrl),
+    mutationFn: (values: FormValues) => createEnperprise(values, apiBaseUrl),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["organizations"] });
+      await queryClient.invalidateQueries({ queryKey: ["enterprises"] });
       setCreateOpen(false);
       createForm.resetFields();
-      messageApi.success("Organization created");
+      messageApi.success("Enterprise created");
     },
     onError: (error) => {
       messageApi.error(error instanceof Error ? error.message : "Create failed");
@@ -68,30 +68,30 @@ export function OrganizationsPage({ apiBaseUrl }: OrganizationsPageProps) {
 
   const updateMutation = useMutation({
     mutationFn: async (values: FormValues) => {
-      if (!editingOrganization) {
+      if (!editingEnterprise) {
         return;
       }
 
-      await updateOrganization(
+      await updateEnperprise(
         {
-          id: editingOrganization.enterpriseId,
+          id: editingEnterprise.enterpriseId,
           changes: values
         },
         apiBaseUrl
       );
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["organizations"] });
-      setEditingOrganization(null);
+      await queryClient.invalidateQueries({ queryKey: ["enterprises"] });
+      setEditingEnterprise(null);
       editForm.resetFields();
-      messageApi.success("Organization updated");
+      messageApi.success("Enterprise updated");
     },
     onError: (error) => {
       messageApi.error(error instanceof Error ? error.message : "Update failed");
     }
   });
 
-  const columns = useMemo<ColumnDef<Organization>[]>(
+  const columns = useMemo<ColumnDef<Enterprise>[]>(
     () => [
       {
         accessorKey: "legalName",
@@ -125,7 +125,7 @@ export function OrganizationsPage({ apiBaseUrl }: OrganizationsPageProps) {
           <Button
             size="small"
             onClick={() => {
-              setEditingOrganization(row.original);
+              setEditingEnterprise(row.original);
               editForm.setFieldsValue({
                 legalName: row.original.legalName,
                 information: row.original.information,
@@ -146,12 +146,12 @@ export function OrganizationsPage({ apiBaseUrl }: OrganizationsPageProps) {
     [editForm]
   );
 
-  const organizations = organizationsQuery.data?.data ?? [];
-  const totalCount = organizationsQuery.data?.totalCount ?? 0;
+  const enterprises = enterprisesQuery.data?.data ?? [];
+  const totalCount = enterprisesQuery.data?.totalCount ?? 0;
   const pageCount = Math.max(1, Math.ceil(totalCount / pageSize));
 
   const table = useReactTable({
-    data: organizations,
+    data: enterprises,
     columns,
     pageCount,
     state: {
@@ -174,20 +174,20 @@ export function OrganizationsPage({ apiBaseUrl }: OrganizationsPageProps) {
           <Space style={{ width: "100%", justifyContent: "space-between" }}>
             <div>
               <Title level={3} style={{ margin: 0 }}>
-                Organizations
+                Enterprises
               </Title>
-              <Text type="secondary">Manage enterprise organizations from Flow Enter backend.</Text>
+              <Text type="secondary">Manage enterprise enterprises from Flow Enter backend.</Text>
             </div>
             <Button type="primary" onClick={() => setCreateOpen(true)}>
-              New Organization
+              New Enterprises
             </Button>
           </Space>
 
-          {organizationsQuery.isError ? (
+          {enterprisesQuery.isError ? (
             <Alert
               type="error"
-              message="Failed to load organizations"
-              description={organizationsQuery.error instanceof Error ? organizationsQuery.error.message : "Unknown error"}
+              message="Failed to load enterprises"
+              description={enterprisesQuery.error instanceof Error ? enterprisesQuery.error.message : "Unknown error"}
               showIcon
             />
           ) : (
@@ -205,7 +205,7 @@ export function OrganizationsPage({ apiBaseUrl }: OrganizationsPageProps) {
                   ))}
                 </thead>
                 <tbody>
-                  {organizationsQuery.isLoading ? (
+                  {enterprisesQuery.isLoading ? (
                     <tr>
                       <td colSpan={columns.length}>
                         <div className="table-loading">
@@ -215,7 +215,7 @@ export function OrganizationsPage({ apiBaseUrl }: OrganizationsPageProps) {
                     </tr>
                   ) : table.getRowModel().rows.length === 0 ? (
                     <tr>
-                      <td colSpan={columns.length}>No organizations found.</td>
+                      <td colSpan={columns.length}>No enterprises found.</td>
                     </tr>
                   ) : (
                     table.getRowModel().rows.map((row) => (
@@ -233,7 +233,7 @@ export function OrganizationsPage({ apiBaseUrl }: OrganizationsPageProps) {
 
           <Space style={{ justifyContent: "space-between", width: "100%" }}>
             <Text type="secondary">
-              Total {totalCount} organizations • Page {pageIndex + 1} / {pageCount}
+              Total {totalCount} enterprises • Page {pageIndex + 1} / {pageCount}
             </Text>
             <Space>
               <Button onClick={() => setPageSize(10)} disabled={pageSize === 10}>
@@ -258,13 +258,13 @@ export function OrganizationsPage({ apiBaseUrl }: OrganizationsPageProps) {
 
       <Modal
         open={isCreateOpen}
-        title="Create Organization"
+        title="Create Enterprise"
         onCancel={() => setCreateOpen(false)}
         onOk={() => createForm.submit()}
         confirmLoading={createMutation.isPending}
         destroyOnClose
       >
-        <OrganizationForm
+        <EnterpriseForm
           form={createForm}
           legalStructureOptions={legalStructureOptions}
           loadingLegalStructures={legalStructuresQuery.isLoading}
@@ -273,17 +273,17 @@ export function OrganizationsPage({ apiBaseUrl }: OrganizationsPageProps) {
       </Modal>
 
       <Modal
-        open={Boolean(editingOrganization)}
-        title="Edit Organization"
+        open={Boolean(editingEnterprise)}
+        title="Edit Enterprise"
         onCancel={() => {
-          setEditingOrganization(null);
+          setEditingEnterprise(null);
           editForm.resetFields();
         }}
         onOk={() => editForm.submit()}
         confirmLoading={updateMutation.isPending}
         destroyOnClose
       >
-        <OrganizationForm
+        <EnterpriseForm
           form={editForm}
           legalStructureOptions={legalStructureOptions}
           loadingLegalStructures={legalStructuresQuery.isLoading}
@@ -294,19 +294,19 @@ export function OrganizationsPage({ apiBaseUrl }: OrganizationsPageProps) {
   );
 }
 
-type OrganizationFormProps = {
+type EnterpriseFormProps = {
   form: ReturnType<typeof Form.useForm<FormValues>>[0];
   legalStructureOptions: Array<{ value: string; label: string }>;
   loadingLegalStructures: boolean;
   onFinish: (values: FormValues) => void;
 };
 
-function OrganizationForm({
+function EnterpriseForm({
   form,
   legalStructureOptions,
   loadingLegalStructures,
   onFinish
-}: OrganizationFormProps) {
+}: EnterpriseFormProps) {
   return (
     <Form<FormValues> form={form} layout="vertical" onFinish={onFinish} initialValues={{ fiscalYearStartMonth: 1 }}>
       <Form.Item name="legalName" label="Legal Name" rules={[{ required: true, message: "Legal name is required" }]}>

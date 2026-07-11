@@ -1,4 +1,4 @@
-export type Organization = {
+export type Enterprise = {
   enterpriseId: string;
   legalName: string;
   information?: string;
@@ -13,8 +13,8 @@ export type Organization = {
   revision: number;
 };
 
-export type OrganizationsResponse = {
-  data: Organization[];
+export type EnterprisesResponse = {
+  data: Enterprise[];
   totalCount: number;
   pageNumber: number;
   pageSize: number;
@@ -26,7 +26,7 @@ export type LegalStructure = {
   name: string;
 };
 
-export type CreateOrganizationRequest = {
+export type CreateEnterpriseRequest = {
   legalName: string;
   information?: string;
   brandName?: string;
@@ -43,7 +43,7 @@ export type PatchOperation = {
   value?: string | number | null;
 };
 
-export type UpdateOrganizationRequest = {
+export type UpdateEnterpriseRequest = {
   id: string;
-  changes: Partial<CreateOrganizationRequest>;
+  changes: Partial<CreateEnterpriseRequest>;
 };

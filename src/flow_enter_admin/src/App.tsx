@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConfigProvider } from "antd";
 import { useMemo } from "react";
-import { OrganizationsPage } from "./features/organizations/OrganizationsPage";
+import { EnterprisesPage } from "./features/enterprises/EnterprisesPage";
 import "./styles.css";
 import "antd/dist/reset.css";
 
@@ -15,7 +15,7 @@ export function App({ apiBaseUrl }: AppProps) {
   return (
     <ConfigProvider>
       <QueryClientProvider client={queryClient}>
-        <OrganizationsPage apiBaseUrl={apiBaseUrl} />
+        <EnterprisesPage apiBaseUrl={apiBaseUrl} />
       </QueryClientProvider>
     </ConfigProvider>
   );

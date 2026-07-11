@@ -1,18 +1,18 @@
 import { requestJson } from "./http";
 import {
-  CreateOrganizationRequest,
+  CreateEnterpriseRequest,
   LegalStructure,
-  OrganizationsResponse,
+  EnterprisesResponse,
   PatchOperation,
-  UpdateOrganizationRequest
-} from "../features/organizations/types";
+  UpdateEnterpriseRequest
+} from "../features/enterprises/types";
 
-export async function fetchOrganizations(
+export async function fetchEnterprises(
   pageNumber: number,
   pageSize: number,
   apiBaseUrl?: string
-): Promise<OrganizationsResponse> {
-  return requestJson<OrganizationsResponse>(
+): Promise<EnterprisesResponse> {
+  return requestJson<EnterprisesResponse>(
     `/api/parties/enterprises?pageNumber=${pageNumber}&pageSize=${pageSize}`,
     { method: "GET" },
     apiBaseUrl
@@ -20,14 +20,14 @@ export async function fetchOrganizations(
 }
 
 export async function fetchLegalStructures(apiBaseUrl?: string): Promise<LegalStructure[]> {
-  return requestJson<LegalStructure[]>("/api/parties/legal-structures", { method: "GET" }, apiBaseUrl);
+  return requestJson<LegalStructure[]>("/api/parties/enterprises/legal-structures", { method: "GET" }, apiBaseUrl);
 }
 
-export async function createOrganization(payload: CreateOrganizationRequest, apiBaseUrl?: string): Promise<void> {
+export async function createEnperprise(payload: CreateEnterpriseRequest, apiBaseUrl?: string): Promise<void> {
   await requestJson("/api/parties/enterprises", { method: "POST", body: JSON.stringify(payload) }, apiBaseUrl);
 }
 
-function toPatchOperations(changes: UpdateOrganizationRequest["changes"]): PatchOperation[] {
+function toPatchOperations(changes: UpdateEnterpriseRequest["changes"]): PatchOperation[] {
   const operations: PatchOperation[] = [];
 
   const entries = Object.entries(changes) as Array<[string, string | number | undefined]>;
@@ -46,7 +46,7 @@ function toPatchOperations(changes: UpdateOrganizationRequest["changes"]): Patch
   return operations;
 }
 
-export async function updateOrganization(payload: UpdateOrganizationRequest, apiBaseUrl?: string): Promise<void> {
+export async function updateEnperprise(payload: UpdateEnterpriseRequest, apiBaseUrl?: string): Promise<void> {
   const operations = toPatchOperations(payload.changes);
   if (operations.length === 0) {
     return;

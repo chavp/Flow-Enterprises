@@ -14,6 +14,6 @@ public sealed class DevTenantProvider : ITenantProvider
 
     public string GetPartiesTenantConnectionString()
     {
-        return "Host=localhost;Database=flowenter-dev;Username=admin;Password=admin123;Port=5432";
+        return "Server=localhost;TrustServerCertificate=True;Database=flow-enter;User Id=sa;Password=Admin@1234";
     }
 }

@@ -85,12 +85,58 @@ public sealed class PartiesContext : DbContext
                 l => l.HasOne(e => e.Party).WithMany()
             );
 
+        seeds(modelBuilder);
+    }
+
+    private void seeds(ModelBuilder modelBuilder) {
+        modelBuilder.Entity<PartyType>().HasData([
+            new PartyType
+            {
+                Id = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
+                Code = PartyType.Person,
+                Name = "Person",
+                CreatedBy = "seed",
+                CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                Revision = 0
+            },
+            new PartyType
+            {
+                Id = Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
+                Code = PartyType.Organization,
+                Name = "Organization",
+                CreatedBy = "seed",
+                CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                Revision = 0
+            }
+        ]);
+
+        modelBuilder.Entity<PartyRoleType>().HasData([
+            new PartyRoleType
+            {
+                Id = Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc"),
+                Code = PartyRoleType.Enterprise,
+                Name = "Enterprise",
+                CreatedBy = "seed",
+                CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                Revision = 0
+            },
+            new PartyRoleType
+            {
+                Id = Guid.Parse("dddddddd-dddd-dddd-dddd-dddddddddddd"),
+                Code = PartyRoleType.Customer,
+                Name = "Customer",
+                CreatedBy = "seed",
+                CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                Revision = 0
+            }
+        ]);
+
         modelBuilder.Entity<LegalStructure>().HasData([
             new LegalStructure
             {
                 Id = Guid.Parse("11111111-1111-1111-1111-111111111111"),
                 Code = LegalStructure.SoleProprietorship,
-                Name = "Sole Proprietorship",
+                Name = "กิจการเจ้าของคนเดียว",
                 CreatedBy = "seed",
                 CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 Revision = 0
@@ -99,7 +145,7 @@ public sealed class PartiesContext : DbContext
             {
                 Id = Guid.Parse("22222222-2222-2222-2222-222222222222"),
                 Code = LegalStructure.Partnership,
-                Name = "Partnership",
+                Name = "ห้างหุ้นส่วน",
                 CreatedBy = "seed",
                 CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 Revision = 0
@@ -108,7 +154,7 @@ public sealed class PartiesContext : DbContext
             {
                 Id = Guid.Parse("33333333-3333-3333-3333-333333333333"),
                 Code = LegalStructure.Corporation,
-                Name = "Corporation",
+                Name = "บริษัทมหาชน (หรือบริษัทจำกัดขนาดใหญ่)",
                 CreatedBy = "seed",
                 CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 Revision = 0
@@ -117,7 +163,7 @@ public sealed class PartiesContext : DbContext
             {
                 Id = Guid.Parse("44444444-4444-4444-4444-444444444444"),
                 Code = LegalStructure.LimitedLiabilityCompany,
-                Name = "Limited Liability Company",
+                Name = "บริษัทจำกัด",
                 CreatedBy = "seed",
                 CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 Revision = 0

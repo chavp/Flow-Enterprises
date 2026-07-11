@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace Flowenter.Parties.Mappings.Migrations
 {
     /// <inheritdoc />
-    public partial class initParties : Migration
+    public partial class initOrders : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -571,6 +573,38 @@ namespace Flowenter.Parties.Mappings.Migrations
                         principalTable: "PartyRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                schema: "parties",
+                table: "LegalStructures",
+                columns: new[] { "Id", "Code", "CreatedAtUtc", "CreatedBy", "Description", "Name", "Revision", "UpdatedAtUtc", "UpdatedBy" },
+                values: new object[,]
+                {
+                    { new Guid("11111111-1111-1111-1111-111111111111"), "SOLE_PROPRIETORSHIP", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", null, "กิจการเจ้าของคนเดียว", 0m, null, null },
+                    { new Guid("22222222-2222-2222-2222-222222222222"), "PARTNERSHIP", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", null, "ห้างหุ้นส่วน", 0m, null, null },
+                    { new Guid("33333333-3333-3333-3333-333333333333"), "CORPORATION", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", null, "บริษัทมหาชน (หรือบริษัทจำกัดขนาดใหญ่)", 0m, null, null },
+                    { new Guid("44444444-4444-4444-4444-444444444444"), "LIMITED_LIABILITY_COMPANY", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", null, "บริษัทจำกัด", 0m, null, null }
+                });
+
+            migrationBuilder.InsertData(
+                schema: "parties",
+                table: "PartyRoleTypes",
+                columns: new[] { "Id", "Code", "CreatedAtUtc", "CreatedBy", "Description", "Name", "Revision", "UpdatedAtUtc", "UpdatedBy" },
+                values: new object[,]
+                {
+                    { new Guid("cccccccc-cccc-cccc-cccc-cccccccccccc"), "ENTERPRISE", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", null, "Enterprise", 0m, null, null },
+                    { new Guid("dddddddd-dddd-dddd-dddd-dddddddddddd"), "CUSTOMER", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", null, "Customer", 0m, null, null }
+                });
+
+            migrationBuilder.InsertData(
+                schema: "parties",
+                table: "PartyTypes",
+                columns: new[] { "Id", "Code", "CreatedAtUtc", "CreatedBy", "Description", "Name", "Revision", "UpdatedAtUtc", "UpdatedBy" },
+                values: new object[,]
+                {
+                    { new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"), "PERSON", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", null, "Person", 0m, null, null },
+                    { new Guid("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"), "ORGANIZATION", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", null, "Organization", 0m, null, null }
                 });
 
             migrationBuilder.CreateIndex(

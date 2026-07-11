@@ -312,7 +312,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                             Code = "SOLE_PROPRIETORSHIP",
                             CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             CreatedBy = "seed",
-                            Name = "Sole Proprietorship",
+                            Name = "กิจการเจ้าของคนเดียว",
                             Revision = 0m
                         },
                         new
@@ -321,7 +321,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                             Code = "PARTNERSHIP",
                             CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             CreatedBy = "seed",
-                            Name = "Partnership",
+                            Name = "ห้างหุ้นส่วน",
                             Revision = 0m
                         },
                         new
@@ -330,7 +330,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                             Code = "CORPORATION",
                             CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             CreatedBy = "seed",
-                            Name = "Corporation",
+                            Name = "บริษัทมหาชน (หรือบริษัทจำกัดขนาดใหญ่)",
                             Revision = 0m
                         },
                         new
@@ -339,7 +339,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                             Code = "LIMITED_LIABILITY_COMPANY",
                             CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             CreatedBy = "seed",
-                            Name = "Limited Liability Company",
+                            Name = "บริษัทจำกัด",
                             Revision = 0m
                         });
                 });
@@ -635,6 +635,26 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .IsUnique();
 
                     b.ToTable("PartyRoleTypes", "parties");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("cccccccc-cccc-cccc-cccc-cccccccccccc"),
+                            Code = "ENTERPRISE",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "seed",
+                            Name = "Enterprise",
+                            Revision = 0m
+                        },
+                        new
+                        {
+                            Id = new Guid("dddddddd-dddd-dddd-dddd-dddddddddddd"),
+                            Code = "CUSTOMER",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "seed",
+                            Name = "Customer",
+                            Revision = 0m
+                        });
                 });
 
             modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.PartyType", b =>
@@ -681,6 +701,26 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .IsUnique();
 
                     b.ToTable("PartyTypes", "parties");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
+                            Code = "PERSON",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "seed",
+                            Name = "Person",
+                            Revision = 0m
+                        },
+                        new
+                        {
+                            Id = new Guid("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
+                            Code = "ORGANIZATION",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "seed",
+                            Name = "Organization",
+                            Revision = 0m
+                        });
                 });
 
             modelBuilder.Entity("Flowenter.Parties.Models.ContactMechanismModels.ElectronicAddress", b =>
