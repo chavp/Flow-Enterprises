@@ -9,6 +9,7 @@ import {
   Alert,
   Button,
   Card,
+  Empty,
   Form,
   Input,
   InputNumber,
@@ -40,6 +41,7 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
   const [pageSize, setPageSize] = useState(defaultPageSize);
   const [isCreateOpen, setCreateOpen] = useState(false);
   const [editingEnterprise, setEditingEnterprise] = useState<Enterprise | null>(null);
+  const [peopleEnterprise, setPeopleEnterprise] = useState<Enterprise | null>(null);
   const [createForm] = Form.useForm<FormValues>();
   const [editForm] = Form.useForm<FormValues>();
 
@@ -122,24 +124,29 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
         id: "actions",
         header: "Actions",
         cell: ({ row }) => (
-          <Button
-            size="small"
-            onClick={() => {
-              setEditingEnterprise(row.original);
-              editForm.setFieldsValue({
-                legalName: row.original.legalName,
-                information: row.original.information,
-                brandName: row.original.brandName,
-                notes: row.original.notes,
-                legalStructureId: row.original.legalStructureId ?? "",
-                businessRegistrationNumber: row.original.businessRegistrationNumber,
-                taxId: row.original.taxId,
-                fiscalYearStartMonth: row.original.fiscalYearStartMonth
-              });
-            }}
-          >
-            Edit
-          </Button>
+          <Space>
+            <Button
+              size="small"
+              onClick={() => {
+                setEditingEnterprise(row.original);
+                editForm.setFieldsValue({
+                  legalName: row.original.legalName,
+                  information: row.original.information,
+                  brandName: row.original.brandName,
+                  notes: row.original.notes,
+                  legalStructureId: row.original.legalStructureId ?? "",
+                  businessRegistrationNumber: row.original.businessRegistrationNumber,
+                  taxId: row.original.taxId,
+                  fiscalYearStartMonth: row.original.fiscalYearStartMonth
+                });
+              }}
+            >
+              Edit
+            </Button>
+            <Button size="small" onClick={() => setPeopleEnterprise(row.original)}>
+              Manage People
+            </Button>
+          </Space>
         )
       }
     ],
@@ -165,6 +172,29 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
     value: item.id,
     label: `${item.name}${item.code ? ` (${item.code})` : ""}`
   }));
+
+  if (peopleEnterprise) {
+    return (
+      <div className="page-container">
+        <Card>
+          <Space direction="vertical" size="middle" style={{ width: "100%" }}>
+            <Space style={{ width: "100%", justifyContent: "space-between" }}>
+              <div>
+                <Title level={3} style={{ margin: 0 }}>
+                  Enterprise People
+                </Title>
+                <Text type="secondary">
+                  Manage people under enterprise: <strong>{peopleEnterprise.legalName}</strong>
+                </Text>
+              </div>
+              <Button onClick={() => setPeopleEnterprise(null)}>Back to Enterprises</Button>
+            </Space>
+            <Empty description="People management UI for this enterprise will be added here." />
+          </Space>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="page-container">
