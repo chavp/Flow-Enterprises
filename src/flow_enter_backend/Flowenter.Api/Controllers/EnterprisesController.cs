@@ -3,6 +3,7 @@ using Flowenter.Parties.IServices.Dtos;
 using Flowenter.Parties.IServices.Dtos.EnterpriseDto;
 using Flowenter.Parties.Mappings;
 using Flowenter.Parties.Mappings.Extensions;
+using Flowenter.Parties.Models.FacilityModels;
 using Flowenter.Parties.Models.PartyModels;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -786,6 +787,173 @@ public class EnterprisesController : ControllerBase
         await context.SaveChangesAsync(cancellationToken);
 
         return NoContent();
+    }
+
+    [HttpGet("{enterprise_role_id:guid}/facilities/rooms")]
+    [ProducesResponseType(typeof(List<RoomDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetEnterpriseRooms(
+        [FromRoute] Guid enterprise_role_id,
+        [FromQuery] string? searchText,
+        CancellationToken cancellationToken)
+    {
+        using var context = _factory.CreateDbContext();
+
+        var enterprise = await context.PartyRoles
+            .OfType<Enterprise>()
+            .Select(e => new { e.Id, e.PartyId, e.TypeId })
+            .FirstOrDefaultAsync(e => e.Id == enterprise_role_id, cancellationToken);
+        if (enterprise == null || !enterprise.PartyId.HasValue || !enterprise.TypeId.HasValue)
+        {
+            return NotFound();
+        }
+
+        var query = context.Facilities
+            .OfType<Room>()
+            .Where(room => context.FacilityRoles.Any(role =>
+                role.Id == room.Id
+                && role.PartyId == enterprise.PartyId
+                && role.PartyRoleTypeId == enterprise.TypeId))
+            .AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(searchText))
+        {
+            var keyword = searchText.Trim();
+            query = query.Where(room => room.Number != null && room.Number.Contains(keyword));
+        }
+
+        var rooms = await query
+            .OrderBy(room => room.Number)
+            .Select(room => new RoomDto
+            {
+                RoomId = room.Id!.Value,
+                Number = room.Number ?? string.Empty,
+                CreatedAtUtc = room.CreatedAtUtc,
+                UpdatedAtUtc = room.UpdatedAtUtc,
+                Revision = room.Revision
+            })
+            .ToListAsync(cancellationToken);
+
+        return Ok(rooms);
+    }
+
+    [HttpPost("{enterprise_role_id:guid}/facilities/rooms")]
+    [ProducesResponseType(typeof(RoomDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> CreateEnterpriseRoom(
+        [FromRoute] Guid enterprise_role_id,
+        [FromBody] CreateRoomDto createDto,
+        CancellationToken cancellationToken)
+    {
+        using var context = _factory.CreateDbContext();
+
+        var enterprise = await context.PartyRoles
+            .OfType<Enterprise>()
+            .Select(e => new { e.Id, e.PartyId, e.TypeId })
+            .FirstOrDefaultAsync(e => e.Id == enterprise_role_id, cancellationToken);
+        if (enterprise == null || !enterprise.PartyId.HasValue || !enterprise.TypeId.HasValue)
+        {
+            return NotFound();
+        }
+
+        var roomFacilityType = await context.FacilityTypes
+            .SingleOrDefaultAsync(item => item.Code == FacilityType.Room, cancellationToken);
+        if (roomFacilityType == null)
+        {
+            return Problem(
+                statusCode: StatusCodes.Status500InternalServerError,
+                title: "Missing master data",
+                detail: $"FacilityType '{FacilityType.Room}' not found. Run database migration/seeding.");
+        }
+
+        var ownFacilityRoleType = await context.FacilityRoleTypes
+            .SingleOrDefaultAsync(item => item.Code == FacilityRoleType.Own, cancellationToken);
+        if (ownFacilityRoleType == null)
+        {
+            return Problem(
+                statusCode: StatusCodes.Status500InternalServerError,
+                title: "Missing master data",
+                detail: $"FacilityRoleType '{FacilityRoleType.Own}' not found. Run database migration/seeding.");
+        }
+
+        var room = new Room
+        {
+            Id = Guid.NewGuid(),
+            Number = createDto.Number.Trim(),
+            FacilityTypeId = roomFacilityType.Id
+        };
+
+        var facilityRole = new FacilityRole
+        {
+            Id = room.Id,
+            FacilityRoleTypeId = ownFacilityRoleType.Id,
+            PartyId = enterprise.PartyId,
+            PartyRoleTypeId = enterprise.TypeId
+        };
+
+        await context.AddAsync(room, cancellationToken);
+        await context.AddAsync(facilityRole, cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
+
+        _logger.LogInformation("Room created: {RoomId}", room.Id);
+
+        return Created($"/api/parties/enterprises/{enterprise_role_id}/facilities/rooms/{room.Id}", new RoomDto
+        {
+            RoomId = room.Id!.Value,
+            Number = room.Number ?? string.Empty,
+            CreatedAtUtc = room.CreatedAtUtc,
+            UpdatedAtUtc = room.UpdatedAtUtc,
+            Revision = room.Revision
+        });
+    }
+
+    [HttpPut("{enterprise_role_id:guid}/facilities/rooms/{room_id:guid}")]
+    [ProducesResponseType(typeof(RoomDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateEnterpriseRoom(
+        [FromRoute] Guid enterprise_role_id,
+        [FromRoute] Guid room_id,
+        [FromBody] UpdateRoomDto updateDto,
+        CancellationToken cancellationToken)
+    {
+        using var context = _factory.CreateDbContext();
+
+        var enterprise = await context.PartyRoles
+            .OfType<Enterprise>()
+            .Select(e => new { e.Id, e.PartyId, e.TypeId })
+            .FirstOrDefaultAsync(e => e.Id == enterprise_role_id, cancellationToken);
+        if (enterprise == null || !enterprise.PartyId.HasValue || !enterprise.TypeId.HasValue)
+        {
+            return NotFound();
+        }
+
+        var room = await context.Facilities
+            .OfType<Room>()
+            .FirstOrDefaultAsync(item =>
+                    item.Id == room_id
+                    && context.FacilityRoles.Any(role =>
+                        role.Id == item.Id
+                        && role.PartyId == enterprise.PartyId
+                        && role.PartyRoleTypeId == enterprise.TypeId),
+                cancellationToken);
+        if (room == null)
+        {
+            return NotFound();
+        }
+
+        room.Number = updateDto.Number.Trim();
+        await context.SaveChangesAsync(cancellationToken);
+
+        return Ok(new RoomDto
+        {
+            RoomId = room.Id!.Value,
+            Number = room.Number ?? string.Empty,
+            CreatedAtUtc = room.CreatedAtUtc,
+            UpdatedAtUtc = room.UpdatedAtUtc,
+            Revision = room.Revision
+        });
     }
 
     [HttpGet("legal-structures")]

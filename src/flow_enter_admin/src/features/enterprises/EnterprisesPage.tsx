@@ -27,18 +27,21 @@ import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 import {
   createEnperprise,
+  createEnterpriseRoom,
   deleteEnterpriseEmployment,
   createEnterpriseEmployment,
   fetchEnterpriseEmployments,
   fetchEnterprises,
   fetchLegalStructures,
   fetchPartyRoleTypes,
+  fetchEnterpriseRooms,
   updateEnterpriseEmploymentEffectiveDate,
   updateEnterpriseEmployment,
+  updateEnterpriseRoom,
   updateEnperprise
 } from "../../api/enterprises";
 import { TopDrawerForm } from "../../components/TopDrawerForm";
-import { CreateEmploymentRequest, CreateEnterpriseRequest, Enterprise, Employment } from "./types";
+import { CreateEmploymentRequest, CreateEnterpriseRequest, CreateRoomRequest, Enterprise, Employment, Room } from "./types";
 
 const { Title, Text } = Typography;
 
@@ -48,6 +51,7 @@ type EnterprisesPageProps = {
 
 type FormValues = CreateEnterpriseRequest;
 type EmploymentFormValues = CreateEmploymentRequest;
+type RoomFormValues = CreateRoomRequest;
 type EmploymentGroup = {
   employeePartyId: string;
   employeeFullName: string;
@@ -81,6 +85,9 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
   const [peopleEnterprise, setPeopleEnterprise] = useState<Enterprise | null>(null);
   const [editingEmployment, setEditingEmployment] = useState<Employment | null>(null);
   const [isCreateEmploymentOpen, setCreateEmploymentOpen] = useState(false);
+  const [roomSearchText, setRoomSearchText] = useState("");
+  const [isCreateRoomOpen, setCreateRoomOpen] = useState(false);
+  const [editingRoom, setEditingRoom] = useState<Room | null>(null);
   const [effectiveDateDrafts, setEffectiveDateDrafts] = useState<
     Record<string, { fromDate: string; thruDate: string }>
   >({});
@@ -89,6 +96,8 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
   const [editForm] = Form.useForm<FormValues>();
   const [employmentForm] = Form.useForm<EmploymentFormValues>();
   const [editEmploymentForm] = Form.useForm<EmploymentFormValues>();
+  const [createRoomForm] = Form.useForm<RoomFormValues>();
+  const [editRoomForm] = Form.useForm<RoomFormValues>();
 
   const enterprisesQuery = useQuery({
     queryKey: ["enterprises", pageIndex, pageSize, apiBaseUrl],
@@ -109,6 +118,12 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
   const partyRoleTypesQuery = useQuery({
     queryKey: ["party-role-types", apiBaseUrl],
     queryFn: () => fetchPartyRoleTypes(apiBaseUrl),
+    enabled: Boolean(peopleEnterprise)
+  });
+
+  const roomsQuery = useQuery({
+    queryKey: ["enterprise-rooms", peopleEnterprise?.enterpriseId, roomSearchText, apiBaseUrl],
+    queryFn: () => fetchEnterpriseRooms(peopleEnterprise!.enterpriseId, roomSearchText, apiBaseUrl),
     enabled: Boolean(peopleEnterprise)
   });
 
@@ -259,6 +274,56 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
     }
   });
 
+  const createRoomMutation = useMutation({
+    mutationFn: async (values: RoomFormValues) => {
+      if (!peopleEnterprise) {
+        return;
+      }
+
+      await createEnterpriseRoom(peopleEnterprise.enterpriseId, values, apiBaseUrl);
+    },
+    onSuccess: async () => {
+      if (!peopleEnterprise) {
+        return;
+      }
+
+      await queryClient.invalidateQueries({
+        queryKey: ["enterprise-rooms", peopleEnterprise.enterpriseId, roomSearchText, apiBaseUrl]
+      });
+      setCreateRoomOpen(false);
+      createRoomForm.resetFields();
+      messageApi.success("Room added");
+    },
+    onError: (error) => {
+      messageApi.error(error instanceof Error ? error.message : "Create room failed");
+    }
+  });
+
+  const updateRoomMutation = useMutation({
+    mutationFn: async (values: RoomFormValues) => {
+      if (!peopleEnterprise || !editingRoom) {
+        return;
+      }
+
+      await updateEnterpriseRoom(peopleEnterprise.enterpriseId, editingRoom.roomId, values, apiBaseUrl);
+    },
+    onSuccess: async () => {
+      if (!peopleEnterprise) {
+        return;
+      }
+
+      await queryClient.invalidateQueries({
+        queryKey: ["enterprise-rooms", peopleEnterprise.enterpriseId, roomSearchText, apiBaseUrl]
+      });
+      setEditingRoom(null);
+      editRoomForm.resetFields();
+      messageApi.success("Room updated");
+    },
+    onError: (error) => {
+      messageApi.error(error instanceof Error ? error.message : "Update room failed");
+    }
+  });
+
   const columns = useMemo<ColumnDef<Enterprise>[]>(
     () => [
       {
@@ -347,6 +412,7 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
     }));
 
   const employments = employmentsQuery.data ?? [];
+  const rooms = roomsQuery.data ?? [];
   const employmentGroups = useMemo<EmploymentGroup[]>(() => {
     const map = new Map<string, EmploymentGroup>();
     for (const employment of employments) {
@@ -394,11 +460,16 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                 onClick={() => {
                   setPeopleEnterprise(null);
                   setEditingEmployment(null);
+                  setEditingRoom(null);
                   setCreateEmploymentOpen(false);
+                  setCreateRoomOpen(false);
+                  setRoomSearchText("");
                   setEffectiveDateDrafts({});
                   setPeopleTabKey("people");
                   employmentForm.resetFields();
                   editEmploymentForm.resetFields();
+                  createRoomForm.resetFields();
+                  editRoomForm.resetFields();
                 }}
               >
                 Back to Enterprises
@@ -578,6 +649,68 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                       )}
                     </Space>
                   )
+                },
+                {
+                  key: "facilities",
+                  label: "Facilities",
+                  children: (
+                    <Space direction="vertical" size="middle" style={{ width: "100%" }}>
+                      <Space style={{ width: "100%", justifyContent: "space-between" }}>
+                        <Input.Search
+                          allowClear
+                          placeholder="Search room number"
+                          value={roomSearchText}
+                          onChange={(event) => setRoomSearchText(event.target.value)}
+                          style={{ maxWidth: 320 }}
+                        />
+                        <Button type="primary" onClick={() => setCreateRoomOpen(true)}>
+                          Add Room
+                        </Button>
+                      </Space>
+
+                      {roomsQuery.isError ? (
+                        <Alert
+                          type="error"
+                          message="Failed to load rooms"
+                          description={roomsQuery.error instanceof Error ? roomsQuery.error.message : "Unknown error"}
+                          showIcon
+                        />
+                      ) : roomsQuery.isLoading ? (
+                        <Spin />
+                      ) : rooms.length === 0 ? (
+                        <Empty description="No rooms found." />
+                      ) : (
+                        <div className="tanstack-table-wrapper">
+                          <table className="tanstack-table">
+                            <thead>
+                              <tr>
+                                <th>Room Number</th>
+                                <th>Actions</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {rooms.map((room) => (
+                                <tr key={room.roomId}>
+                                  <td>{room.number}</td>
+                                  <td>
+                                    <Button
+                                      size="small"
+                                      onClick={() => {
+                                        setEditingRoom(room);
+                                        editRoomForm.setFieldsValue({ number: room.number });
+                                      }}
+                                    >
+                                      Edit
+                                    </Button>
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      )}
+                    </Space>
+                  )
                 }
               ]}
             />
@@ -678,6 +811,50 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                     placeholder="Select party roles"
                     optionFilterProp="label"
                   />
+                </Form.Item>
+              </Form>
+            </TopDrawerForm>
+
+            <TopDrawerForm
+              open={isCreateRoomOpen}
+              title="Add Room"
+              submitText="Add"
+              onClose={() => {
+                setCreateRoomOpen(false);
+                createRoomForm.resetFields();
+              }}
+              onSubmit={() => createRoomForm.submit()}
+              loading={createRoomMutation.isPending}
+            >
+              <Form<RoomFormValues> form={createRoomForm} layout="vertical" onFinish={(values) => createRoomMutation.mutate(values)}>
+                <Form.Item
+                  name="number"
+                  label="Room Number"
+                  rules={[{ required: true, message: "Room number is required" }]}
+                >
+                  <Input maxLength={100} />
+                </Form.Item>
+              </Form>
+            </TopDrawerForm>
+
+            <TopDrawerForm
+              open={Boolean(editingRoom)}
+              title="Edit Room"
+              submitText="Update"
+              onClose={() => {
+                setEditingRoom(null);
+                editRoomForm.resetFields();
+              }}
+              onSubmit={() => editRoomForm.submit()}
+              loading={updateRoomMutation.isPending}
+            >
+              <Form<RoomFormValues> form={editRoomForm} layout="vertical" onFinish={(values) => updateRoomMutation.mutate(values)}>
+                <Form.Item
+                  name="number"
+                  label="Room Number"
+                  rules={[{ required: true, message: "Room number is required" }]}
+                >
+                  <Input maxLength={100} />
                 </Form.Item>
               </Form>
             </TopDrawerForm>

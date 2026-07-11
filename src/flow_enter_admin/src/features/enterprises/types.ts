@@ -87,3 +87,17 @@ export type UpdateEmploymentEffectiveDateRequest = {
   fromDate: string;
   thruDate: string;
 };
+
+export type Room = {
+  roomId: string;
+  number: string;
+  createdAtUtc: string;
+  updatedAtUtc?: string;
+  revision: number;
+};
+
+export type CreateRoomRequest = {
+  number: string;
+};
+
+export type UpdateRoomRequest = CreateRoomRequest;

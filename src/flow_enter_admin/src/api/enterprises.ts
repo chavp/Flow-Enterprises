@@ -2,13 +2,16 @@ import { requestJson } from "./http";
 import {
   CreateEmploymentRequest,
   CreateEnterpriseRequest,
+  CreateRoomRequest,
   Employment,
   LegalStructure,
   EnterprisesResponse,
   PatchOperation,
   PartyRoleType,
+  Room,
   UpdateEmploymentEffectiveDateRequest,
   UpdateEmploymentRequest,
+  UpdateRoomRequest,
   UpdateEnterpriseRequest
 } from "../features/enterprises/types";
 
@@ -124,6 +127,48 @@ export async function updateEnterpriseEmploymentEffectiveDate(
   await requestJson(
     `/api/parties/enterprises/${enterpriseId}/employments/${employmentId}/effective-date`,
     { method: "PATCH", body: JSON.stringify(payload) },
+    apiBaseUrl
+  );
+}
+
+export async function fetchEnterpriseRooms(
+  enterpriseId: string,
+  searchText: string,
+  apiBaseUrl?: string
+): Promise<Room[]> {
+  const query = new URLSearchParams();
+  if (searchText.trim().length > 0) {
+    query.set("searchText", searchText.trim());
+  }
+
+  return requestJson<Room[]>(
+    `/api/parties/enterprises/${enterpriseId}/facilities/rooms${query.toString() ? `?${query.toString()}` : ""}`,
+    { method: "GET" },
+    apiBaseUrl
+  );
+}
+
+export async function createEnterpriseRoom(
+  enterpriseId: string,
+  payload: CreateRoomRequest,
+  apiBaseUrl?: string
+): Promise<void> {
+  await requestJson(
+    `/api/parties/enterprises/${enterpriseId}/facilities/rooms`,
+    { method: "POST", body: JSON.stringify(payload) },
+    apiBaseUrl
+  );
+}
+
+export async function updateEnterpriseRoom(
+  enterpriseId: string,
+  roomId: string,
+  payload: UpdateRoomRequest,
+  apiBaseUrl?: string
+): Promise<void> {
+  await requestJson(
+    `/api/parties/enterprises/${enterpriseId}/facilities/rooms/${roomId}`,
+    { method: "PUT", body: JSON.stringify(payload) },
     apiBaseUrl
   );
 }
