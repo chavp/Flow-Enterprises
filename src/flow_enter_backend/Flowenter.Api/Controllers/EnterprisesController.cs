@@ -316,12 +316,14 @@ public class EnterprisesController : ControllerBase
         }
 
         var language = createDto.LanguageId.HasValue
-            ? await context.Languages.FirstOrDefaultAsync(item => item.Id == createDto.LanguageId, cancellationToken)
-            : await context.Languages.FirstOrDefaultAsync(item => item.Code == Language.TH, cancellationToken);
+            ? await context.Languages.SingleOrDefaultAsync(item => item.Id == createDto.LanguageId, cancellationToken)
+            : await context.Languages.SingleOrDefaultAsync(item => item.Code == Language.TH, cancellationToken);
 
         if (language == null)
         {
-            language = await context.Languages.FirstOrDefaultAsync(cancellationToken);
+            language = await context.Languages
+                .OrderBy(item => item.CreatedAtUtc)
+                .SingleOrDefaultAsync(item => item.Id != null, cancellationToken);
         }
 
         if (language?.Id == null)
@@ -361,7 +363,7 @@ public class EnterprisesController : ControllerBase
             EmployeeId = employeeRole.Id
         };
 
-        await context.AddRangeAsync(person, personName, employeeRole, employment, cancellationToken);
+        await context.AddRangeAsync(person, personName, employeeRole, employment);
         await context.SaveChangesAsync(cancellationToken);
         await tran.CommitAsync(cancellationToken);
 
