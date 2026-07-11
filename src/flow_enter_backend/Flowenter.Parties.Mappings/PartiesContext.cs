@@ -39,6 +39,10 @@ public sealed class PartiesContext : DbContext
 
     public readonly ITenantProvider _tenantProvider;
 
+    // Party Relationships
+    public DbSet<PartyRelationshipType> PartyRelationshipTypes => Set<PartyRelationshipType>();
+    public DbSet<PartyRelationship> PartyRelationships => Set<PartyRelationship>();
+
     public PartiesContext(DbContextOptions<PartiesContext> options,
         ITenantProvider tenantProvider) : base(options)
     {
@@ -88,6 +92,8 @@ public sealed class PartiesContext : DbContext
                 r => r.HasOne(e => e.ContactMechanism).WithMany(),
                 l => l.HasOne(e => e.Party).WithMany()
             );
+
+        modelBuilder.Entity<Employment>();
 
         seeds(modelBuilder);
     }

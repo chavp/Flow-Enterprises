@@ -4,6 +4,7 @@ using Flowenter.Parties.Mappings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Flowenter.Parties.Mappings.Migrations
 {
     [DbContext(typeof(PartiesContext))]
-    partial class PartiesContextModelSnapshot : ModelSnapshot
+    [Migration("20260711125325_orderEmployments")]
+    partial class orderEmployments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1093,7 +1096,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.ToTable("People", "parties");
                 });
 
-            modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.Employment", b =>
+            modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.EmploymentRelationship", b =>
                 {
                     b.HasBaseType("Flowenter.Parties.Models.PartyModels.PartyRelationship");
 
@@ -1107,7 +1110,7 @@ namespace Flowenter.Parties.Mappings.Migrations
 
                     b.HasIndex("EmployerId");
 
-                    b.ToTable("Employments", "parties");
+                    b.ToTable("EmploymentRelationships", "parties");
                 });
 
             modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.Customer", b =>
@@ -1378,7 +1381,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.Employment", b =>
+            modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.EmploymentRelationship", b =>
                 {
                     b.HasOne("Flowenter.Parties.Models.PartyModels.PartyRole", "Employee")
                         .WithMany()
@@ -1390,7 +1393,7 @@ namespace Flowenter.Parties.Mappings.Migrations
 
                     b.HasOne("Flowenter.Parties.Models.PartyModels.PartyRelationship", null)
                         .WithOne()
-                        .HasForeignKey("Flowenter.Parties.Models.PartyModels.Employment", "Id")
+                        .HasForeignKey("Flowenter.Parties.Models.PartyModels.EmploymentRelationship", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

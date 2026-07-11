@@ -8,9 +8,8 @@ using System.Text;
 
 namespace Flowenter.Parties.Models.PartyModels;
 
-[Table("PersonNames")]
 [Index(nameof(FirstName), nameof(MiddleName), nameof(LastName), nameof(LanguageId), IsUnique = true)]
-public sealed class PersonName : BaseEntity
+public sealed class PersonName : EffectiveEntity
 {
     protected PersonName() { }
     public PersonName(Person? person, string? firstName, string? lastName, Language? language)
@@ -32,9 +31,6 @@ public sealed class PersonName : BaseEntity
 
     [Required, StringLength(500)]
     public string? LastName { get; set; }
-
-    public DateOnly EffectiveDate { get; set; } = DateOnly.FromDateTime(DateTime.Today);
-    public DateOnly ExpiryDate { get; set; } = DateOnly.MaxValue;
 
     [Required]
     public Guid? LanguageId { get; set; }

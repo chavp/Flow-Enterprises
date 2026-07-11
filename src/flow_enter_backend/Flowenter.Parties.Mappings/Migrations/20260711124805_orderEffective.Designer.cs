@@ -4,6 +4,7 @@ using Flowenter.Parties.Mappings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Flowenter.Parties.Mappings.Migrations
 {
     [DbContext(typeof(PartiesContext))]
-    partial class PartiesContextModelSnapshot : ModelSnapshot
+    [Migration("20260711124805_orderEffective")]
+    partial class orderEffective
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -606,17 +609,8 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<DateOnly>("FromDate")
-                        .HasColumnType("date");
-
-                    b.Property<Guid>("PartyRelationshipTypeId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<decimal>("Revision")
                         .HasColumnType("decimal(20,0)");
-
-                    b.Property<DateOnly>("ThruDate")
-                        .HasColumnType("date");
 
                     b.Property<DateTime?>("UpdatedAtUtc")
                         .HasColumnType("datetime2");
@@ -627,11 +621,7 @@ namespace Flowenter.Parties.Mappings.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PartyRelationshipTypeId");
-
                     b.ToTable("PartyRelationships", "parties");
-
-                    b.UseTptMappingStrategy();
                 });
 
             modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.PartyRelationshipType", b =>
@@ -1093,23 +1083,6 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.ToTable("People", "parties");
                 });
 
-            modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.Employment", b =>
-                {
-                    b.HasBaseType("Flowenter.Parties.Models.PartyModels.PartyRelationship");
-
-                    b.Property<Guid?>("EmployeeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("EmployerId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.HasIndex("EmployerId");
-
-                    b.ToTable("Employments", "parties");
-                });
-
             modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.Customer", b =>
                 {
                     b.HasBaseType("Flowenter.Parties.Models.PartyModels.PartyRole");
@@ -1261,17 +1234,6 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.Navigation("PartyRoleType");
                 });
 
-            modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.PartyRelationship", b =>
-                {
-                    b.HasOne("Flowenter.Parties.Models.PartyModels.PartyRelationshipType", "PartyRelationshipType")
-                        .WithMany()
-                        .HasForeignKey("PartyRelationshipTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("PartyRelationshipType");
-                });
-
             modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.PartyRole", b =>
                 {
                     b.HasOne("Flowenter.Parties.Models.PartyModels.Party", "Party")
@@ -1376,27 +1338,6 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasForeignKey("Flowenter.Parties.Models.PartyModels.Person", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.Employment", b =>
-                {
-                    b.HasOne("Flowenter.Parties.Models.PartyModels.PartyRole", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId");
-
-                    b.HasOne("Flowenter.Parties.Models.PartyModels.PartyRole", "Employer")
-                        .WithMany()
-                        .HasForeignKey("EmployerId");
-
-                    b.HasOne("Flowenter.Parties.Models.PartyModels.PartyRelationship", null)
-                        .WithOne()
-                        .HasForeignKey("Flowenter.Parties.Models.PartyModels.Employment", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
-
-                    b.Navigation("Employer");
                 });
 
             modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.Customer", b =>
