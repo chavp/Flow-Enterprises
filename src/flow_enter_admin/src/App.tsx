@@ -1,25 +1,62 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConfigProvider, Layout, Menu, Tabs } from "antd";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { EnterprisesPage } from "./features/enterprises/EnterprisesPage";
+import { CountriesPage } from "./features/countries/CountriesPage";
 import "./styles.css";
 import "antd/dist/reset.css";
 
-const MAIN_MENU_ITEMS = [{ key: "enterprises", label: "Enterprises" }];
+const MAIN_MENU_ITEMS = [
+  { key: "enterprises", label: "Enterprises" },
+  { key: "world", label: "World" }
+];
 const SUB_MENU_ITEMS: Record<string, { key: string; label: string }[]> = {
-  enterprises: [{ key: "enterpeise", label: "Enterpeise" }]
+  enterprises: [{ key: "enterpeise", label: "Enterpeise" }],
+  world: [{ key: "geographic-boundaries", label: "Geographic Boundaries" }]
 };
+const DEFAULT_DOMAIN_KEY = "enterprises";
+const DEFAULT_SUBDOMAIN_KEY = "enterpeise";
 
 type AppProps = {
   apiBaseUrl?: string;
 };
 
+function getFirstSubdomainKey(domainKey: string): string {
+  return (SUB_MENU_ITEMS[domainKey] ?? [])[0]?.key ?? "";
+}
+
+function getInitialNavigationState() {
+  const params = new URLSearchParams(window.location.search);
+  const requestedDomain = params.get("domain") ?? DEFAULT_DOMAIN_KEY;
+  const resolvedDomain = SUB_MENU_ITEMS[requestedDomain] ? requestedDomain : DEFAULT_DOMAIN_KEY;
+
+  const requestedSubdomain = params.get("subdomain");
+  const allowedSubdomains = (SUB_MENU_ITEMS[resolvedDomain] ?? []).map((item) => item.key);
+  const resolvedSubdomain =
+    requestedSubdomain && allowedSubdomains.includes(requestedSubdomain)
+      ? requestedSubdomain
+      : getFirstSubdomainKey(resolvedDomain) || DEFAULT_SUBDOMAIN_KEY;
+
+  return { domainKey: resolvedDomain, subdomainKey: resolvedSubdomain };
+}
+
 export function App({ apiBaseUrl }: AppProps) {
   const queryClient = useMemo(() => new QueryClient(), []);
-  const [domainKey, setDomainKey] = useState("enterprises");
-  const [subdomainKey, setSubdomainKey] = useState("enterpeise");
+  const initialNavigationState = useMemo(() => getInitialNavigationState(), []);
+  const [domainKey, setDomainKey] = useState(initialNavigationState.domainKey);
+  const [subdomainKey, setSubdomainKey] = useState(initialNavigationState.subdomainKey);
 
   const subdomainItems = SUB_MENU_ITEMS[domainKey] ?? [];
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    params.set("domain", domainKey);
+    params.set("subdomain", subdomainKey);
+
+    const queryString = params.toString();
+    const nextUrl = `${window.location.pathname}${queryString ? `?${queryString}` : ""}${window.location.hash}`;
+    window.history.replaceState(window.history.state, "", nextUrl);
+  }, [domainKey, subdomainKey]);
 
   return (
     <ConfigProvider>
@@ -32,8 +69,9 @@ export function App({ apiBaseUrl }: AppProps) {
               selectedKeys={[domainKey]}
               items={MAIN_MENU_ITEMS}
               onClick={(info) => {
-                setDomainKey(info.key);
-                setSubdomainKey((SUB_MENU_ITEMS[info.key] ?? [])[0]?.key ?? "");
+                const nextDomainKey = String(info.key);
+                setDomainKey(nextDomainKey);
+                setSubdomainKey(getFirstSubdomainKey(nextDomainKey));
               }}
             />
           </Layout.Sider>
@@ -49,6 +87,8 @@ export function App({ apiBaseUrl }: AppProps) {
             <Layout.Content className="app-shell-content">
               {domainKey === "enterprises" && subdomainKey === "enterpeise" ? (
                 <EnterprisesPage apiBaseUrl={apiBaseUrl} />
+              ) : domainKey === "world" && subdomainKey === "geographic-boundaries" ? (
+                <CountriesPage apiBaseUrl={apiBaseUrl} />
               ) : null}
             </Layout.Content>
           </Layout>

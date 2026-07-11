@@ -4,6 +4,7 @@ using Flowenter.Parties.Mappings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Flowenter.Parties.Mappings.Migrations
 {
     [DbContext(typeof(PartiesContext))]
-    partial class PartiesContextModelSnapshot : ModelSnapshot
+    [Migration("20260711074637_initOrders2")]
+    partial class initOrders2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -196,17 +199,6 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .IsUnique();
 
                     b.ToTable("GeographicBoundaryTypes", "parties");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"),
-                            Code = "COUNTRY",
-                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "seed",
-                            Name = "Country",
-                            Revision = 0m
-                        });
                 });
 
             modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.FinancialAccount", b =>

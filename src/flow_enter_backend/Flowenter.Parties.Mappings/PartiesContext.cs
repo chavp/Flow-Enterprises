@@ -12,6 +12,8 @@ namespace Flowenter.Parties.Mappings;
 public sealed class PartiesContext : DbContext
 {
     // PartyModels
+    public DbSet<Language> Languages => Set<Language>();
+
     public DbSet<PartyType> PartyTypes => Set<PartyType>();
     public DbSet<PartyRoleType> PartyRoleTypes => Set<PartyRoleType>();
     public DbSet<LegalStructure> LegalStructures => Set<LegalStructure>();
@@ -21,10 +23,12 @@ public sealed class PartiesContext : DbContext
     public DbSet<PartyRole> PartyRoles => Set<PartyRole>();
     public DbSet<PartyContactMechanism> PartyContactMechanisms => Set<PartyContactMechanism>();
     public DbSet<PartyClassification> PartyClassifications => Set<PartyClassification>();
+    public DbSet<PersonName> PersonNames => Set<PersonName>();
 
     // GeographicBoundaryModels
     public DbSet<GeographicBoundaryType> GeographicBoundaryTypes => Set<GeographicBoundaryType>();
     public DbSet<GeographicBoundary> GeographicBoundaries => Set<GeographicBoundary>();
+    public DbSet<Country> Countries => Set<Country>();
 
     // ContactMechanismModels
     public DbSet<ContactMechanismType> ContactMechanismTypes => Set<ContactMechanismType>();
@@ -89,6 +93,26 @@ public sealed class PartiesContext : DbContext
     }
 
     private void seeds(ModelBuilder modelBuilder) {
+
+    //    modelBuilder.Entity<Language>().HasData([
+    //new PartyType
+    //        {
+    //            Id = Guid.NewGuid(),
+    //            Code = Language.TH,
+    //            Name = "ภาษาไทย",
+    //            CreatedBy = "seed",
+    //            Revision = 0
+    //        },
+    //        new PartyType
+    //        {
+    //            Id = Guid.NewGuid(),
+    //            Code = Language.EN,
+    //            Name = "English",
+    //            CreatedBy = "seed",
+    //            Revision = 0
+    //        }
+    //    ]);
+
         modelBuilder.Entity<PartyType>().HasData([
             new PartyType
             {
@@ -164,6 +188,18 @@ public sealed class PartiesContext : DbContext
                 Id = Guid.Parse("44444444-4444-4444-4444-444444444444"),
                 Code = LegalStructure.LimitedLiabilityCompany,
                 Name = "บริษัทจำกัด",
+                CreatedBy = "seed",
+                CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                Revision = 0
+            }
+        ]);
+
+        modelBuilder.Entity<GeographicBoundaryType>().HasData([
+            new GeographicBoundaryType
+            {
+                Id = Guid.Parse("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"),
+                Code = GeographicBoundaryType.Country,
+                Name = "Country",
                 CreatedBy = "seed",
                 CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 Revision = 0
