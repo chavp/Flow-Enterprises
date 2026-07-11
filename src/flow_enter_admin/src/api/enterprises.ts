@@ -7,6 +7,7 @@ import {
   EnterprisesResponse,
   PatchOperation,
   PartyRoleType,
+  UpdateEmploymentEffectiveDateRequest,
   UpdateEmploymentRequest,
   UpdateEnterpriseRequest
 } from "../features/enterprises/types";
@@ -110,6 +111,19 @@ export async function deleteEnterpriseEmployment(
   await requestJson(
     `/api/parties/enterprises/${enterpriseId}/employments/${employmentId}`,
     { method: "DELETE" },
+    apiBaseUrl
+  );
+}
+
+export async function updateEnterpriseEmploymentEffectiveDate(
+  enterpriseId: string,
+  employmentId: string,
+  payload: UpdateEmploymentEffectiveDateRequest,
+  apiBaseUrl?: string
+): Promise<void> {
+  await requestJson(
+    `/api/parties/enterprises/${enterpriseId}/employments/${employmentId}/effective-date`,
+    { method: "PATCH", body: JSON.stringify(payload) },
     apiBaseUrl
   );
 }

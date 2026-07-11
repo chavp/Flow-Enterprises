@@ -1093,6 +1093,60 @@
   },
   {
     "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "Method": "UpdateEnterpriseEmploymentEffectiveDate",
+    "RelativePath": "api/parties/enterprises/{enterprise_role_id}/employments/{employment_id}/effective-date",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "enterprise_role_id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "employment_id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "updateDto",
+        "Type": "Flowenter.Parties.IServices.Dtos.EnterpriseDto.UpdateEmploymentEffectiveDateDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Flowenter.Parties.IServices.Dtos.EnterpriseDto.EmploymentDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 400
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 404
+      }
+    ]
+  },
+  {
+    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
     "Method": "GetLegalStructures",
     "RelativePath": "api/parties/enterprises/legal-structures",
     "HttpMethod": "GET",

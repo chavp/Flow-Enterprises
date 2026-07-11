@@ -948,6 +948,120 @@
         }
       }
     },
+    "/api/parties/enterprises/{enterprise_role_id}/employments/{employment_id}/effective-date": {
+      "patch": {
+        "tags": [
+          "Enterprises"
+        ],
+        "parameters": [
+          {
+            "name": "enterprise_role_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "employment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEmploymentEffectiveDateDto"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEmploymentEffectiveDateDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEmploymentEffectiveDateDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEmploymentEffectiveDateDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmploymentDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmploymentDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmploymentDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/parties/enterprises/legal-structures": {
       "get": {
         "tags": [
@@ -4807,6 +4921,23 @@
               "type": "string",
               "format": "uuid"
             }
+          }
+        }
+      },
+      "UpdateEmploymentEffectiveDateDto": {
+        "required": [
+          "fromDate",
+          "thruDate"
+        ],
+        "type": "object",
+        "properties": {
+          "fromDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "thruDate": {
+            "type": "string",
+            "format": "date"
           }
         }
       }

@@ -82,3 +82,8 @@ export type CreateEmploymentRequest = {
 };
 
 export type UpdateEmploymentRequest = CreateEmploymentRequest;
+
+export type UpdateEmploymentEffectiveDateRequest = {
+  fromDate: string;
+  thruDate: string;
+};

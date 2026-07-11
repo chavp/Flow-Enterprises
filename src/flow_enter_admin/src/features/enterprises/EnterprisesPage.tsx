@@ -9,10 +9,12 @@ import {
   Alert,
   Button,
   Card,
+  DatePicker,
   Empty,
   Form,
   Input,
   InputNumber,
+  Popover,
   Select,
   Space,
   Spin,
@@ -21,6 +23,7 @@ import {
   Typography,
   message
 } from "antd";
+import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 import {
   createEnperprise,
@@ -30,6 +33,7 @@ import {
   fetchEnterprises,
   fetchLegalStructures,
   fetchPartyRoleTypes,
+  updateEnterpriseEmploymentEffectiveDate,
   updateEnterpriseEmployment,
   updateEnperprise
 } from "../../api/enterprises";
@@ -44,6 +48,14 @@ type EnterprisesPageProps = {
 
 type FormValues = CreateEnterpriseRequest;
 type EmploymentFormValues = CreateEmploymentRequest;
+type EmploymentGroup = {
+  employeePartyId: string;
+  employeeFullName: string;
+  firstName: string;
+  middleName?: string;
+  lastName: string;
+  employments: Employment[];
+};
 
 const defaultPageSize = 10;
 
@@ -57,6 +69,9 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
   const [peopleEnterprise, setPeopleEnterprise] = useState<Enterprise | null>(null);
   const [editingEmployment, setEditingEmployment] = useState<Employment | null>(null);
   const [isCreateEmploymentOpen, setCreateEmploymentOpen] = useState(false);
+  const [effectiveDateDrafts, setEffectiveDateDrafts] = useState<
+    Record<string, { fromDate: string; thruDate: string }>
+  >({});
   const [peopleTabKey, setPeopleTabKey] = useState("people");
   const [createForm] = Form.useForm<FormValues>();
   const [editForm] = Form.useForm<FormValues>();
@@ -148,6 +163,37 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
     },
     onError: (error) => {
       messageApi.error(error instanceof Error ? error.message : "Delete employment failed");
+    }
+  });
+
+  const updateEmploymentEffectiveDateMutation = useMutation({
+    mutationFn: async (payload: { employmentId: string; fromDate: string; thruDate: string }) => {
+      if (!peopleEnterprise) {
+        return;
+      }
+
+      await updateEnterpriseEmploymentEffectiveDate(
+        peopleEnterprise.enterpriseId,
+        payload.employmentId,
+        {
+          fromDate: payload.fromDate,
+          thruDate: payload.thruDate
+        },
+        apiBaseUrl
+      );
+    },
+    onSuccess: async () => {
+      if (!peopleEnterprise) {
+        return;
+      }
+
+      await queryClient.invalidateQueries({
+        queryKey: ["enterprise-employments", peopleEnterprise.enterpriseId, apiBaseUrl]
+      });
+      messageApi.success("Effective date updated");
+    },
+    onError: (error) => {
+      messageApi.error(error instanceof Error ? error.message : "Update effective date failed");
     }
   });
 
@@ -289,17 +335,33 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
     }));
 
   const employments = employmentsQuery.data ?? [];
-  const roleTypeIdsByEmployee = useMemo(() => {
-    const map = new Map<string, string[]>();
+  const employmentGroups = useMemo<EmploymentGroup[]>(() => {
+    const map = new Map<string, EmploymentGroup>();
     for (const employment of employments) {
-      const roleTypeIds = map.get(employment.employeePartyId) ?? [];
-      if (!roleTypeIds.includes(employment.partyRoleTypeId)) {
-        roleTypeIds.push(employment.partyRoleTypeId);
+      const existing = map.get(employment.employeePartyId);
+      if (existing) {
+        existing.employments.push(employment);
+        continue;
       }
-      map.set(employment.employeePartyId, roleTypeIds);
+
+      map.set(employment.employeePartyId, {
+        employeePartyId: employment.employeePartyId,
+        employeeFullName: employment.employeeFullName,
+        firstName: employment.firstName,
+        middleName: employment.middleName,
+        lastName: employment.lastName,
+        employments: [employment]
+      });
     }
-    return map;
+
+    return Array.from(map.values()).sort((left, right) => left.employeeFullName.localeCompare(right.employeeFullName));
   }, [employments]);
+
+  const getEffectiveDateDraft = (employment: Employment) =>
+    effectiveDateDrafts[employment.employmentId] ?? {
+      fromDate: employment.fromDate,
+      thruDate: employment.thruDate
+    };
 
   if (peopleEnterprise) {
     return (
@@ -321,6 +383,7 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                   setPeopleEnterprise(null);
                   setEditingEmployment(null);
                   setCreateEmploymentOpen(false);
+                  setEffectiveDateDrafts({});
                   setPeopleTabKey("people");
                   employmentForm.resetFields();
                   editEmploymentForm.resetFields();
@@ -358,7 +421,7 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                         />
                       ) : employmentsQuery.isLoading ? (
                         <Spin />
-                      ) : employments.length === 0 ? (
+                      ) : employmentGroups.length === 0 ? (
                         <Empty description="No employments found for this enterprise." />
                       ) : (
                         <div className="tanstack-table-wrapper">
@@ -366,36 +429,113 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                             <thead>
                               <tr>
                                 <th>Employee</th>
-                                <th>Party Role Type</th>
-                                <th>From Date</th>
-                                <th>Thru Date</th>
+                                <th>Roles</th>
                                 <th>Actions</th>
                               </tr>
                             </thead>
                             <tbody>
-                              {employments.map((employment: Employment) => (
-                                <tr key={employment.employmentId}>
-                                  <td>{employment.employeeFullName}</td>
+                              {employmentGroups.map((employmentGroup) => (
+                                <tr key={employmentGroup.employeePartyId}>
+                                  <td>{employmentGroup.employeeFullName}</td>
                                   <td>
-                                    {employment.partyRoleTypeName}
-                                    {employment.partyRoleTypeCode ? ` (${employment.partyRoleTypeCode})` : ""}
+                                    <Popover
+                                      trigger="click"
+                                      content={
+                                        <div style={{ width: 560 }}>
+                                          <table className="tanstack-table">
+                                            <thead>
+                                              <tr>
+                                                <th>Role</th>
+                                                <th>From Date</th>
+                                                <th>Thru Date</th>
+                                                <th>Action</th>
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                              {employmentGroup.employments.map((item) => {
+                                                const draft = getEffectiveDateDraft(item);
+                                                return (
+                                                  <tr key={item.employmentId}>
+                                                    <td>
+                                                      {item.partyRoleTypeName}
+                                                      {item.partyRoleTypeCode ? ` (${item.partyRoleTypeCode})` : ""}
+                                                    </td>
+                                                    <td>
+                                                      <DatePicker
+                                                        format="YYYY-MM-DD"
+                                                        value={dayjs(draft.fromDate)}
+                                                        onChange={(value) => {
+                                                          if (!value) {
+                                                            return;
+                                                          }
+                                                          setEffectiveDateDrafts((current) => ({
+                                                            ...current,
+                                                            [item.employmentId]: {
+                                                              ...getEffectiveDateDraft(item),
+                                                              fromDate: value.format("YYYY-MM-DD")
+                                                            }
+                                                          }));
+                                                        }}
+                                                      />
+                                                    </td>
+                                                    <td>
+                                                      <DatePicker
+                                                        format="YYYY-MM-DD"
+                                                        value={dayjs(draft.thruDate)}
+                                                        onChange={(value) => {
+                                                          if (!value) {
+                                                            return;
+                                                          }
+                                                          setEffectiveDateDrafts((current) => ({
+                                                            ...current,
+                                                            [item.employmentId]: {
+                                                              ...getEffectiveDateDraft(item),
+                                                              thruDate: value.format("YYYY-MM-DD")
+                                                            }
+                                                          }));
+                                                        }}
+                                                      />
+                                                    </td>
+                                                    <td>
+                                                      <Button
+                                                        size="small"
+                                                        onClick={() =>
+                                                          updateEmploymentEffectiveDateMutation.mutate({
+                                                            employmentId: item.employmentId,
+                                                            fromDate: getEffectiveDateDraft(item).fromDate,
+                                                            thruDate: getEffectiveDateDraft(item).thruDate
+                                                          })
+                                                        }
+                                                        loading={updateEmploymentEffectiveDateMutation.isPending}
+                                                      >
+                                                        Save
+                                                      </Button>
+                                                    </td>
+                                                  </tr>
+                                                );
+                                              })}
+                                            </tbody>
+                                          </table>
+                                        </div>
+                                      }
+                                    >
+                                      <Button size="small">
+                                        Roles ({employmentGroup.employments.length})
+                                      </Button>
+                                    </Popover>
                                   </td>
-                                  <td>{employment.fromDate}</td>
-                                  <td>{employment.thruDate}</td>
                                   <td>
                                     <Space>
                                       <Button
                                         size="small"
                                         onClick={() => {
-                                          setEditingEmployment(employment);
+                                          const primaryEmployment = employmentGroup.employments[0];
+                                          setEditingEmployment(primaryEmployment);
                                           editEmploymentForm.setFieldsValue({
-                                            firstName: employment.firstName,
-                                            middleName: employment.middleName,
-                                            lastName: employment.lastName,
-                                            partyRoleTypeIds:
-                                              roleTypeIdsByEmployee.get(employment.employeePartyId) ?? [
-                                                employment.partyRoleTypeId
-                                              ]
+                                            firstName: employmentGroup.firstName,
+                                            middleName: employmentGroup.middleName,
+                                            lastName: employmentGroup.lastName,
+                                            partyRoleTypeIds: employmentGroup.employments.map((item) => item.partyRoleTypeId)
                                           });
                                         }}
                                       >
@@ -403,10 +543,12 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                                       </Button>
                                       <Popconfirm
                                         title="Delete employment?"
-                                        description="This will remove this employment relationship."
+                                        description="This will remove this employee and all roles in this enterprise."
                                         okText="Delete"
                                         okButtonProps={{ danger: true, loading: deleteEmploymentMutation.isPending }}
-                                        onConfirm={() => deleteEmploymentMutation.mutate(employment.employmentId)}
+                                        onConfirm={() =>
+                                          deleteEmploymentMutation.mutate(employmentGroup.employments[0].employmentId)
+                                        }
                                       >
                                         <Button size="small" danger>
                                           Delete
