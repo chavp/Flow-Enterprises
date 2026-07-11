@@ -10,11 +10,11 @@ namespace Flowenter.Parties.Models.PartyModels;
 public class Employment : PartyRelationship
 {
     protected Employment() { }
-    public Employment(Guid employerId, Guid employeeId, PartyRelationshipType partyRelationshipType)
+    public Employment(Guid employerId, Guid employeeId, Guid partyRelationshipTypeId)
     {
         EmployerId = employerId;
         EmployeeId = employeeId;
-        PartyRelationshipType = partyRelationshipType;
+        PartyRelationshipTypeId = partyRelationshipTypeId;
     }
 
     [Required]

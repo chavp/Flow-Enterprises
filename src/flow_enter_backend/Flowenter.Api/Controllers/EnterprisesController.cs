@@ -223,9 +223,9 @@ public class EnterprisesController : ControllerBase
         var personNames = await context.PersonNames
             .Where(personName => personName.PersonId.HasValue
                                  && personIds.Contains(personName.PersonId.Value)
-                                 && personName.FromDate <= today
-                                 && today <= personName.ThruDate)
-            .OrderByDescending(personName => personName.FromDate)
+                                 && personName.FromDateUtc <= today
+                                 && today <= personName.ThruDateUtc)
+            .OrderByDescending(personName => personName.FromDateUtc)
             .ToListAsync(cancellationToken);
 
         var personNameMap = personNames
@@ -258,8 +258,8 @@ public class EnterprisesController : ControllerBase
                     PartyRoleTypeId = row.RoleType.Id!.Value,
                     PartyRoleTypeCode = row.RoleType.Code ?? string.Empty,
                     PartyRoleTypeName = row.RoleType.Name ?? string.Empty,
-                    FromDate = row.Employment.FromDate,
-                    ThruDate = row.Employment.ThruDate,
+                    FromDate = row.Employment.FromDateUtc,
+                    ThruDate = row.Employment.ThruDateUtc,
                     CreatedAtUtc = row.Employment.CreatedAtUtc,
                     UpdatedAtUtc = row.Employment.UpdatedAtUtc,
                     Revision = row.Employment.Revision
@@ -375,7 +375,7 @@ public class EnterprisesController : ControllerBase
                 PartyId = person.Id
             };
 
-            var employment = new Employment(enterpriseRole.Id!.Value, employeeRole.Id!.Value, employmentRelationshipType)
+            var employment = new Employment(enterpriseRole.Id!.Value, employeeRole.Id!.Value, employmentRelationshipType.Id!.Value)
             {
                 Id = Guid.NewGuid(),
                 PartyRelationshipTypeId = employmentRelationshipType.Id,
@@ -416,8 +416,8 @@ public class EnterprisesController : ControllerBase
             PartyRoleTypeId = firstPartyRoleType.Id!.Value,
             PartyRoleTypeCode = firstPartyRoleType.Code ?? string.Empty,
             PartyRoleTypeName = firstPartyRoleType.Name ?? string.Empty,
-            FromDate = firstEmployment.FromDate,
-            ThruDate = firstEmployment.ThruDate,
+            FromDate = firstEmployment.FromDateUtc,
+            ThruDate = firstEmployment.ThruDateUtc,
             CreatedAtUtc = firstEmployment.CreatedAtUtc,
             UpdatedAtUtc = firstEmployment.UpdatedAtUtc,
             Revision = firstEmployment.Revision
@@ -486,9 +486,9 @@ public class EnterprisesController : ControllerBase
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
         var personName = await context.PersonNames
             .Where(item => item.PersonId == person.Id
-                           && item.FromDate <= today
-                           && today <= item.ThruDate)
-            .OrderByDescending(item => item.FromDate)
+                           && item.FromDateUtc <= today
+                           && today <= item.ThruDateUtc)
+            .OrderByDescending(item => item.FromDateUtc)
             .FirstOrDefaultAsync(cancellationToken);
 
         if (personName == null)
@@ -585,7 +585,7 @@ public class EnterprisesController : ControllerBase
                 PartyId = person.Id
             };
 
-            var employmentToAdd = new Employment(enterprise_role_id, employeeRoleToAdd.Id!.Value, employmentRelationshipType)
+            var employmentToAdd = new Employment(enterprise_role_id, employeeRoleToAdd.Id!.Value, employmentRelationshipType.Id!.Value)
             {
                 Id = Guid.NewGuid(),
                 PartyRelationshipTypeId = employmentRelationshipType.Id,
@@ -628,8 +628,8 @@ public class EnterprisesController : ControllerBase
             PartyRoleTypeId = primaryRoleType.Id!.Value,
             PartyRoleTypeCode = primaryRoleType.Code ?? string.Empty,
             PartyRoleTypeName = primaryRoleType.Name ?? string.Empty,
-            FromDate = responseEmployment.FromDate,
-            ThruDate = responseEmployment.ThruDate,
+            FromDate = responseEmployment.FromDateUtc,
+            ThruDate = responseEmployment.ThruDateUtc,
             CreatedAtUtc = responseEmployment.CreatedAtUtc,
             UpdatedAtUtc = responseEmployment.UpdatedAtUtc,
             Revision = responseEmployment.Revision
@@ -670,16 +670,16 @@ public class EnterprisesController : ControllerBase
             return NotFound();
         }
 
-        employmentRow.Employment.FromDate = updateDto.FromDate;
-        employmentRow.Employment.ThruDate = updateDto.ThruDate;
+        employmentRow.Employment.FromDateUtc = updateDto.FromDate;
+        employmentRow.Employment.ThruDateUtc = updateDto.ThruDate;
         await context.SaveChangesAsync(cancellationToken);
 
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
         var personName = await context.PersonNames
             .Where(item => item.PersonId == employmentRow.EmployeeRole.PartyId
-                           && item.FromDate <= today
-                           && today <= item.ThruDate)
-            .OrderByDescending(item => item.FromDate)
+                           && item.FromDateUtc <= today
+                           && today <= item.ThruDateUtc)
+            .OrderByDescending(item => item.FromDateUtc)
             .FirstOrDefaultAsync(cancellationToken);
 
         var fullName = personName == null
@@ -700,8 +700,8 @@ public class EnterprisesController : ControllerBase
             PartyRoleTypeId = employmentRow.RoleType.Id!.Value,
             PartyRoleTypeCode = employmentRow.RoleType.Code ?? string.Empty,
             PartyRoleTypeName = employmentRow.RoleType.Name ?? string.Empty,
-            FromDate = employmentRow.Employment.FromDate,
-            ThruDate = employmentRow.Employment.ThruDate,
+            FromDate = employmentRow.Employment.FromDateUtc,
+            ThruDate = employmentRow.Employment.ThruDateUtc,
             CreatedAtUtc = employmentRow.Employment.CreatedAtUtc,
             UpdatedAtUtc = employmentRow.Employment.UpdatedAtUtc,
             Revision = employmentRow.Employment.Revision
@@ -751,6 +751,36 @@ public class EnterprisesController : ControllerBase
         {
             context.PartyRelationships.Remove(relatedEmployment.Employment);
             context.PartyRoles.Remove(relatedEmployment.EmployeeRole);
+        }
+
+        var partyId = employeeRole.PartyId.Value;
+        var removedRoleIds = relatedEmployments
+            .Where(item => item.EmployeeRole.Id.HasValue)
+            .Select(item => item.EmployeeRole.Id!.Value)
+            .ToList();
+
+        var hasRemainingPartyRoles = await context.PartyRoles
+            .AnyAsync(item => item.PartyId == partyId
+                              && item.Id.HasValue
+                              && !removedRoleIds.Contains(item.Id.Value),
+                cancellationToken);
+
+        if (!hasRemainingPartyRoles)
+        {
+            var personNames = await context.PersonNames
+                .Where(item => item.PersonId == partyId)
+                .ToListAsync(cancellationToken);
+            if (personNames.Count > 0)
+            {
+                context.PersonNames.RemoveRange(personNames);
+            }
+
+            var party = await context.Parties
+                .FirstOrDefaultAsync(item => item.Id == partyId, cancellationToken);
+            if (party != null)
+            {
+                context.Parties.Remove(party);
+            }
         }
 
         await context.SaveChangesAsync(cancellationToken);

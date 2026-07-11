@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Flowenter.Parties.Mappings.Migrations
 {
     [DbContext(typeof(PartiesContext))]
-    [Migration("20260711131952_init")]
-    partial class init
+    [Migration("20260711173444_facRoomBed")]
+    partial class facRoomBed
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -110,6 +110,104 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .IsUnique();
 
                     b.ToTable("ContactMechanismTypes", "parties");
+                });
+
+            modelBuilder.Entity("Flowenter.Parties.Models.FacilityModels.Facility", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<Guid>("FacilityTypeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Number")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<Guid?>("PartOfId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Revision")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<DateTime?>("UpdatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FacilityTypeId");
+
+                    b.HasIndex("Number");
+
+                    b.HasIndex("PartOfId");
+
+                    b.ToTable("Facilities", "parties");
+
+                    b.UseTptMappingStrategy();
+                });
+
+            modelBuilder.Entity("Flowenter.Parties.Models.FacilityModels.FacilityType", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<decimal>("Revision")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<DateTime?>("UpdatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.ToTable("FacilityTypes", "parties");
                 });
 
             modelBuilder.Entity("Flowenter.Parties.Models.GeographicBoundaryModels.GeographicBoundary", b =>
@@ -269,6 +367,52 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .IsUnique();
 
                     b.ToTable("FinancialAccounts", "parties");
+                });
+
+            modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.GenderType", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<decimal>("Revision")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<DateTime?>("UpdatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.ToTable("GenderTypes", "parties");
                 });
 
             modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.Language", b =>
@@ -564,7 +708,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<DateOnly>("FromDate")
+                    b.Property<DateOnly>("FromDateUtc")
                         .HasColumnType("date");
 
                     b.Property<Guid>("PartyId")
@@ -576,7 +720,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.Property<decimal>("Revision")
                         .HasColumnType("decimal(20,0)");
 
-                    b.Property<DateOnly>("ThruDate")
+                    b.Property<DateOnly>("ThruDateUtc")
                         .HasColumnType("date");
 
                     b.Property<DateTime?>("UpdatedAtUtc")
@@ -592,7 +736,7 @@ namespace Flowenter.Parties.Mappings.Migrations
 
                     b.HasIndex("PartyRoleTypeId");
 
-                    b.HasIndex("PartyId", "PartyRoleTypeId", "ContactMechanismId", "FromDate")
+                    b.HasIndex("PartyId", "PartyRoleTypeId", "ContactMechanismId", "FromDateUtc")
                         .IsUnique();
 
                     b.ToTable("PartyContactMechanisms", "parties");
@@ -616,7 +760,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<DateOnly>("FromDate")
+                    b.Property<DateOnly>("FromDateUtc")
                         .HasColumnType("date");
 
                     b.Property<Guid>("PartyRelationshipTypeId")
@@ -625,7 +769,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.Property<decimal>("Revision")
                         .HasColumnType("decimal(20,0)");
 
-                    b.Property<DateOnly>("ThruDate")
+                    b.Property<DateOnly>("ThruDateUtc")
                         .HasColumnType("date");
 
                     b.Property<DateTime?>("UpdatedAtUtc")
@@ -696,7 +840,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                             Code = "EMPLOYMENT",
                             CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             CreatedBy = "seed",
-                            Name = "Employment",
+                            Name = "การจ้างงาน",
                             Revision = 0m
                         });
                 });
@@ -719,7 +863,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<DateOnly>("FromDate")
+                    b.Property<DateOnly>("FromDateUtc")
                         .HasColumnType("date");
 
                     b.Property<Guid>("PartyId")
@@ -728,7 +872,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.Property<decimal>("Revision")
                         .HasColumnType("decimal(20,0)");
 
-                    b.Property<DateOnly>("ThruDate")
+                    b.Property<DateOnly>("ThruDateUtc")
                         .HasColumnType("date");
 
                     b.Property<Guid>("TypeId")
@@ -745,7 +889,7 @@ namespace Flowenter.Parties.Mappings.Migrations
 
                     b.HasIndex("PartyId");
 
-                    b.HasIndex("TypeId", "PartyId", "FromDate")
+                    b.HasIndex("TypeId", "PartyId", "FromDateUtc")
                         .IsUnique();
 
                     b.ToTable("PartyRoles", "parties");
@@ -805,8 +949,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                             Code = "ENTERPRISE",
                             CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             CreatedBy = "seed",
-                            Description = "บทบาทกิจการ/นิติบุคคล",
-                            Name = "Enterprise",
+                            Name = "กิจการ/นิติบุคคล",
                             Revision = 0m
                         },
                         new
@@ -815,8 +958,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                             Code = "CUSTOMER",
                             CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             CreatedBy = "seed",
-                            Description = "บทบาทลูกค้า",
-                            Name = "Customer",
+                            Name = "ลูกค้า",
                             Revision = 0m
                         },
                         new
@@ -825,8 +967,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                             Code = "ADMINISTRATOR",
                             CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             CreatedBy = "seed",
-                            Description = "ผู้บริหารหรือผู้จัดการสถานดูแล",
-                            Name = "Administrator",
+                            Name = "ผู้บริหารหรือผู้จัดการสถานดูแล",
                             Revision = 0m
                         },
                         new
@@ -835,8 +976,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                             Code = "CARE_MANAGER",
                             CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             CreatedBy = "seed",
-                            Description = "ผู้จัดการดูแลผู้ป่วยหรือผู้จัดการเคส",
-                            Name = "Care Manager",
+                            Name = "ผู้จัดการดูแลผู้ป่วยหรือผู้จัดการเคส",
                             Revision = 0m
                         },
                         new
@@ -845,8 +985,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                             Code = "NURSE",
                             CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             CreatedBy = "seed",
-                            Description = "พยาบาล",
-                            Name = "Nurse",
+                            Name = "พยาบาล",
                             Revision = 0m
                         },
                         new
@@ -855,8 +994,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                             Code = "CAREGIVER",
                             CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             CreatedBy = "seed",
-                            Description = "ผู้ดูแล",
-                            Name = "Caregiver",
+                            Name = "ผู้ดูแล",
                             Revision = 0m
                         },
                         new
@@ -865,8 +1003,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                             Code = "PHYSICIAN",
                             CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             CreatedBy = "seed",
-                            Description = "แพทย์",
-                            Name = "Physician",
+                            Name = "แพทย์",
                             Revision = 0m
                         },
                         new
@@ -875,8 +1012,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                             Code = "PHARMACIST",
                             CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             CreatedBy = "seed",
-                            Description = "เภสัชกร",
-                            Name = "Pharmacist",
+                            Name = "เภสัชกร",
                             Revision = 0m
                         },
                         new
@@ -885,8 +1021,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                             Code = "DIETITIAN",
                             CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             CreatedBy = "seed",
-                            Description = "นักกำหนดอาหารหรือนักโภชนาการ",
-                            Name = "Dietitian",
+                            Name = "นักกำหนดอาหารหรือนักโภชนาการ",
                             Revision = 0m
                         },
                         new
@@ -895,8 +1030,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                             Code = "KITCHEN_STAFF",
                             CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             CreatedBy = "seed",
-                            Description = "พนักงานครัว",
-                            Name = "Kitchen Staff",
+                            Name = "พนักงานครัว",
                             Revision = 0m
                         },
                         new
@@ -905,8 +1039,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                             Code = "HOUSEKEEPING_STAFF",
                             CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             CreatedBy = "seed",
-                            Description = "พนักงานทำความสะอาด",
-                            Name = "Housekeeping Staff",
+                            Name = "พนักงานทำความสะอาด",
                             Revision = 0m
                         },
                         new
@@ -915,8 +1048,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                             Code = "MAINTENANCE_STAFF",
                             CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             CreatedBy = "seed",
-                            Description = "ช่างซ่อมบำรุง",
-                            Name = "Maintenance Staff",
+                            Name = "ช่างซ่อมบำรุง",
                             Revision = 0m
                         },
                         new
@@ -925,8 +1057,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                             Code = "LAUNDRY_STAFF",
                             CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             CreatedBy = "seed",
-                            Description = "พนักงานซักรีด",
-                            Name = "Laundry Staff",
+                            Name = "พนักงานซักรีด",
                             Revision = 0m
                         },
                         new
@@ -935,8 +1066,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                             Code = "RECEPTIONIST",
                             CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             CreatedBy = "seed",
-                            Description = "พนักงานต้อนรับ",
-                            Name = "Receptionist",
+                            Name = "พนักงานต้อนรับ",
                             Revision = 0m
                         },
                         new
@@ -945,8 +1075,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                             Code = "PATIENT",
                             CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             CreatedBy = "seed",
-                            Description = "ผู้ป่วย",
-                            Name = "Patient",
+                            Name = "ผู้ป่วย",
                             Revision = 0m
                         },
                         new
@@ -955,8 +1084,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                             Code = "SECURITY_GUARD",
                             CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             CreatedBy = "seed",
-                            Description = "เจ้าหน้าที่รักษาความปลอดภัย",
-                            Name = "Security Guard",
+                            Name = "เจ้าหน้าที่รักษาความปลอดภัย",
                             Revision = 0m
                         });
                 });
@@ -1050,7 +1178,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
-                    b.Property<DateOnly>("FromDate")
+                    b.Property<DateOnly>("FromDateUtc")
                         .HasColumnType("date");
 
                     b.Property<Guid>("LanguageId")
@@ -1071,7 +1199,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.Property<decimal>("Revision")
                         .HasColumnType("decimal(20,0)");
 
-                    b.Property<DateOnly>("ThruDate")
+                    b.Property<DateOnly>("ThruDateUtc")
                         .HasColumnType("date");
 
                     b.Property<DateTime?>("UpdatedAtUtc")
@@ -1190,6 +1318,25 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.ToTable("TelecommunicationNumbers", "parties");
                 });
 
+            modelBuilder.Entity("Flowenter.Parties.Models.FacilityModels.Bed", b =>
+                {
+                    b.HasBaseType("Flowenter.Parties.Models.FacilityModels.Facility");
+
+                    b.Property<Guid?>("RoomId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasIndex("RoomId");
+
+                    b.ToTable("Beds", "parties");
+                });
+
+            modelBuilder.Entity("Flowenter.Parties.Models.FacilityModels.Room", b =>
+                {
+                    b.HasBaseType("Flowenter.Parties.Models.FacilityModels.Facility");
+
+                    b.ToTable("Rooms", "parties");
+                });
+
             modelBuilder.Entity("Flowenter.Parties.Models.GeographicBoundaryModels.Country", b =>
                 {
                     b.HasBaseType("Flowenter.Parties.Models.GeographicBoundaryModels.GeographicBoundary");
@@ -1248,6 +1395,11 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.Property<DateOnly?>("DateOfBirth")
                         .HasColumnType("date");
 
+                    b.Property<Guid?>("GenderTypeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasIndex("GenderTypeId");
+
                     b.ToTable("People", "parties");
                 });
 
@@ -1255,10 +1407,10 @@ namespace Flowenter.Parties.Mappings.Migrations
                 {
                     b.HasBaseType("Flowenter.Parties.Models.PartyModels.PartyRelationship");
 
-                    b.Property<Guid?>("EmployeeId")
+                    b.Property<Guid>("EmployeeId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("EmployerId")
+                    b.Property<Guid>("EmployerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasIndex("EmployeeId");
@@ -1331,6 +1483,23 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .IsRequired();
 
                     b.Navigation("Type");
+                });
+
+            modelBuilder.Entity("Flowenter.Parties.Models.FacilityModels.Facility", b =>
+                {
+                    b.HasOne("Flowenter.Parties.Models.FacilityModels.FacilityType", "FacilityType")
+                        .WithMany()
+                        .HasForeignKey("FacilityTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Flowenter.Parties.Models.FacilityModels.Facility", "PartOf")
+                        .WithMany()
+                        .HasForeignKey("PartOfId");
+
+                    b.Navigation("FacilityType");
+
+                    b.Navigation("PartOf");
                 });
 
             modelBuilder.Entity("Flowenter.Parties.Models.GeographicBoundaryModels.GeographicBoundary", b =>
@@ -1509,6 +1678,30 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.Navigation("Country");
                 });
 
+            modelBuilder.Entity("Flowenter.Parties.Models.FacilityModels.Bed", b =>
+                {
+                    b.HasOne("Flowenter.Parties.Models.FacilityModels.Facility", null)
+                        .WithOne()
+                        .HasForeignKey("Flowenter.Parties.Models.FacilityModels.Bed", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Flowenter.Parties.Models.FacilityModels.Room", "Room")
+                        .WithMany()
+                        .HasForeignKey("RoomId");
+
+                    b.Navigation("Room");
+                });
+
+            modelBuilder.Entity("Flowenter.Parties.Models.FacilityModels.Room", b =>
+                {
+                    b.HasOne("Flowenter.Parties.Models.FacilityModels.Facility", null)
+                        .WithOne()
+                        .HasForeignKey("Flowenter.Parties.Models.FacilityModels.Room", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Flowenter.Parties.Models.GeographicBoundaryModels.Country", b =>
                 {
                     b.HasOne("Flowenter.Parties.Models.GeographicBoundaryModels.GeographicBoundary", null)
@@ -1529,22 +1722,32 @@ namespace Flowenter.Parties.Mappings.Migrations
 
             modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.Person", b =>
                 {
+                    b.HasOne("Flowenter.Parties.Models.PartyModels.GenderType", "GenderType")
+                        .WithMany()
+                        .HasForeignKey("GenderTypeId");
+
                     b.HasOne("Flowenter.Parties.Models.PartyModels.Party", null)
                         .WithOne()
                         .HasForeignKey("Flowenter.Parties.Models.PartyModels.Person", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("GenderType");
                 });
 
             modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.Employment", b =>
                 {
                     b.HasOne("Flowenter.Parties.Models.PartyModels.PartyRole", "Employee")
                         .WithMany()
-                        .HasForeignKey("EmployeeId");
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("Flowenter.Parties.Models.PartyModels.PartyRole", "Employer")
                         .WithMany()
-                        .HasForeignKey("EmployerId");
+                        .HasForeignKey("EmployerId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("Flowenter.Parties.Models.PartyModels.PartyRelationship", null)
                         .WithOne()

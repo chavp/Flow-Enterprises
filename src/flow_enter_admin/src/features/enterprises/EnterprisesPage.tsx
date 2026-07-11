@@ -57,6 +57,18 @@ type EmploymentGroup = {
   employments: Employment[];
 };
 
+function toLocalDatePickerValue(value: string) {
+  if (value.includes("T")) {
+    return dayjs(new Date(value));
+  }
+
+  return dayjs(new Date(`${value}T00:00:00`));
+}
+
+function toLocalDateApiValue(value: string) {
+  return toLocalDatePickerValue(value).format("YYYY-MM-DD");
+}
+
 const defaultPageSize = 10;
 
 export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
@@ -359,8 +371,8 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
 
   const getEffectiveDateDraft = (employment: Employment) =>
     effectiveDateDrafts[employment.employmentId] ?? {
-      fromDate: employment.fromDate,
-      thruDate: employment.thruDate
+      fromDate: toLocalDateApiValue(employment.fromDate),
+      thruDate: toLocalDateApiValue(employment.thruDate)
     };
 
   if (peopleEnterprise) {
@@ -464,7 +476,7 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                                                       <DatePicker
                                                         format="DD/MM/YYYY"
                                                         style={{ width: 150 }}
-                                                        value={dayjs(draft.fromDate)}
+                                                        value={toLocalDatePickerValue(draft.fromDate)}
                                                         onChange={(value) => {
                                                           if (!value) {
                                                             return;
@@ -483,7 +495,7 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                                                       <DatePicker
                                                         format="DD/MM/YYYY"
                                                         style={{ width: 150 }}
-                                                        value={dayjs(draft.thruDate)}
+                                                        value={toLocalDatePickerValue(draft.thruDate)}
                                                         onChange={(value) => {
                                                           if (!value) {
                                                             return;

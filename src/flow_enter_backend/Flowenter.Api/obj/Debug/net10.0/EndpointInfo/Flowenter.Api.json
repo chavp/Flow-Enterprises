@@ -4064,11 +4064,11 @@
               }
             ]
           },
-          "fromDate": {
+          "fromDateUtc": {
             "type": "string",
             "format": "date"
           },
-          "thruDate": {
+          "thruDateUtc": {
             "type": "string",
             "format": "date"
           },
@@ -4702,11 +4702,11 @@
               }
             ]
           },
-          "fromDate": {
+          "fromDateUtc": {
             "type": "string",
             "format": "date"
           },
-          "thruDate": {
+          "thruDateUtc": {
             "type": "string",
             "format": "date"
           },

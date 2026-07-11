@@ -1,6 +1,7 @@
 ﻿using Flowenter.Domain.Models;
 using Flowenter.Parties.Mappings.Extensions;
 using Flowenter.Parties.Models.ContactMechanismModels;
+using Flowenter.Parties.Models.FacilityModels;
 using Flowenter.Parties.Models.GeographicBoundaryModels;
 using Flowenter.Parties.Models.PartyModels;
 using Microsoft.EntityFrameworkCore;
@@ -11,9 +12,11 @@ namespace Flowenter.Parties.Mappings;
 
 public sealed class PartiesContext : DbContext
 {
-    // PartyModels
+    // World
     public DbSet<Language> Languages => Set<Language>();
+    public DbSet<GenderType> GenderTypes => Set<GenderType>();
 
+    // PartyModels
     public DbSet<PartyType> PartyTypes => Set<PartyType>();
     public DbSet<PartyRoleType> PartyRoleTypes => Set<PartyRoleType>();
     public DbSet<LegalStructure> LegalStructures => Set<LegalStructure>();
@@ -42,6 +45,10 @@ public sealed class PartiesContext : DbContext
     // Party Relationships
     public DbSet<PartyRelationshipType> PartyRelationshipTypes => Set<PartyRelationshipType>();
     public DbSet<PartyRelationship> PartyRelationships => Set<PartyRelationship>();
+
+    // Facilities
+    public DbSet<FacilityType> FacilityTypes => Set<FacilityType>();
+    public DbSet<Facility> Facilities => Set<Facility>();
 
     public PartiesContext(DbContextOptions<PartiesContext> options,
         ITenantProvider tenantProvider) : base(options)
@@ -93,7 +100,22 @@ public sealed class PartiesContext : DbContext
                 l => l.HasOne(e => e.Party).WithMany()
             );
 
-        modelBuilder.Entity<Employment>();
+        modelBuilder.Entity<Employment>(builder =>
+        {
+            builder.HasOne(e => e.Employee)
+                .WithMany()
+                .HasForeignKey(e => e.EmployeeId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasOne(e => e.Employer)
+                .WithMany()
+                .HasForeignKey(e => e.EmployerId)
+                .OnDelete(DeleteBehavior.NoAction);
+        });
+
+        // Facilities
+        modelBuilder.Entity<Room>().ToTable("Rooms");
+        modelBuilder.Entity<Bed>().ToTable("Beds");
 
         seeds(modelBuilder);
     }

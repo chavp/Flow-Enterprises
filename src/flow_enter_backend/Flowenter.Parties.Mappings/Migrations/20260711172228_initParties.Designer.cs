@@ -4,6 +4,7 @@ using Flowenter.Parties.Mappings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Flowenter.Parties.Mappings.Migrations
 {
     [DbContext(typeof(PartiesContext))]
-    partial class PartiesContextModelSnapshot : ModelSnapshot
+    [Migration("20260711172228_initParties")]
+    partial class initParties
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -127,6 +130,11 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(8)
+                        .HasColumnType("nvarchar(8)");
+
                     b.Property<Guid>("FacilityTypeId")
                         .HasColumnType("uniqueidentifier");
 
@@ -158,7 +166,9 @@ namespace Flowenter.Parties.Mappings.Migrations
 
                     b.ToTable("Facilities", "parties");
 
-                    b.UseTptMappingStrategy();
+                    b.HasDiscriminator().HasValue("Facility");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Flowenter.Parties.Models.FacilityModels.FacilityType", b =>
@@ -1324,14 +1334,14 @@ namespace Flowenter.Parties.Mappings.Migrations
 
                     b.HasIndex("RoomId");
 
-                    b.ToTable("Beds", "parties");
+                    b.HasDiscriminator().HasValue("Bed");
                 });
 
             modelBuilder.Entity("Flowenter.Parties.Models.FacilityModels.Room", b =>
                 {
                     b.HasBaseType("Flowenter.Parties.Models.FacilityModels.Facility");
 
-                    b.ToTable("Rooms", "parties");
+                    b.HasDiscriminator().HasValue("Room");
                 });
 
             modelBuilder.Entity("Flowenter.Parties.Models.GeographicBoundaryModels.Country", b =>
@@ -1677,26 +1687,11 @@ namespace Flowenter.Parties.Mappings.Migrations
 
             modelBuilder.Entity("Flowenter.Parties.Models.FacilityModels.Bed", b =>
                 {
-                    b.HasOne("Flowenter.Parties.Models.FacilityModels.Facility", null)
-                        .WithOne()
-                        .HasForeignKey("Flowenter.Parties.Models.FacilityModels.Bed", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Flowenter.Parties.Models.FacilityModels.Room", "Room")
                         .WithMany()
                         .HasForeignKey("RoomId");
 
                     b.Navigation("Room");
-                });
-
-            modelBuilder.Entity("Flowenter.Parties.Models.FacilityModels.Room", b =>
-                {
-                    b.HasOne("Flowenter.Parties.Models.FacilityModels.Facility", null)
-                        .WithOne()
-                        .HasForeignKey("Flowenter.Parties.Models.FacilityModels.Room", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Flowenter.Parties.Models.GeographicBoundaryModels.Country", b =>
