@@ -172,3 +172,15 @@ export async function updateEnterpriseRoom(
     apiBaseUrl
   );
 }
+
+export async function deleteEnterpriseRoom(
+  enterpriseId: string,
+  roomId: string,
+  apiBaseUrl?: string
+): Promise<void> {
+  await requestJson(
+    `/api/parties/enterprises/${enterpriseId}/facilities/rooms/${roomId}`,
+    { method: "DELETE" },
+    apiBaseUrl
+  );
+}

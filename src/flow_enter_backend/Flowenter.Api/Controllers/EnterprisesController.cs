@@ -956,6 +956,56 @@ public class EnterprisesController : ControllerBase
         });
     }
 
+    [HttpDelete("{enterprise_role_id:guid}/facilities/rooms/{room_id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteEnterpriseRoom(
+        [FromRoute] Guid enterprise_role_id,
+        [FromRoute] Guid room_id,
+        CancellationToken cancellationToken)
+    {
+        using var context = _factory.CreateDbContext();
+
+        var enterprise = await context.PartyRoles
+            .OfType<Enterprise>()
+            .Select(e => new { e.Id, e.PartyId, e.TypeId })
+            .FirstOrDefaultAsync(e => e.Id == enterprise_role_id, cancellationToken);
+        if (enterprise == null || !enterprise.PartyId.HasValue || !enterprise.TypeId.HasValue)
+        {
+            return NotFound();
+        }
+
+        var enterpriseRoomRoles = await context.FacilityRoles
+            .Where(role => role.Id == room_id
+                           && role.PartyId == enterprise.PartyId
+                           && role.PartyRoleTypeId == enterprise.TypeId)
+            .ToListAsync(cancellationToken);
+        if (enterpriseRoomRoles.Count == 0)
+        {
+            return NotFound();
+        }
+
+        context.FacilityRoles.RemoveRange(enterpriseRoomRoles);
+
+        var hasOtherFacilityRoleReferences = await context.FacilityRoles
+            .AnyAsync(role => role.Id == room_id
+                              && (role.PartyId != enterprise.PartyId || role.PartyRoleTypeId != enterprise.TypeId),
+                cancellationToken);
+        if (!hasOtherFacilityRoleReferences)
+        {
+            var room = await context.Facilities
+                .OfType<Room>()
+                .FirstOrDefaultAsync(item => item.Id == room_id, cancellationToken);
+            if (room != null)
+            {
+                context.Facilities.Remove(room);
+            }
+        }
+
+        await context.SaveChangesAsync(cancellationToken);
+        return NoContent();
+    }
+
     [HttpGet("legal-structures")]
     [ProducesResponseType(typeof(List<LegalStructure>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetLegalStructures(CancellationToken cancellationToken)

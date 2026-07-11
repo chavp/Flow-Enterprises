@@ -1290,6 +1290,42 @@
   },
   {
     "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "Method": "DeleteEnterpriseRoom",
+    "RelativePath": "api/parties/enterprises/{enterprise_role_id}/facilities/rooms/{room_id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "enterprise_role_id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "room_id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 204
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 404
+      }
+    ]
+  },
+  {
+    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
     "Method": "GetLegalStructures",
     "RelativePath": "api/parties/enterprises/legal-structures",
     "HttpMethod": "GET",

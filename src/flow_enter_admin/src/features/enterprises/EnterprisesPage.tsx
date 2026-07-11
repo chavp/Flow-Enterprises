@@ -28,6 +28,7 @@ import { useMemo, useState } from "react";
 import {
   createEnperprise,
   createEnterpriseRoom,
+  deleteEnterpriseRoom,
   deleteEnterpriseEmployment,
   createEnterpriseEmployment,
   fetchEnterpriseEmployments,
@@ -321,6 +322,29 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
     },
     onError: (error) => {
       messageApi.error(error instanceof Error ? error.message : "Update room failed");
+    }
+  });
+
+  const deleteRoomMutation = useMutation({
+    mutationFn: async (roomId: string) => {
+      if (!peopleEnterprise) {
+        return;
+      }
+
+      await deleteEnterpriseRoom(peopleEnterprise.enterpriseId, roomId, apiBaseUrl);
+    },
+    onSuccess: async () => {
+      if (!peopleEnterprise) {
+        return;
+      }
+
+      await queryClient.invalidateQueries({
+        queryKey: ["enterprise-rooms", peopleEnterprise.enterpriseId, roomSearchText, apiBaseUrl]
+      });
+      messageApi.success("Room deleted");
+    },
+    onError: (error) => {
+      messageApi.error(error instanceof Error ? error.message : "Delete room failed");
     }
   });
 
@@ -693,15 +717,28 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                                 <tr key={room.roomId}>
                                   <td>{room.number}</td>
                                   <td>
-                                    <Button
-                                      size="small"
-                                      onClick={() => {
-                                        setEditingRoom(room);
-                                        editRoomForm.setFieldsValue({ number: room.number });
-                                      }}
-                                    >
-                                      Edit
-                                    </Button>
+                                    <Space>
+                                      <Button
+                                        size="small"
+                                        onClick={() => {
+                                          setEditingRoom(room);
+                                          editRoomForm.setFieldsValue({ number: room.number });
+                                        }}
+                                      >
+                                        Edit
+                                      </Button>
+                                      <Popconfirm
+                                        title="Delete room?"
+                                        description="This removes the room from this enterprise."
+                                        okText="Delete"
+                                        okButtonProps={{ danger: true, loading: deleteRoomMutation.isPending }}
+                                        onConfirm={() => deleteRoomMutation.mutate(room.roomId)}
+                                      >
+                                        <Button size="small" danger>
+                                          Delete
+                                        </Button>
+                                      </Popconfirm>
+                                    </Space>
                                   </td>
                                 </tr>
                               ))}
