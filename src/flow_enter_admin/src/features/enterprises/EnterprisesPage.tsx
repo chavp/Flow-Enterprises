@@ -56,6 +56,7 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
   const [editingEnterprise, setEditingEnterprise] = useState<Enterprise | null>(null);
   const [peopleEnterprise, setPeopleEnterprise] = useState<Enterprise | null>(null);
   const [editingEmployment, setEditingEmployment] = useState<Employment | null>(null);
+  const [isCreateEmploymentOpen, setCreateEmploymentOpen] = useState(false);
   const [peopleTabKey, setPeopleTabKey] = useState("people");
   const [createForm] = Form.useForm<FormValues>();
   const [editForm] = Form.useForm<FormValues>();
@@ -191,6 +192,7 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
       await queryClient.invalidateQueries({
         queryKey: ["enterprise-employments", peopleEnterprise.enterpriseId, apiBaseUrl]
       });
+      setCreateEmploymentOpen(false);
       employmentForm.resetFields();
       messageApi.success("Employment added");
     },
@@ -307,6 +309,7 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                 onClick={() => {
                   setPeopleEnterprise(null);
                   setEditingEmployment(null);
+                  setCreateEmploymentOpen(false);
                   setPeopleTabKey("people");
                   employmentForm.resetFields();
                   editEmploymentForm.resetFields();
@@ -329,47 +332,11 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                   label: "Employments",
                   children: (
                     <Space direction="vertical" size="middle" style={{ width: "100%" }}>
-                      <Card size="small" title="Add Employment">
-                        <Form<EmploymentFormValues>
-                          form={employmentForm}
-                          layout="vertical"
-                          onFinish={(values) => createEmploymentMutation.mutate(values)}
-                        >
-                          <Form.Item
-                            name="firstName"
-                            label="First Name"
-                            rules={[{ required: true, message: "First name is required" }]}
-                          >
-                            <Input maxLength={300} />
-                          </Form.Item>
-                          <Form.Item name="middleName" label="Middle Name">
-                            <Input maxLength={300} />
-                          </Form.Item>
-                          <Form.Item
-                            name="lastName"
-                            label="Last Name"
-                            rules={[{ required: true, message: "Last name is required" }]}
-                          >
-                            <Input maxLength={500} />
-                          </Form.Item>
-                          <Form.Item
-                            name="partyRoleTypeId"
-                            label="Party Role Type"
-                            rules={[{ required: true, message: "Party role type is required" }]}
-                          >
-                            <Select
-                              showSearch
-                              options={roleTypeOptions}
-                              loading={partyRoleTypesQuery.isLoading}
-                              placeholder="Select party role type"
-                              optionFilterProp="label"
-                            />
-                          </Form.Item>
-                          <Button type="primary" htmlType="submit" loading={createEmploymentMutation.isPending}>
-                            Add Employment
-                          </Button>
-                        </Form>
-                      </Card>
+                      <Space style={{ width: "100%", justifyContent: "flex-end" }}>
+                        <Button type="primary" onClick={() => setCreateEmploymentOpen(true)}>
+                          Add Employment
+                        </Button>
+                      </Space>
 
                       {employmentsQuery.isError ? (
                         <Alert
@@ -444,6 +411,55 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                 }
               ]}
             />
+
+            <TopDrawerForm
+              open={isCreateEmploymentOpen}
+              title="Add Employment"
+              submitText="Add"
+              onClose={() => {
+                setCreateEmploymentOpen(false);
+                employmentForm.resetFields();
+              }}
+              onSubmit={() => employmentForm.submit()}
+              loading={createEmploymentMutation.isPending}
+            >
+              <Form<EmploymentFormValues>
+                form={employmentForm}
+                layout="vertical"
+                onFinish={(values) => createEmploymentMutation.mutate(values)}
+              >
+                <Form.Item
+                  name="firstName"
+                  label="First Name"
+                  rules={[{ required: true, message: "First name is required" }]}
+                >
+                  <Input maxLength={300} />
+                </Form.Item>
+                <Form.Item name="middleName" label="Middle Name">
+                  <Input maxLength={300} />
+                </Form.Item>
+                <Form.Item
+                  name="lastName"
+                  label="Last Name"
+                  rules={[{ required: true, message: "Last name is required" }]}
+                >
+                  <Input maxLength={500} />
+                </Form.Item>
+                <Form.Item
+                  name="partyRoleTypeId"
+                  label="Party Role Type"
+                  rules={[{ required: true, message: "Party role type is required" }]}
+                >
+                  <Select
+                    showSearch
+                    options={roleTypeOptions}
+                    loading={partyRoleTypesQuery.isLoading}
+                    placeholder="Select party role type"
+                    optionFilterProp="label"
+                  />
+                </Form.Item>
+              </Form>
+            </TopDrawerForm>
 
             <TopDrawerForm
               open={Boolean(editingEmployment)}
