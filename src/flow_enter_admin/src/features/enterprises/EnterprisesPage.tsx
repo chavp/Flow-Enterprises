@@ -13,7 +13,6 @@ import {
   Form,
   Input,
   InputNumber,
-  Modal,
   Select,
   Space,
   Spin,
@@ -22,6 +21,7 @@ import {
 } from "antd";
 import { useMemo, useState } from "react";
 import { createEnperprise, fetchLegalStructures, fetchEnterprises, updateEnperprise } from "../../api/enterprises";
+import { TopDrawerForm } from "../../components/TopDrawerForm";
 import { CreateEnterpriseRequest, Enterprise } from "./types";
 
 const { Title, Text } = Typography;
@@ -286,13 +286,13 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
         </Space>
       </Card>
 
-      <Modal
+      <TopDrawerForm
         open={isCreateOpen}
         title="Create Enterprise"
-        onCancel={() => setCreateOpen(false)}
-        onOk={() => createForm.submit()}
-        confirmLoading={createMutation.isPending}
-        destroyOnClose
+        submitText="Create"
+        onClose={() => setCreateOpen(false)}
+        onSubmit={() => createForm.submit()}
+        loading={createMutation.isPending}
       >
         <EnterpriseForm
           form={createForm}
@@ -300,18 +300,18 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
           loadingLegalStructures={legalStructuresQuery.isLoading}
           onFinish={(values) => createMutation.mutate(values)}
         />
-      </Modal>
+      </TopDrawerForm>
 
-      <Modal
+      <TopDrawerForm
         open={Boolean(editingEnterprise)}
         title="Edit Enterprise"
-        onCancel={() => {
+        submitText="Update"
+        onClose={() => {
           setEditingEnterprise(null);
           editForm.resetFields();
         }}
-        onOk={() => editForm.submit()}
-        confirmLoading={updateMutation.isPending}
-        destroyOnClose
+        onSubmit={() => editForm.submit()}
+        loading={updateMutation.isPending}
       >
         <EnterpriseForm
           form={editForm}
@@ -319,7 +319,7 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
           loadingLegalStructures={legalStructuresQuery.isLoading}
           onFinish={(values) => updateMutation.mutate(values)}
         />
-      </Modal>
+      </TopDrawerForm>
     </div>
   );
 }

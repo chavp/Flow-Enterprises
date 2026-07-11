@@ -1,8 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { Alert, Button, Card, Form, Input, InputNumber, Modal, Space, Spin, Typography, message } from "antd";
+import { Alert, Button, Card, Form, Input, InputNumber, Space, Spin, Typography, message } from "antd";
 import { useMemo, useState } from "react";
 import { createCountry, fetchCountries, updateCountry } from "../../api/countries";
+import { TopDrawerForm } from "../../components/TopDrawerForm";
 import { Country, CreateCountryRequest } from "./types";
 
 const { Title, Text } = Typography;
@@ -225,36 +226,36 @@ export function CountriesPage({ apiBaseUrl }: CountriesPageProps) {
         </Space>
       </Card>
 
-      <Modal
+      <TopDrawerForm
         open={isCreateOpen}
         title="Create Country"
-        onCancel={() => setCreateOpen(false)}
-        onOk={() => createForm.submit()}
-        confirmLoading={createMutation.isPending}
-        destroyOnClose
+        submitText="Create"
+        onClose={() => setCreateOpen(false)}
+        onSubmit={() => createForm.submit()}
+        loading={createMutation.isPending}
       >
         <CountryForm
           form={createForm}
           onFinish={(values) => createMutation.mutate(values)}
         />
-      </Modal>
+      </TopDrawerForm>
 
-      <Modal
+      <TopDrawerForm
         open={Boolean(editingCountry)}
         title="Edit Country"
-        onCancel={() => {
+        submitText="Update"
+        onClose={() => {
           setEditingCountry(null);
           editForm.resetFields();
         }}
-        onOk={() => editForm.submit()}
-        confirmLoading={updateMutation.isPending}
-        destroyOnClose
+        onSubmit={() => editForm.submit()}
+        loading={updateMutation.isPending}
       >
         <CountryForm
           form={editForm}
           onFinish={(values) => updateMutation.mutate(values)}
         />
-      </Modal>
+      </TopDrawerForm>
     </div>
   );
 }
