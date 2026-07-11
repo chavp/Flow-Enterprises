@@ -16,13 +16,22 @@ import {
   Select,
   Space,
   Spin,
+  Tabs,
   Typography,
   message
 } from "antd";
 import { useMemo, useState } from "react";
-import { createEnperprise, fetchLegalStructures, fetchEnterprises, updateEnperprise } from "../../api/enterprises";
+import {
+  createEnperprise,
+  createEnterpriseEmployment,
+  fetchEnterpriseEmployments,
+  fetchEnterprises,
+  fetchLegalStructures,
+  fetchPartyRoleTypes,
+  updateEnperprise
+} from "../../api/enterprises";
 import { TopDrawerForm } from "../../components/TopDrawerForm";
-import { CreateEnterpriseRequest, Enterprise } from "./types";
+import { CreateEmploymentRequest, CreateEnterpriseRequest, Enterprise, Employment } from "./types";
 
 const { Title, Text } = Typography;
 
@@ -31,6 +40,7 @@ type EnterprisesPageProps = {
 };
 
 type FormValues = CreateEnterpriseRequest;
+type EmploymentFormValues = CreateEmploymentRequest;
 
 const defaultPageSize = 10;
 
@@ -42,8 +52,10 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
   const [isCreateOpen, setCreateOpen] = useState(false);
   const [editingEnterprise, setEditingEnterprise] = useState<Enterprise | null>(null);
   const [peopleEnterprise, setPeopleEnterprise] = useState<Enterprise | null>(null);
+  const [peopleTabKey, setPeopleTabKey] = useState("people");
   const [createForm] = Form.useForm<FormValues>();
   const [editForm] = Form.useForm<FormValues>();
+  const [employmentForm] = Form.useForm<EmploymentFormValues>();
 
   const enterprisesQuery = useQuery({
     queryKey: ["enterprises", pageIndex, pageSize, apiBaseUrl],
@@ -53,6 +65,18 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
   const legalStructuresQuery = useQuery({
     queryKey: ["enterprises/legal-structures", apiBaseUrl],
     queryFn: () => fetchLegalStructures(apiBaseUrl)
+  });
+
+  const employmentsQuery = useQuery({
+    queryKey: ["enterprise-employments", peopleEnterprise?.enterpriseId, apiBaseUrl],
+    queryFn: () => fetchEnterpriseEmployments(peopleEnterprise!.enterpriseId, apiBaseUrl),
+    enabled: Boolean(peopleEnterprise)
+  });
+
+  const partyRoleTypesQuery = useQuery({
+    queryKey: ["party-role-types", apiBaseUrl],
+    queryFn: () => fetchPartyRoleTypes(apiBaseUrl),
+    enabled: Boolean(peopleEnterprise)
   });
 
   const createMutation = useMutation({
@@ -90,6 +114,30 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
     },
     onError: (error) => {
       messageApi.error(error instanceof Error ? error.message : "Update failed");
+    }
+  });
+
+  const createEmploymentMutation = useMutation({
+    mutationFn: async (values: EmploymentFormValues) => {
+      if (!peopleEnterprise) {
+        return;
+      }
+
+      await createEnterpriseEmployment(peopleEnterprise.enterpriseId, values, apiBaseUrl);
+    },
+    onSuccess: async () => {
+      if (!peopleEnterprise) {
+        return;
+      }
+
+      await queryClient.invalidateQueries({
+        queryKey: ["enterprise-employments", peopleEnterprise.enterpriseId, apiBaseUrl]
+      });
+      employmentForm.resetFields();
+      messageApi.success("Employment added");
+    },
+    onError: (error) => {
+      messageApi.error(error instanceof Error ? error.message : "Create employment failed");
     }
   });
 
@@ -173,9 +221,19 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
     label: `${item.name}${item.code ? ` (${item.code})` : ""}`
   }));
 
+  const roleTypeOptions = (partyRoleTypesQuery.data ?? [])
+    .filter((item) => item.code !== "ENTERPRISE")
+    .map((item) => ({
+      value: item.id,
+      label: `${item.name}${item.code ? ` (${item.code})` : ""}`
+    }));
+
+  const employments = employmentsQuery.data ?? [];
+
   if (peopleEnterprise) {
     return (
       <div className="page-container">
+        {contextHolder}
         <Card>
           <Space direction="vertical" size="middle" style={{ width: "100%" }}>
             <Space style={{ width: "100%", justifyContent: "space-between" }}>
@@ -187,9 +245,115 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                   Manage people under enterprise: <strong>{peopleEnterprise.legalName}</strong>
                 </Text>
               </div>
-              <Button onClick={() => setPeopleEnterprise(null)}>Back to Enterprises</Button>
+              <Button
+                onClick={() => {
+                  setPeopleEnterprise(null);
+                  setPeopleTabKey("people");
+                  employmentForm.resetFields();
+                }}
+              >
+                Back to Enterprises
+              </Button>
             </Space>
-            <Empty description="People management UI for this enterprise will be added here." />
+            <Tabs
+              activeKey={peopleTabKey}
+              onChange={setPeopleTabKey}
+              items={[
+                {
+                  key: "people",
+                  label: "People",
+                  children: <Empty description="People management UI for this enterprise will be added here." />
+                },
+                {
+                  key: "employments",
+                  label: "Employments",
+                  children: (
+                    <Space direction="vertical" size="middle" style={{ width: "100%" }}>
+                      <Card size="small" title="Add Employment">
+                        <Form<EmploymentFormValues>
+                          form={employmentForm}
+                          layout="vertical"
+                          onFinish={(values) => createEmploymentMutation.mutate(values)}
+                        >
+                          <Form.Item
+                            name="firstName"
+                            label="First Name"
+                            rules={[{ required: true, message: "First name is required" }]}
+                          >
+                            <Input maxLength={300} />
+                          </Form.Item>
+                          <Form.Item name="middleName" label="Middle Name">
+                            <Input maxLength={300} />
+                          </Form.Item>
+                          <Form.Item
+                            name="lastName"
+                            label="Last Name"
+                            rules={[{ required: true, message: "Last name is required" }]}
+                          >
+                            <Input maxLength={500} />
+                          </Form.Item>
+                          <Form.Item
+                            name="partyRoleTypeId"
+                            label="Party Role Type"
+                            rules={[{ required: true, message: "Party role type is required" }]}
+                          >
+                            <Select
+                              showSearch
+                              options={roleTypeOptions}
+                              loading={partyRoleTypesQuery.isLoading}
+                              placeholder="Select party role type"
+                              optionFilterProp="label"
+                            />
+                          </Form.Item>
+                          <Button type="primary" htmlType="submit" loading={createEmploymentMutation.isPending}>
+                            Add Employment
+                          </Button>
+                        </Form>
+                      </Card>
+
+                      {employmentsQuery.isError ? (
+                        <Alert
+                          type="error"
+                          message="Failed to load employments"
+                          description={employmentsQuery.error instanceof Error ? employmentsQuery.error.message : "Unknown error"}
+                          showIcon
+                        />
+                      ) : employmentsQuery.isLoading ? (
+                        <Spin />
+                      ) : employments.length === 0 ? (
+                        <Empty description="No employments found for this enterprise." />
+                      ) : (
+                        <div className="tanstack-table-wrapper">
+                          <table className="tanstack-table">
+                            <thead>
+                              <tr>
+                                <th>Employee</th>
+                                <th>Party Role Type</th>
+                                <th>From Date</th>
+                                <th>Thru Date</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {employments.map((employment: Employment) => (
+                                <tr key={employment.employmentId}>
+                                  <td>{employment.employeeFullName}</td>
+                                  <td>
+                                    {employment.partyRoleTypeName}
+                                    {employment.partyRoleTypeCode ? ` (${employment.partyRoleTypeCode})` : ""}
+                                  </td>
+                                  <td>{employment.fromDate}</td>
+                                  <td>{employment.thruDate}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      )}
+                    </Space>
+                  )
+                }
+              ]}
+            />
           </Space>
         </Card>
       </div>

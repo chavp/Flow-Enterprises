@@ -175,3 +175,4 @@ D:\github\Flow-Enterprises\src\flow_enter_backend\Flowenter.Api\obj\Debug\net10.
 D:\github\Flow-Enterprises\src\flow_enter_backend\Flowenter.Api\obj\Debug\net10.0\Flowenter.Api.pdb
 D:\github\Flow-Enterprises\src\flow_enter_backend\Flowenter.Api\obj\Debug\net10.0\Flowenter.Api.genruntimeconfig.cache
 D:\github\Flow-Enterprises\src\flow_enter_backend\Flowenter.Api\obj\Debug\net10.0\ref\Flowenter.Api.dll
+D:\github\Flow-Enterprises\src\flow_enter_backend\Flowenter.Api\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt

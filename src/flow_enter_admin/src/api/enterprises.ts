@@ -1,9 +1,12 @@
 import { requestJson } from "./http";
 import {
+  CreateEmploymentRequest,
   CreateEnterpriseRequest,
+  Employment,
   LegalStructure,
   EnterprisesResponse,
   PatchOperation,
+  PartyRoleType,
   UpdateEnterpriseRequest
 } from "../features/enterprises/types";
 
@@ -61,6 +64,26 @@ export async function updateEnperprise(payload: UpdateEnterpriseRequest, apiBase
       },
       body: JSON.stringify(operations)
     },
+    apiBaseUrl
+  );
+}
+
+export async function fetchPartyRoleTypes(apiBaseUrl?: string): Promise<PartyRoleType[]> {
+  return requestJson<PartyRoleType[]>("/api/parties/role-types", { method: "GET" }, apiBaseUrl);
+}
+
+export async function fetchEnterpriseEmployments(enterpriseId: string, apiBaseUrl?: string): Promise<Employment[]> {
+  return requestJson<Employment[]>(`/api/parties/enterprises/${enterpriseId}/employments`, { method: "GET" }, apiBaseUrl);
+}
+
+export async function createEnterpriseEmployment(
+  enterpriseId: string,
+  payload: CreateEmploymentRequest,
+  apiBaseUrl?: string
+): Promise<void> {
+  await requestJson(
+    `/api/parties/enterprises/${enterpriseId}/employments`,
+    { method: "POST", body: JSON.stringify(payload) },
     apiBaseUrl
   );
 }

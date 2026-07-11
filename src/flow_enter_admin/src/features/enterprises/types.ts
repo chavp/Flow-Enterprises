@@ -47,3 +47,33 @@ export type UpdateEnterpriseRequest = {
   id: string;
   changes: Partial<CreateEnterpriseRequest>;
 };
+
+export type PartyRoleType = {
+  id: string;
+  code?: string;
+  name: string;
+  description?: string;
+};
+
+export type Employment = {
+  employmentId: string;
+  employerId: string;
+  employeePartyRoleId: string;
+  employeePartyId: string;
+  employeeFullName: string;
+  partyRoleTypeId: string;
+  partyRoleTypeCode: string;
+  partyRoleTypeName: string;
+  fromDate: string;
+  thruDate: string;
+  createdAtUtc: string;
+  updatedAtUtc?: string;
+  revision: number;
+};
+
+export type CreateEmploymentRequest = {
+  firstName: string;
+  middleName?: string;
+  lastName: string;
+  partyRoleTypeId: string;
+};

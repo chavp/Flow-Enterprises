@@ -162,6 +162,187 @@
   },
   {
     "ContainingType": "Flowenter.Api.Controllers.GeographicBoundariesController",
+    "Method": "GetCountries",
+    "RelativePath": "api/geographic-boundaries/countries",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "pageNumber",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "pageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[Flowenter.Parties.Models.GeographicBoundaryModels.Country, Flowenter.Parties.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Flowenter.Api.Controllers.GeographicBoundariesController",
+    "Method": "CreateCountry",
+    "RelativePath": "api/geographic-boundaries/countries",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "createCountry",
+        "Type": "Flowenter.Parties.IServices.Dtos.CreateCountry",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Flowenter.Parties.Models.GeographicBoundaryModels.Country",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 201
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 400
+      }
+    ]
+  },
+  {
+    "ContainingType": "Flowenter.Api.Controllers.GeographicBoundariesController",
+    "Method": "GetCountry",
+    "RelativePath": "api/geographic-boundaries/countries/{country_id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "country_id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Flowenter.Parties.Models.GeographicBoundaryModels.Country",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 404
+      }
+    ]
+  },
+  {
+    "ContainingType": "Flowenter.Api.Controllers.GeographicBoundariesController",
+    "Method": "PatchCountry",
+    "RelativePath": "api/geographic-boundaries/countries/{country_id}",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "country_id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "patchDoc",
+        "Type": "Microsoft.AspNetCore.JsonPatch.Operations.Operation[]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Flowenter.Parties.Models.GeographicBoundaryModels.Country",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 400
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 404
+      }
+    ]
+  },
+  {
+    "ContainingType": "Flowenter.Api.Controllers.GeographicBoundariesController",
+    "Method": "DeleteCountry",
+    "RelativePath": "api/geographic-boundaries/countries/{country_id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "country_id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 204
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 404
+      }
+    ]
+  },
+  {
+    "ContainingType": "Flowenter.Api.Controllers.GeographicBoundariesController",
     "Method": "GetGeographicBoundaryTypes",
     "RelativePath": "api/geographic-boundaries/types",
     "HttpMethod": "GET",
@@ -671,7 +852,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.PartiesController",
+    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
     "Method": "GetEnterprises",
     "RelativePath": "api/parties/enterprises",
     "HttpMethod": "GET",
@@ -691,7 +872,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.List\u00601[[Flowenter.Parties.IServices.Dtos.EnterpriseDto.EnterprisesDto, Flowenter.Parties.IServices, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "Flowenter.Parties.IServices.Dtos.EnterpriseDto.EnterprisesDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -702,7 +883,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.PartiesController",
+    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
     "Method": "CreateEnterprise",
     "RelativePath": "api/parties/enterprises",
     "HttpMethod": "POST",
@@ -737,33 +918,68 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.PartiesController",
-    "Method": "PatchEnterprise",
-    "RelativePath": "api/parties/enterprises/{enterprise_id}",
-    "HttpMethod": "PATCH",
+    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "Method": "GetEnterpriseEmployments",
+    "RelativePath": "api/parties/enterprises/{enterprise_role_id}/employments",
+    "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "enterprise_id",
+        "Name": "enterprise_role_id",
         "Type": "System.Guid",
-        "IsRequired": true
-      },
-      {
-        "Name": "patchDoc",
-        "Type": "Microsoft.AspNetCore.JsonPatch.Operations.Operation[]",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "Flowenter.Parties.Models.PartyModels.Enterprise",
+        "Type": "System.Collections.Generic.List\u00601[[Flowenter.Parties.IServices.Dtos.EnterpriseDto.EmploymentDto, Flowenter.Parties.IServices, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
           "text/json"
         ],
         "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 404
+      }
+    ]
+  },
+  {
+    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "Method": "CreateEnterpriseEmployment",
+    "RelativePath": "api/parties/enterprises/{enterprise_role_id}/employments",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "enterprise_role_id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "createDto",
+        "Type": "Flowenter.Parties.IServices.Dtos.EnterpriseDto.CreateEmploymentDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Flowenter.Parties.IServices.Dtos.EnterpriseDto.EmploymentDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 201
       },
       {
         "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
@@ -786,9 +1002,9 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.PartiesController",
+    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
     "Method": "GetLegalStructures",
-    "RelativePath": "api/parties/legal-structures",
+    "RelativePath": "api/parties/enterprises/legal-structures",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -806,9 +1022,9 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.PartiesController",
+    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
     "Method": "CreateLegalStructure",
-    "RelativePath": "api/parties/legal-structures",
+    "RelativePath": "api/parties/enterprises/legal-structures",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -841,9 +1057,9 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.PartiesController",
+    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
     "Method": "GetLegalStructure",
-    "RelativePath": "api/parties/legal-structures/{legal_structure_id}",
+    "RelativePath": "api/parties/enterprises/legal-structures/{legal_structure_id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -876,9 +1092,9 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.PartiesController",
+    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
     "Method": "PatchLegalStructure",
-    "RelativePath": "api/parties/legal-structures/{legal_structure_id}",
+    "RelativePath": "api/parties/enterprises/legal-structures/{legal_structure_id}",
     "HttpMethod": "PATCH",
     "IsController": true,
     "Order": 0,
@@ -925,9 +1141,9 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.PartiesController",
+    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
     "Method": "DeleteLegalStructure",
-    "RelativePath": "api/parties/legal-structures/{legal_structure_id}",
+    "RelativePath": "api/parties/enterprises/legal-structures/{legal_structure_id}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -943,6 +1159,90 @@
         "Type": "System.Void",
         "MediaTypes": [],
         "StatusCode": 204
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 404
+      }
+    ]
+  },
+  {
+    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "Method": "GetEnterprise",
+    "RelativePath": "api/parties/enterprises/{organization_id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "organization_id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Flowenter.Parties.Models.PartyModels.Enterprise",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 404
+      }
+    ]
+  },
+  {
+    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "Method": "PatchEnterprise",
+    "RelativePath": "api/parties/enterprises/{organization_id}",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "organization_id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "patchDoc",
+        "Type": "Microsoft.AspNetCore.JsonPatch.Operations.Operation[]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Flowenter.Parties.Models.PartyModels.Enterprise",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 400
       },
       {
         "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
