@@ -1,0 +1,18 @@
+using System.ComponentModel.DataAnnotations;
+
+namespace Flowenter.Parties.IServices.Dtos.EnterpriseDto;
+
+public record UpdateEmploymentDto
+{
+    [Required, StringLength(300)]
+    public string FirstName { get; init; } = string.Empty;
+
+    [StringLength(300)]
+    public string? MiddleName { get; init; }
+
+    [Required, StringLength(500)]
+    public string LastName { get; init; } = string.Empty;
+
+    [Required]
+    public Guid PartyRoleTypeId { get; init; }
+}

@@ -60,6 +60,9 @@ export type Employment = {
   employerId: string;
   employeePartyRoleId: string;
   employeePartyId: string;
+  firstName: string;
+  middleName?: string;
+  lastName: string;
   employeeFullName: string;
   partyRoleTypeId: string;
   partyRoleTypeCode: string;
@@ -77,3 +80,5 @@ export type CreateEmploymentRequest = {
   lastName: string;
   partyRoleTypeId: string;
 };
+
+export type UpdateEmploymentRequest = CreateEmploymentRequest;

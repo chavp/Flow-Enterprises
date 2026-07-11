@@ -251,6 +251,9 @@ public class EnterprisesController : ControllerBase
                     EmployerId = row.Employment.EmployerId!.Value,
                     EmployeePartyRoleId = row.EmployeeRole.Id!.Value,
                     EmployeePartyId = row.PersonId!.Value,
+                    FirstName = personName?.FirstName ?? string.Empty,
+                    MiddleName = personName?.MiddleName,
+                    LastName = personName?.LastName ?? string.Empty,
                     EmployeeFullName = fullName,
                     PartyRoleTypeId = row.RoleType.Id!.Value,
                     PartyRoleTypeCode = row.RoleType.Code ?? string.Empty,
@@ -379,6 +382,9 @@ public class EnterprisesController : ControllerBase
             EmployerId = employment.EmployerId!.Value,
             EmployeePartyRoleId = employeeRole.Id!.Value,
             EmployeePartyId = person.Id!.Value,
+            FirstName = personName.FirstName ?? string.Empty,
+            MiddleName = personName.MiddleName,
+            LastName = personName.LastName ?? string.Empty,
             EmployeeFullName = fullName,
             PartyRoleTypeId = partyRoleType.Id!.Value,
             PartyRoleTypeCode = partyRoleType.Code ?? string.Empty,
@@ -391,6 +397,150 @@ public class EnterprisesController : ControllerBase
         };
 
         return Created($"/api/parties/enterprises/{enterprise_role_id}/employments/{employment.Id}", response);
+    }
+
+    [HttpPut("{enterprise_role_id:guid}/employments/{employment_id:guid}")]
+    [ProducesResponseType(typeof(EmploymentDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateEnterpriseEmployment(
+        [FromRoute] Guid enterprise_role_id,
+        [FromRoute] Guid employment_id,
+        [FromBody] UpdateEmploymentDto updateDto,
+        CancellationToken cancellationToken)
+    {
+        using var context = _factory.CreateDbContext();
+
+        var employment = await context.PartyRelationships
+            .OfType<Employment>()
+            .FirstOrDefaultAsync(item => item.Id == employment_id && item.EmployerId == enterprise_role_id, cancellationToken);
+        if (employment == null)
+        {
+            return NotFound();
+        }
+
+        var employeeRole = await context.PartyRoles
+            .FirstOrDefaultAsync(item => item.Id == employment.EmployeeId, cancellationToken);
+        if (employeeRole?.PartyId == null)
+        {
+            return Problem(
+                statusCode: StatusCodes.Status500InternalServerError,
+                title: "Invalid data",
+                detail: $"PartyRole '{employment.EmployeeId}' not found for Employment '{employment_id}'.");
+        }
+
+        var person = await context.Parties
+            .OfType<Person>()
+            .FirstOrDefaultAsync(item => item.Id == employeeRole.PartyId, cancellationToken);
+        if (person?.Id == null)
+        {
+            return Problem(
+                statusCode: StatusCodes.Status500InternalServerError,
+                title: "Invalid data",
+                detail: $"Person '{employeeRole.PartyId}' not found for Employment '{employment_id}'.");
+        }
+
+        var partyRoleType = await context.PartyRoleTypes
+            .SingleOrDefaultAsync(type => type.Id == updateDto.PartyRoleTypeId, cancellationToken);
+        if (partyRoleType == null)
+        {
+            return BadRequest($"PartyRoleType '{updateDto.PartyRoleTypeId}' not found.");
+        }
+
+        employeeRole.TypeId = partyRoleType.Id;
+
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var personName = await context.PersonNames
+            .Where(item => item.PersonId == person.Id
+                           && item.FromDate <= today
+                           && today <= item.ThruDate)
+            .OrderByDescending(item => item.FromDate)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (personName == null)
+        {
+            var language = await context.Languages
+                .SingleOrDefaultAsync(item => item.Code == Language.TH, cancellationToken);
+            if (language == null)
+            {
+                language = await context.Languages
+                    .OrderBy(item => item.CreatedAtUtc)
+                    .SingleOrDefaultAsync(item => item.Id != null, cancellationToken);
+            }
+
+            if (language?.Id == null)
+            {
+                return Problem(
+                    statusCode: StatusCodes.Status500InternalServerError,
+                    title: "Missing master data",
+                    detail: "Language not found. Run database migration/seeding.");
+            }
+
+            personName = new PersonName(person, updateDto.FirstName.Trim(), updateDto.LastName.Trim(), language)
+            {
+                Id = Guid.NewGuid(),
+                MiddleName = string.IsNullOrWhiteSpace(updateDto.MiddleName) ? null : updateDto.MiddleName.Trim(),
+                LanguageId = language.Id
+            };
+
+            await context.AddAsync(personName, cancellationToken);
+        }
+        else
+        {
+            personName.FirstName = updateDto.FirstName.Trim();
+            personName.MiddleName = string.IsNullOrWhiteSpace(updateDto.MiddleName) ? null : updateDto.MiddleName.Trim();
+            personName.LastName = updateDto.LastName.Trim();
+        }
+
+        await context.SaveChangesAsync(cancellationToken);
+
+        var fullName = string.Join(" ",
+            new[] { personName.FirstName, personName.MiddleName, personName.LastName }
+                .Where(part => !string.IsNullOrWhiteSpace(part)));
+
+        return Ok(new EmploymentDto
+        {
+            EmploymentId = employment.Id!.Value,
+            EmployerId = employment.EmployerId!.Value,
+            EmployeePartyRoleId = employeeRole.Id!.Value,
+            EmployeePartyId = person.Id!.Value,
+            FirstName = personName.FirstName ?? string.Empty,
+            MiddleName = personName.MiddleName,
+            LastName = personName.LastName ?? string.Empty,
+            EmployeeFullName = fullName,
+            PartyRoleTypeId = partyRoleType.Id!.Value,
+            PartyRoleTypeCode = partyRoleType.Code ?? string.Empty,
+            PartyRoleTypeName = partyRoleType.Name ?? string.Empty,
+            FromDate = employment.FromDate,
+            ThruDate = employment.ThruDate,
+            CreatedAtUtc = employment.CreatedAtUtc,
+            UpdatedAtUtc = employment.UpdatedAtUtc,
+            Revision = employment.Revision
+        });
+    }
+
+    [HttpDelete("{enterprise_role_id:guid}/employments/{employment_id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteEnterpriseEmployment(
+        [FromRoute] Guid enterprise_role_id,
+        [FromRoute] Guid employment_id,
+        CancellationToken cancellationToken)
+    {
+        using var context = _factory.CreateDbContext();
+
+        var employment = await context.PartyRelationships
+            .OfType<Employment>()
+            .FirstOrDefaultAsync(item => item.Id == employment_id && item.EmployerId == enterprise_role_id, cancellationToken);
+        if (employment == null)
+        {
+            return NotFound();
+        }
+
+        context.PartyRelationships.Remove(employment);
+        await context.SaveChangesAsync(cancellationToken);
+
+        return NoContent();
     }
 
     [HttpGet("legal-structures")]

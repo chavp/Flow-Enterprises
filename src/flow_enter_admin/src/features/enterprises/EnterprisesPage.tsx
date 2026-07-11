@@ -17,17 +17,20 @@ import {
   Space,
   Spin,
   Tabs,
+  Popconfirm,
   Typography,
   message
 } from "antd";
 import { useMemo, useState } from "react";
 import {
   createEnperprise,
+  deleteEnterpriseEmployment,
   createEnterpriseEmployment,
   fetchEnterpriseEmployments,
   fetchEnterprises,
   fetchLegalStructures,
   fetchPartyRoleTypes,
+  updateEnterpriseEmployment,
   updateEnperprise
 } from "../../api/enterprises";
 import { TopDrawerForm } from "../../components/TopDrawerForm";
@@ -52,10 +55,12 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
   const [isCreateOpen, setCreateOpen] = useState(false);
   const [editingEnterprise, setEditingEnterprise] = useState<Enterprise | null>(null);
   const [peopleEnterprise, setPeopleEnterprise] = useState<Enterprise | null>(null);
+  const [editingEmployment, setEditingEmployment] = useState<Employment | null>(null);
   const [peopleTabKey, setPeopleTabKey] = useState("people");
   const [createForm] = Form.useForm<FormValues>();
   const [editForm] = Form.useForm<FormValues>();
   const [employmentForm] = Form.useForm<EmploymentFormValues>();
+  const [editEmploymentForm] = Form.useForm<EmploymentFormValues>();
 
   const enterprisesQuery = useQuery({
     queryKey: ["enterprises", pageIndex, pageSize, apiBaseUrl],
@@ -89,6 +94,59 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
     },
     onError: (error) => {
       messageApi.error(error instanceof Error ? error.message : "Create failed");
+    }
+  });
+
+  const updateEmploymentMutation = useMutation({
+    mutationFn: async (values: EmploymentFormValues) => {
+      if (!peopleEnterprise || !editingEmployment) {
+        return;
+      }
+
+      await updateEnterpriseEmployment(
+        peopleEnterprise.enterpriseId,
+        editingEmployment.employmentId,
+        values,
+        apiBaseUrl
+      );
+    },
+    onSuccess: async () => {
+      if (!peopleEnterprise) {
+        return;
+      }
+
+      await queryClient.invalidateQueries({
+        queryKey: ["enterprise-employments", peopleEnterprise.enterpriseId, apiBaseUrl]
+      });
+      setEditingEmployment(null);
+      editEmploymentForm.resetFields();
+      messageApi.success("Employment updated");
+    },
+    onError: (error) => {
+      messageApi.error(error instanceof Error ? error.message : "Update employment failed");
+    }
+  });
+
+  const deleteEmploymentMutation = useMutation({
+    mutationFn: async (employmentId: string) => {
+      if (!peopleEnterprise) {
+        return;
+      }
+
+      await deleteEnterpriseEmployment(peopleEnterprise.enterpriseId, employmentId, apiBaseUrl);
+    },
+    onSuccess: async () => {
+      if (!peopleEnterprise) {
+        return;
+      }
+
+      await queryClient.invalidateQueries({
+        queryKey: ["enterprise-employments", peopleEnterprise.enterpriseId, apiBaseUrl]
+      });
+      messageApi.success("Employment deleted");
+    },
+    onError: (error) => {
+      messageApi.error(error instanceof Error ? error.message : "Delete employment failed");
     }
   });
 
@@ -248,8 +306,10 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
               <Button
                 onClick={() => {
                   setPeopleEnterprise(null);
+                  setEditingEmployment(null);
                   setPeopleTabKey("people");
                   employmentForm.resetFields();
+                  editEmploymentForm.resetFields();
                 }}
               >
                 Back to Enterprises
@@ -331,6 +391,7 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                                 <th>Party Role Type</th>
                                 <th>From Date</th>
                                 <th>Thru Date</th>
+                                <th>Actions</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -343,6 +404,35 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                                   </td>
                                   <td>{employment.fromDate}</td>
                                   <td>{employment.thruDate}</td>
+                                  <td>
+                                    <Space>
+                                      <Button
+                                        size="small"
+                                        onClick={() => {
+                                          setEditingEmployment(employment);
+                                          editEmploymentForm.setFieldsValue({
+                                            firstName: employment.firstName,
+                                            middleName: employment.middleName,
+                                            lastName: employment.lastName,
+                                            partyRoleTypeId: employment.partyRoleTypeId
+                                          });
+                                        }}
+                                      >
+                                        Edit
+                                      </Button>
+                                      <Popconfirm
+                                        title="Delete employment?"
+                                        description="This will remove this employment relationship."
+                                        okText="Delete"
+                                        okButtonProps={{ danger: true, loading: deleteEmploymentMutation.isPending }}
+                                        onConfirm={() => deleteEmploymentMutation.mutate(employment.employmentId)}
+                                      >
+                                        <Button size="small" danger>
+                                          Delete
+                                        </Button>
+                                      </Popconfirm>
+                                    </Space>
+                                  </td>
                                 </tr>
                               ))}
                             </tbody>
@@ -354,6 +444,55 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                 }
               ]}
             />
+
+            <TopDrawerForm
+              open={Boolean(editingEmployment)}
+              title="Edit Employment"
+              submitText="Update"
+              onClose={() => {
+                setEditingEmployment(null);
+                editEmploymentForm.resetFields();
+              }}
+              onSubmit={() => editEmploymentForm.submit()}
+              loading={updateEmploymentMutation.isPending}
+            >
+              <Form<EmploymentFormValues>
+                form={editEmploymentForm}
+                layout="vertical"
+                onFinish={(values) => updateEmploymentMutation.mutate(values)}
+              >
+                <Form.Item
+                  name="firstName"
+                  label="First Name"
+                  rules={[{ required: true, message: "First name is required" }]}
+                >
+                  <Input maxLength={300} />
+                </Form.Item>
+                <Form.Item name="middleName" label="Middle Name">
+                  <Input maxLength={300} />
+                </Form.Item>
+                <Form.Item
+                  name="lastName"
+                  label="Last Name"
+                  rules={[{ required: true, message: "Last name is required" }]}
+                >
+                  <Input maxLength={500} />
+                </Form.Item>
+                <Form.Item
+                  name="partyRoleTypeId"
+                  label="Party Role Type"
+                  rules={[{ required: true, message: "Party role type is required" }]}
+                >
+                  <Select
+                    showSearch
+                    options={roleTypeOptions}
+                    loading={partyRoleTypesQuery.isLoading}
+                    placeholder="Select party role type"
+                    optionFilterProp="label"
+                  />
+                </Form.Item>
+              </Form>
+            </TopDrawerForm>
           </Space>
         </Card>
       </div>
