@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { Alert, Button, Card, Form, Input, Modal, Space, Spin, Typography, message } from "antd";
+import { Alert, Button, Card, Form, Input, InputNumber, Modal, Space, Spin, Typography, message } from "antd";
 import { useMemo, useState } from "react";
 import { createCountry, fetchCountries, updateCountry } from "../../api/countries";
 import { Country, CreateCountryRequest } from "./types";
@@ -76,6 +76,16 @@ export function CountriesPage({ apiBaseUrl }: CountriesPageProps) {
         cell: (info) => info.getValue<string>()
       },
       {
+        accessorKey: "nationality",
+        header: "Nationality",
+        cell: (info) => info.getValue<string>() ?? "-"
+      },
+      {
+        accessorKey: "numeric",
+        header: "Numeric",
+        cell: (info) => info.getValue<number>() ?? "-"
+      },
+      {
         accessorKey: "isoCode2",
         header: "ISO Code 2",
         cell: (info) => info.getValue<string>()
@@ -95,6 +105,8 @@ export function CountriesPage({ apiBaseUrl }: CountriesPageProps) {
               setEditingCountry(row.original);
               editForm.setFieldsValue({
                 name: row.original.name,
+                nationality: row.original.nationality,
+                numeric: row.original.numeric,
                 isoCode2: row.original.isoCode2,
                 isoCode3: row.original.isoCode3
               });
@@ -257,6 +269,12 @@ function CountryForm({ form, onFinish }: CountryFormProps) {
     <Form<FormValues> form={form} layout="vertical" onFinish={onFinish}>
       <Form.Item name="name" label="Country Name" rules={[{ required: true, message: "Country name is required" }]}>
         <Input maxLength={200} />
+      </Form.Item>
+      <Form.Item name="nationality" label="Nationality" rules={[{ required: true, message: "Nationality is required" }]}>
+        <Input maxLength={200} />
+      </Form.Item>
+      <Form.Item name="numeric" label="Numeric">
+        <InputNumber min={0} max={999} style={{ width: "100%" }} />
       </Form.Item>
       <Form.Item name="isoCode2" label="ISO Code 2" rules={[{ required: true, message: "ISO code 2 is required" }]}>
         <Input maxLength={2} />

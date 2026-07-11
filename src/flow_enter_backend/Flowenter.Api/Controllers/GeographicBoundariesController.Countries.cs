@@ -56,6 +56,8 @@ public partial class GeographicBoundariesController
             Id = Guid.NewGuid(),
             Type = boundaryType,
             Name = createCountry.Name,
+            Nationality = createCountry.Nationality ?? string.Empty,
+            Numeric = createCountry.Numeric,
             IsoCode2 = createCountry.IsoCode2,
             IsoCode3 = createCountry.IsoCode3
         };

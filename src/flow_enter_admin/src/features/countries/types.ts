@@ -1,6 +1,8 @@
 export type Country = {
   id: string;
   name: string;
+  nationality: string;
+  numeric?: number;
   isoCode2: string;
   isoCode3: string;
   createdAtUtc: string;
@@ -17,6 +19,8 @@ export type CountriesResponse = {
 
 export type CreateCountryRequest = {
   name: string;
+  nationality: string;
+  numeric?: number;
   isoCode2: string;
   isoCode3: string;
 };
