@@ -9,10 +9,37 @@ body {
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
 }
 
-.page-container {
-  margin: 24px auto;
-  max-width: 1200px;
+.app-shell {
+  min-height: 100vh;
+}
+
+.app-shell-sider {
+  border-right: 1px solid #f0f0f0;
+}
+
+.app-shell-sider-title {
+  padding: 16px;
+  font-weight: 600;
+  color: #262626;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.app-shell-header {
+  background: #ffffff;
+  height: auto;
+  line-height: normal;
   padding: 0 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.app-shell-content {
+  padding: 16px;
+}
+
+.page-container {
+  margin: 0;
+  max-width: none;
+  padding: 0;
 }
 
 .tanstack-table-wrapper {
