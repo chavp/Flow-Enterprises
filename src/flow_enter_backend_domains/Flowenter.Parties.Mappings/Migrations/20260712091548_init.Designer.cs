@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Flowenter.Parties.Mappings.Migrations
 {
     [DbContext(typeof(PartiesContext))]
-    [Migration("20260712041150_init")]
+    [Migration("20260712091548_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -472,6 +472,33 @@ namespace Flowenter.Parties.Mappings.Migrations
                             CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             CreatedBy = "seed",
                             Name = "Country",
+                            Revision = 0m
+                        },
+                        new
+                        {
+                            Id = new Guid("efefefef-efef-efef-efef-efefefefefef"),
+                            Code = "PROVINCE",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "seed",
+                            Name = "Province",
+                            Revision = 0m
+                        },
+                        new
+                        {
+                            Id = new Guid("abababab-abab-abab-abab-abababababab"),
+                            Code = "DISTRICT",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "seed",
+                            Name = "District",
+                            Revision = 0m
+                        },
+                        new
+                        {
+                            Id = new Guid("cdcdcdcd-cdcd-cdcd-cdcd-cdcdcdcdcdcd"),
+                            Code = "SUBDISTRICT",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "seed",
+                            Name = "Subdistrict",
                             Revision = 0m
                         });
                 });
@@ -1011,6 +1038,15 @@ namespace Flowenter.Parties.Mappings.Migrations
                             CreatedBy = "seed",
                             Name = "การจ้างงาน",
                             Revision = 0m
+                        },
+                        new
+                        {
+                            Id = new Guid("ffffffff-ffff-ffff-ffff-fffffffffffe"),
+                            Code = "ENTERPRISE_BRANCH",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "seed",
+                            Name = "สาขา",
+                            Revision = 0m
                         });
                 });
 
@@ -1128,6 +1164,15 @@ namespace Flowenter.Parties.Mappings.Migrations
                             CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             CreatedBy = "seed",
                             Name = "ลูกค้า",
+                            Revision = 0m
+                        },
+                        new
+                        {
+                            Id = new Guid("cccccccc-cccc-cccc-cccc-cccccccccccd"),
+                            Code = "BRANCH",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "seed",
+                            Name = "สาขา",
                             Revision = 0m
                         },
                         new
@@ -1730,6 +1775,30 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.ToTable("Employments", "parties");
                 });
 
+            modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.EnterpriseBranch", b =>
+                {
+                    b.HasBaseType("Flowenter.Parties.Models.PartyModels.PartyRelationship");
+
+                    b.Property<Guid>("BranchId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("EnterpriseId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasIndex("BranchId");
+
+                    b.HasIndex("EnterpriseId");
+
+                    b.ToTable("EnterpriseBranchs", "parties");
+                });
+
+            modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.Branch", b =>
+                {
+                    b.HasBaseType("Flowenter.Parties.Models.PartyModels.PartyRole");
+
+                    b.ToTable("Branchs", "parties");
+                });
+
             modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.Customer", b =>
                 {
                     b.HasBaseType("Flowenter.Parties.Models.PartyModels.PartyRole");
@@ -2176,6 +2245,40 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.Navigation("Employee");
 
                     b.Navigation("Employer");
+                });
+
+            modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.EnterpriseBranch", b =>
+                {
+                    b.HasOne("Flowenter.Parties.Models.PartyModels.Branch", "Branch")
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Flowenter.Parties.Models.PartyModels.Enterprise", "Enterprise")
+                        .WithMany()
+                        .HasForeignKey("EnterpriseId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Flowenter.Parties.Models.PartyModels.PartyRelationship", null)
+                        .WithOne()
+                        .HasForeignKey("Flowenter.Parties.Models.PartyModels.EnterpriseBranch", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Branch");
+
+                    b.Navigation("Enterprise");
+                });
+
+            modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.Branch", b =>
+                {
+                    b.HasOne("Flowenter.Parties.Models.PartyModels.PartyRole", null)
+                        .WithOne()
+                        .HasForeignKey("Flowenter.Parties.Models.PartyModels.Branch", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.Customer", b =>

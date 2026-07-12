@@ -805,6 +805,25 @@ namespace Flowenter.Parties.Mappings.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Branchs",
+                schema: "parties",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Branchs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Branchs_PartyRoles_Id",
+                        column: x => x.Id,
+                        principalSchema: "parties",
+                        principalTable: "PartyRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Customers",
                 schema: "parties",
                 columns: table => new
@@ -987,6 +1006,39 @@ namespace Flowenter.Parties.Mappings.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "EnterpriseBranchs",
+                schema: "parties",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    EnterpriseId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    BranchId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EnterpriseBranchs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EnterpriseBranchs_Branchs_BranchId",
+                        column: x => x.BranchId,
+                        principalSchema: "parties",
+                        principalTable: "Branchs",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_EnterpriseBranchs_Enterprises_EnterpriseId",
+                        column: x => x.EnterpriseId,
+                        principalSchema: "parties",
+                        principalTable: "Enterprises",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_EnterpriseBranchs_PartyRelationships_Id",
+                        column: x => x.Id,
+                        principalSchema: "parties",
+                        principalTable: "PartyRelationships",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Beds",
                 schema: "parties",
                 columns: table => new
@@ -1071,7 +1123,13 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties",
                 table: "GeographicBoundaryTypes",
                 columns: new[] { "Id", "Code", "CreatedAtUtc", "CreatedBy", "Description", "Name", "Revision", "UpdatedAtUtc", "UpdatedBy" },
-                values: new object[] { new Guid("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"), "COUNTRY", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", null, "Country", 0m, null, null });
+                values: new object[,]
+                {
+                    { new Guid("abababab-abab-abab-abab-abababababab"), "DISTRICT", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", null, "District", 0m, null, null },
+                    { new Guid("cdcdcdcd-cdcd-cdcd-cdcd-cdcdcdcdcdcd"), "SUBDISTRICT", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", null, "Subdistrict", 0m, null, null },
+                    { new Guid("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"), "COUNTRY", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", null, "Country", 0m, null, null },
+                    { new Guid("efefefef-efef-efef-efef-efefefefefef"), "PROVINCE", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", null, "Province", 0m, null, null }
+                });
 
             migrationBuilder.InsertData(
                 schema: "parties",
@@ -1099,7 +1157,11 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties",
                 table: "PartyRelationshipTypes",
                 columns: new[] { "Id", "Code", "CreatedAtUtc", "CreatedBy", "Description", "Name", "Revision", "UpdatedAtUtc", "UpdatedBy" },
-                values: new object[] { new Guid("ffffffff-ffff-ffff-ffff-ffffffffffff"), "EMPLOYMENT", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", null, "การจ้างงาน", 0m, null, null });
+                values: new object[,]
+                {
+                    { new Guid("ffffffff-ffff-ffff-ffff-fffffffffffe"), "ENTERPRISE_BRANCH", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", null, "สาขา", 0m, null, null },
+                    { new Guid("ffffffff-ffff-ffff-ffff-ffffffffffff"), "EMPLOYMENT", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", null, "การจ้างงาน", 0m, null, null }
+                });
 
             migrationBuilder.InsertData(
                 schema: "parties",
@@ -1122,6 +1184,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                     { new Guid("bbbbbbbb-4444-4444-4444-444444444444"), "PATIENT", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", null, "ผู้ป่วย", 0m, null, null },
                     { new Guid("bbbbbbbb-5555-5555-5555-555555555555"), "SECURITY_GUARD", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", null, "เจ้าหน้าที่รักษาความปลอดภัย", 0m, null, null },
                     { new Guid("cccccccc-cccc-cccc-cccc-cccccccccccc"), "ENTERPRISE", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", null, "กิจการ/นิติบุคคล", 0m, null, null },
+                    { new Guid("cccccccc-cccc-cccc-cccc-cccccccccccd"), "BRANCH", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", null, "สาขา", 0m, null, null },
                     { new Guid("dddddddd-dddd-dddd-dddd-dddddddddddd"), "CUSTOMER", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "seed", null, "ลูกค้า", 0m, null, null }
                 });
 
@@ -1199,6 +1262,18 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties",
                 table: "Employments",
                 column: "EmployerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EnterpriseBranchs_BranchId",
+                schema: "parties",
+                table: "EnterpriseBranchs",
+                column: "BranchId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EnterpriseBranchs_EnterpriseId",
+                schema: "parties",
+                table: "EnterpriseBranchs",
+                column: "EnterpriseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Enterprises_LegalName",
@@ -1490,7 +1565,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties");
 
             migrationBuilder.DropTable(
-                name: "Enterprises",
+                name: "EnterpriseBranchs",
                 schema: "parties");
 
             migrationBuilder.DropTable(
@@ -1534,15 +1609,15 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties");
 
             migrationBuilder.DropTable(
+                name: "Branchs",
+                schema: "parties");
+
+            migrationBuilder.DropTable(
+                name: "Enterprises",
+                schema: "parties");
+
+            migrationBuilder.DropTable(
                 name: "PartyRelationships",
-                schema: "parties");
-
-            migrationBuilder.DropTable(
-                name: "LegalStructures",
-                schema: "parties");
-
-            migrationBuilder.DropTable(
-                name: "PartyRoles",
                 schema: "parties");
 
             migrationBuilder.DropTable(
@@ -1574,19 +1649,19 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties");
 
             migrationBuilder.DropTable(
+                name: "LegalStructures",
+                schema: "parties");
+
+            migrationBuilder.DropTable(
+                name: "PartyRoles",
+                schema: "parties");
+
+            migrationBuilder.DropTable(
                 name: "PartyRelationshipTypes",
                 schema: "parties");
 
             migrationBuilder.DropTable(
-                name: "PartyRoleTypes",
-                schema: "parties");
-
-            migrationBuilder.DropTable(
                 name: "GenderTypes",
-                schema: "parties");
-
-            migrationBuilder.DropTable(
-                name: "Parties",
                 schema: "parties");
 
             migrationBuilder.DropTable(
@@ -1602,7 +1677,11 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties");
 
             migrationBuilder.DropTable(
-                name: "PartyTypes",
+                name: "Parties",
+                schema: "parties");
+
+            migrationBuilder.DropTable(
+                name: "PartyRoleTypes",
                 schema: "parties");
 
             migrationBuilder.DropTable(
@@ -1611,6 +1690,10 @@ namespace Flowenter.Parties.Mappings.Migrations
 
             migrationBuilder.DropTable(
                 name: "Facilities",
+                schema: "parties");
+
+            migrationBuilder.DropTable(
+                name: "PartyTypes",
                 schema: "parties");
 
             migrationBuilder.DropTable(

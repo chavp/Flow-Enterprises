@@ -263,6 +263,22 @@ public class EnterprisesController : ControllerBase
             }
         }
 
+        var branchRoleIdsOfEnterpriseParty = await context.PartyRoles
+            .OfType<Branch>()
+            .Where(item => item.PartyId == enterprisePartyId && item.Id.HasValue)
+            .Select(item => item.Id!.Value)
+            .ToListAsync(cancellationToken);
+
+        var relatedEnterpriseBranchRelationships = await context.PartyRelationships
+            .OfType<EnterpriseBranch>()
+            .Where(item => item.EnterpriseId == enterpriseRoleId
+                           || (item.BranchId.HasValue && branchRoleIdsOfEnterpriseParty.Contains(item.BranchId.Value)))
+            .ToListAsync(cancellationToken);
+        if (relatedEnterpriseBranchRelationships.Count > 0)
+        {
+            context.PartyRelationships.RemoveRange(relatedEnterpriseBranchRelationships);
+        }
+
         var enterpriseFacilityRoles = await context.FacilityRoles
             .Where(item => item.PartyId == enterprisePartyId && item.PartyRoleTypeId == enterprisePartyRoleTypeId)
             .ToListAsync(cancellationToken);
@@ -1010,6 +1026,338 @@ public class EnterprisesController : ControllerBase
             UpdatedAtUtc = employmentRow.Employment.UpdatedAtUtc,
             Revision = employmentRow.Employment.Revision
         });
+    }
+
+    [HttpGet("{enterprise_role_id:guid}/branchs")]
+    [ProducesResponseType(typeof(List<EnterpriseBranchDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetEnterpriseBranchs(
+        [FromRoute] Guid enterprise_role_id,
+        CancellationToken cancellationToken)
+    {
+        using var context = _factory.CreateDbContext();
+
+        var enterpriseExists = await context.PartyRoles
+            .OfType<Enterprise>()
+            .AnyAsync(item => item.Id == enterprise_role_id, cancellationToken);
+        if (!enterpriseExists)
+        {
+            return NotFound();
+        }
+
+        var branchs = await (
+            from relation in context.PartyRelationships.OfType<EnterpriseBranch>()
+            join branchRole in context.PartyRoles.OfType<Branch>() on relation.BranchId equals branchRole.Id
+            join branchParty in context.Parties.OfType<Organization>() on branchRole.PartyId equals branchParty.Id
+            where relation.EnterpriseId == enterprise_role_id
+            orderby branchParty.Name
+            select new EnterpriseBranchDto
+            {
+                EnterpriseBranchId = relation.Id!.Value,
+                EnterpriseId = relation.EnterpriseId!.Value,
+                BranchId = relation.BranchId!.Value,
+                BranchLegalName = branchParty.Name ?? string.Empty,
+                CreatedAtUtc = relation.CreatedAtUtc,
+                UpdatedAtUtc = relation.UpdatedAtUtc,
+                Revision = relation.Revision
+            })
+            .ToListAsync(cancellationToken);
+
+        return Ok(branchs);
+    }
+
+    [HttpPost("{enterprise_role_id:guid}/branchs")]
+    [ProducesResponseType(typeof(EnterpriseBranchDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> CreateEnterpriseBranch(
+        [FromRoute] Guid enterprise_role_id,
+        [FromBody] CreateEnterpriseBranchDto createDto,
+        CancellationToken cancellationToken)
+    {
+        var branchName = createDto.Name.Trim();
+        if (string.IsNullOrWhiteSpace(branchName))
+        {
+            return BadRequest("Branch name is required.");
+        }
+
+        using var context = _factory.CreateDbContext();
+
+        var enterprise = await context.PartyRoles
+            .OfType<Enterprise>()
+            .Select(item => new { item.Id, item.PartyId })
+            .FirstOrDefaultAsync(item => item.Id == enterprise_role_id, cancellationToken);
+        if (enterprise == null || !enterprise.Id.HasValue)
+        {
+            return NotFound();
+        }
+
+        var branchRoleType = await context.PartyRoleTypes
+            .SingleOrDefaultAsync(item => item.Code == PartyRoleType.Branch, cancellationToken);
+        if (branchRoleType == null)
+        {
+            branchRoleType = new PartyRoleType
+            {
+                Id = Guid.NewGuid(),
+                Code = PartyRoleType.Branch,
+                Name = "สาขา"
+            };
+            await context.AddAsync(branchRoleType, cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
+        }
+
+        var enterpriseBranchRelationshipType = await context.PartyRelationshipTypes
+            .SingleOrDefaultAsync(item => item.Code == PartyRelationshipType.EnterpriseBranch, cancellationToken);
+        if (enterpriseBranchRelationshipType == null)
+        {
+            enterpriseBranchRelationshipType = new PartyRelationshipType
+            {
+                Id = Guid.NewGuid(),
+                Code = PartyRelationshipType.EnterpriseBranch,
+                Name = "สาขา"
+            };
+            await context.AddAsync(enterpriseBranchRelationshipType, cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
+        }
+
+        var organizationPartyType = await context.PartyTypes
+            .SingleOrDefaultAsync(item => item.Code == PartyType.Organization, cancellationToken);
+        if (organizationPartyType == null)
+        {
+            organizationPartyType = new PartyType
+            {
+                Id = Guid.NewGuid(),
+                Code = PartyType.Organization,
+                Name = "Organization"
+            };
+            await context.AddAsync(organizationPartyType, cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
+        }
+
+        var branchOrganization = await context.Parties
+            .OfType<Organization>()
+            .FirstOrDefaultAsync(item => item.Name == branchName, cancellationToken);
+        if (branchOrganization == null)
+        {
+            branchOrganization = new Organization
+            {
+                Id = Guid.NewGuid(),
+                Name = branchName,
+                TypeId = organizationPartyType.Id
+            };
+            await context.AddAsync(branchOrganization, cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
+        }
+
+        var branchRole = await context.PartyRoles
+            .OfType<Branch>()
+            .FirstOrDefaultAsync(item => item.PartyId == branchOrganization.Id && item.TypeId == branchRoleType.Id, cancellationToken);
+        if (branchRole == null)
+        {
+            branchRole = new Branch
+            {
+                Id = Guid.NewGuid(),
+                PartyId = branchOrganization.Id,
+                TypeId = branchRoleType.Id,
+            };
+            await context.AddAsync(branchRole, cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
+        }
+
+        var relationExists = await context.PartyRelationships
+            .OfType<EnterpriseBranch>()
+            .AnyAsync(item => item.EnterpriseId == enterprise.Id
+                              && item.BranchId == branchRole.Id,
+                cancellationToken);
+        if (relationExists)
+        {
+            return BadRequest("Branch already exists for this enterprise.");
+        }
+
+        var relation = new EnterpriseBranch(enterprise.Id.Value, branchRole.Id!.Value, enterpriseBranchRelationshipType.Id!.Value)
+        {
+            Id = Guid.NewGuid()
+        };
+
+        await context.AddAsync(relation, cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
+
+        return Created($"/api/parties/enterprises/{enterprise_role_id}/branchs/{relation.Id}", new EnterpriseBranchDto
+        {
+            EnterpriseBranchId = relation.Id!.Value,
+            EnterpriseId = relation.EnterpriseId!.Value,
+            BranchId = relation.BranchId!.Value,
+            BranchLegalName = branchOrganization.Name ?? string.Empty,
+            CreatedAtUtc = relation.CreatedAtUtc,
+            UpdatedAtUtc = relation.UpdatedAtUtc,
+            Revision = relation.Revision
+        });
+    }
+
+    [HttpPut("{enterprise_role_id:guid}/branchs/{enterprise_branch_id:guid}")]
+    [ProducesResponseType(typeof(EnterpriseBranchDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateEnterpriseBranch(
+        [FromRoute] Guid enterprise_role_id,
+        [FromRoute] Guid enterprise_branch_id,
+        [FromBody] UpdateEnterpriseBranchDto updateDto,
+        CancellationToken cancellationToken)
+    {
+        var branchName = updateDto.Name.Trim();
+        if (string.IsNullOrWhiteSpace(branchName))
+        {
+            return BadRequest("Branch name is required.");
+        }
+
+        using var context = _factory.CreateDbContext();
+
+        var relation = await context.PartyRelationships
+            .OfType<EnterpriseBranch>()
+            .Include(item => item.Branch)
+            .ThenInclude(item => item!.Party)
+            .FirstOrDefaultAsync(item => item.Id == enterprise_branch_id && item.EnterpriseId == enterprise_role_id, cancellationToken);
+        if (relation == null)
+        {
+            return NotFound();
+        }
+
+        var branchRoleType = await context.PartyRoleTypes
+            .SingleOrDefaultAsync(item => item.Code == PartyRoleType.Branch, cancellationToken);
+        if (branchRoleType == null)
+        {
+            branchRoleType = new PartyRoleType
+            {
+                Id = Guid.NewGuid(),
+                Code = PartyRoleType.Branch,
+                Name = "สาขา"
+            };
+            await context.AddAsync(branchRoleType, cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
+        }
+
+        var organizationPartyType = await context.PartyTypes
+            .SingleOrDefaultAsync(item => item.Code == PartyType.Organization, cancellationToken);
+        if (organizationPartyType == null)
+        {
+            organizationPartyType = new PartyType
+            {
+                Id = Guid.NewGuid(),
+                Code = PartyType.Organization,
+                Name = "Organization"
+            };
+            await context.AddAsync(organizationPartyType, cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
+        }
+
+        var branchOrganization = await context.Parties
+            .OfType<Organization>()
+            .FirstOrDefaultAsync(item => item.Name == branchName, cancellationToken);
+        if (branchOrganization == null)
+        {
+            var currentBranchOrganization = relation.Branch?.Party as Organization;
+            if (currentBranchOrganization != null)
+            {
+                currentBranchOrganization.Name = branchName;
+                await context.SaveChangesAsync(cancellationToken);
+                branchOrganization = currentBranchOrganization;
+            }
+            else
+            {
+                branchOrganization = new Organization
+                {
+                    Id = Guid.NewGuid(),
+                    Name = branchName,
+                    TypeId = organizationPartyType.Id
+                };
+                await context.AddAsync(branchOrganization, cancellationToken);
+                await context.SaveChangesAsync(cancellationToken);
+            }
+        }
+
+        var branchRole = await context.PartyRoles
+            .OfType<Branch>()
+            .FirstOrDefaultAsync(item => item.PartyId == branchOrganization.Id && item.TypeId == branchRoleType.Id, cancellationToken);
+        if (branchRole == null)
+        {
+            branchRole = new Branch
+            {
+                Id = Guid.NewGuid(),
+                PartyId = branchOrganization.Id,
+                TypeId = branchRoleType.Id,
+            };
+            await context.AddAsync(branchRole, cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
+        }
+
+        var relationExists = await context.PartyRelationships
+            .OfType<EnterpriseBranch>()
+            .AnyAsync(item => item.Id != enterprise_branch_id
+                              && item.EnterpriseId == enterprise_role_id
+                              && item.BranchId == branchRole.Id,
+                cancellationToken);
+        if (relationExists)
+        {
+            return BadRequest("Branch already exists for this enterprise.");
+        }
+
+        relation.BranchId = branchRole.Id;
+        await context.SaveChangesAsync(cancellationToken);
+
+        return Ok(new EnterpriseBranchDto
+        {
+            EnterpriseBranchId = relation.Id!.Value,
+            EnterpriseId = relation.EnterpriseId!.Value,
+            BranchId = relation.BranchId!.Value,
+            BranchLegalName = branchOrganization.Name ?? string.Empty,
+            CreatedAtUtc = relation.CreatedAtUtc,
+            UpdatedAtUtc = relation.UpdatedAtUtc,
+            Revision = relation.Revision
+        });
+    }
+
+    [HttpDelete("{enterprise_role_id:guid}/branchs/{enterprise_branch_id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteEnterpriseBranch(
+        [FromRoute] Guid enterprise_role_id,
+        [FromRoute] Guid enterprise_branch_id,
+        CancellationToken cancellationToken)
+    {
+        using var context = _factory.CreateDbContext();
+
+        var relation = await context.PartyRelationships
+            .OfType<EnterpriseBranch>()
+            .FirstOrDefaultAsync(item => item.Id == enterprise_branch_id && item.EnterpriseId == enterprise_role_id, cancellationToken);
+        if (relation == null)
+        {
+            return NotFound();
+        }
+
+        var branchRoleId = relation.BranchId;
+
+        context.PartyRelationships.Remove(relation);
+        await context.SaveChangesAsync(cancellationToken);
+
+        if (branchRoleId.HasValue)
+        {
+            var hasOtherReference = await context.PartyRelationships
+                .OfType<EnterpriseBranch>()
+                .AnyAsync(item => item.BranchId == branchRoleId, cancellationToken);
+            if (!hasOtherReference)
+            {
+                var branchRole = await context.PartyRoles
+                    .OfType<Branch>()
+                    .FirstOrDefaultAsync(item => item.Id == branchRoleId, cancellationToken);
+                if (branchRole != null)
+                {
+                    context.PartyRoles.Remove(branchRole);
+                    await context.SaveChangesAsync(cancellationToken);
+                }
+            }
+        }
+
+        return NoContent();
     }
 
     [HttpDelete("{enterprise_role_id:guid}/employments/{employment_id:guid}")]

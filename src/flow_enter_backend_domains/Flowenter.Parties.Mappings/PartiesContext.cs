@@ -379,7 +379,7 @@ public sealed class PartiesContext : DbContext
             },
             new PartyRelationshipType
             {
-                Id = Guid.Parse("ffffffff-ffff-ffff-ffff-fffffffffffg"),
+                Id = Guid.Parse("ffffffff-ffff-ffff-ffff-fffffffffffe"),
                 Code = PartyRelationshipType.EnterpriseBranch,
                 Name = "สาขา",
                 CreatedBy = "seed",

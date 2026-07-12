@@ -5,10 +5,12 @@ import {
   CreateBuildingRequest,
   CreateBedRequest,
   CreateEmploymentRequest,
+  CreateEnterpriseBranchRequest,
   CreateEnterpriseRequest,
   CreateFloorRequest,
   CreateRoomRequest,
   EnterpriseFacilitiesTree,
+  EnterpriseBranch,
   Employment,
   Floor,
   LegalStructure,
@@ -18,6 +20,7 @@ import {
   Room,
   UpdateBuildingRequest,
   UpdateEmploymentEffectiveDateRequest,
+  UpdateEnterpriseBranchRequest,
   UpdateEmploymentRequest,
   UpdateFloorRequest,
   UpdateBedRequest,
@@ -141,6 +144,47 @@ export async function updateEnterpriseEmploymentEffectiveDate(
   await requestJson(
     `/api/parties/enterprises/${enterpriseId}/employments/${employmentId}/effective-date`,
     { method: "PATCH", body: JSON.stringify(payload) },
+    apiBaseUrl
+  );
+}
+
+export async function fetchEnterpriseBranchs(enterpriseId: string, apiBaseUrl?: string): Promise<EnterpriseBranch[]> {
+  return requestJson<EnterpriseBranch[]>(`/api/parties/enterprises/${enterpriseId}/branchs`, { method: "GET" }, apiBaseUrl);
+}
+
+export async function createEnterpriseBranch(
+  enterpriseId: string,
+  payload: CreateEnterpriseBranchRequest,
+  apiBaseUrl?: string
+): Promise<void> {
+  await requestJson(
+    `/api/parties/enterprises/${enterpriseId}/branchs`,
+    { method: "POST", body: JSON.stringify(payload) },
+    apiBaseUrl
+  );
+}
+
+export async function updateEnterpriseBranch(
+  enterpriseId: string,
+  enterpriseBranchId: string,
+  payload: UpdateEnterpriseBranchRequest,
+  apiBaseUrl?: string
+): Promise<void> {
+  await requestJson(
+    `/api/parties/enterprises/${enterpriseId}/branchs/${enterpriseBranchId}`,
+    { method: "PUT", body: JSON.stringify(payload) },
+    apiBaseUrl
+  );
+}
+
+export async function deleteEnterpriseBranch(
+  enterpriseId: string,
+  enterpriseBranchId: string,
+  apiBaseUrl?: string
+): Promise<void> {
+  await requestJson(
+    `/api/parties/enterprises/${enterpriseId}/branchs/${enterpriseBranchId}`,
+    { method: "DELETE" },
     apiBaseUrl
   );
 }

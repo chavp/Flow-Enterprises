@@ -88,6 +88,22 @@ export type UpdateEmploymentEffectiveDateRequest = {
   thruDate: string;
 };
 
+export type EnterpriseBranch = {
+  enterpriseBranchId: string;
+  enterpriseId: string;
+  branchId: string;
+  branchLegalName: string;
+  createdAtUtc: string;
+  updatedAtUtc?: string;
+  revision: number;
+};
+
+export type CreateEnterpriseBranchRequest = {
+  name: string;
+};
+
+export type UpdateEnterpriseBranchRequest = CreateEnterpriseBranchRequest;
+
 export type Room = {
   roomId: string;
   number: string;

@@ -29,6 +29,7 @@ import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 import {
   createEnterpriseBed,
+  createEnterpriseBranch,
   createEnterpriseBuilding,
   createEnterpriseFloor,
   createEnperprise,
@@ -36,17 +37,20 @@ import {
   deleteEnterpriseBed,
   deleteEnterpriseBuilding,
   deleteEnterprise,
+  deleteEnterpriseBranch,
   deleteEnterpriseFloor,
   deleteEnterpriseRoom,
   deleteEnterpriseEmployment,
   createEnterpriseEmployment,
   fetchEnterpriseFacilitiesTree,
+  fetchEnterpriseBranchs,
   fetchEnterpriseEmployments,
   fetchEnterprises,
   fetchLegalStructures,
   fetchPartyRoleTypes,
   fetchEnterpriseRooms,
   updateEnterpriseBed,
+  updateEnterpriseBranch,
   updateEnterpriseBuilding,
   updateEnterpriseEmploymentEffectiveDate,
   updateEnterpriseEmployment,
@@ -57,6 +61,7 @@ import {
 import { TopDrawerForm } from "../../components/TopDrawerForm";
 import {
   Bed,
+  CreateEnterpriseBranchRequest,
   Building,
   CreateBedRequest,
   CreateBuildingRequest,
@@ -65,6 +70,7 @@ import {
   CreateFloorRequest,
   CreateRoomRequest,
   Enterprise,
+  EnterpriseBranch,
   Employment,
   Floor,
   Room
@@ -78,6 +84,7 @@ type EnterprisesPageProps = {
 
 type FormValues = CreateEnterpriseRequest;
 type EmploymentFormValues = CreateEmploymentRequest;
+type EnterpriseBranchFormValues = CreateEnterpriseBranchRequest;
 type BuildingFormValues = CreateBuildingRequest;
 type FloorFormValues = CreateFloorRequest;
 type RoomFormValues = CreateRoomRequest;
@@ -115,6 +122,8 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
   const [peopleEnterprise, setPeopleEnterprise] = useState<Enterprise | null>(null);
   const [editingEmployment, setEditingEmployment] = useState<Employment | null>(null);
   const [isCreateEmploymentOpen, setCreateEmploymentOpen] = useState(false);
+  const [isCreateEnterpriseBranchOpen, setCreateEnterpriseBranchOpen] = useState(false);
+  const [editingEnterpriseBranch, setEditingEnterpriseBranch] = useState<EnterpriseBranch | null>(null);
   const [isCreateBuildingOpen, setCreateBuildingOpen] = useState(false);
   const [editingBuilding, setEditingBuilding] = useState<Building | null>(null);
   const [isCreateFloorOpen, setCreateFloorOpen] = useState(false);
@@ -134,6 +143,8 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
   const [editForm] = Form.useForm<FormValues>();
   const [employmentForm] = Form.useForm<EmploymentFormValues>();
   const [editEmploymentForm] = Form.useForm<EmploymentFormValues>();
+  const [enterpriseBranchForm] = Form.useForm<EnterpriseBranchFormValues>();
+  const [editEnterpriseBranchForm] = Form.useForm<EnterpriseBranchFormValues>();
   const [createBuildingForm] = Form.useForm<BuildingFormValues>();
   const [editBuildingForm] = Form.useForm<BuildingFormValues>();
   const [createFloorForm] = Form.useForm<FloorFormValues>();
@@ -156,6 +167,12 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
   const employmentsQuery = useQuery({
     queryKey: ["enterprise-employments", peopleEnterprise?.enterpriseId, apiBaseUrl],
     queryFn: () => fetchEnterpriseEmployments(peopleEnterprise!.enterpriseId, apiBaseUrl),
+    enabled: Boolean(peopleEnterprise)
+  });
+
+  const enterpriseBranchsQuery = useQuery({
+    queryKey: ["enterprise-branchs", peopleEnterprise?.enterpriseId, apiBaseUrl],
+    queryFn: () => fetchEnterpriseBranchs(peopleEnterprise!.enterpriseId, apiBaseUrl),
     enabled: Boolean(peopleEnterprise)
   });
 
@@ -334,6 +351,79 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
     },
     onError: (error) => {
       messageApi.error(error instanceof Error ? error.message : "Create employment failed");
+    }
+  });
+
+  const createEnterpriseBranchMutation = useMutation({
+    mutationFn: async (values: EnterpriseBranchFormValues) => {
+      if (!peopleEnterprise) {
+        return;
+      }
+
+      await createEnterpriseBranch(peopleEnterprise.enterpriseId, values, apiBaseUrl);
+    },
+    onSuccess: async () => {
+      if (!peopleEnterprise) {
+        return;
+      }
+
+      await queryClient.invalidateQueries({
+        queryKey: ["enterprise-branchs", peopleEnterprise.enterpriseId, apiBaseUrl]
+      });
+      setCreateEnterpriseBranchOpen(false);
+      enterpriseBranchForm.resetFields();
+      messageApi.success("Enterprise branch added");
+    },
+    onError: (error) => {
+      messageApi.error(error instanceof Error ? error.message : "Create enterprise branch failed");
+    }
+  });
+
+  const updateEnterpriseBranchMutation = useMutation({
+    mutationFn: async (values: EnterpriseBranchFormValues) => {
+      if (!peopleEnterprise || !editingEnterpriseBranch) {
+        return;
+      }
+
+      await updateEnterpriseBranch(peopleEnterprise.enterpriseId, editingEnterpriseBranch.enterpriseBranchId, values, apiBaseUrl);
+    },
+    onSuccess: async () => {
+      if (!peopleEnterprise) {
+        return;
+      }
+
+      await queryClient.invalidateQueries({
+        queryKey: ["enterprise-branchs", peopleEnterprise.enterpriseId, apiBaseUrl]
+      });
+      setEditingEnterpriseBranch(null);
+      editEnterpriseBranchForm.resetFields();
+      messageApi.success("Enterprise branch updated");
+    },
+    onError: (error) => {
+      messageApi.error(error instanceof Error ? error.message : "Update enterprise branch failed");
+    }
+  });
+
+  const deleteEnterpriseBranchMutation = useMutation({
+    mutationFn: async (enterpriseBranchId: string) => {
+      if (!peopleEnterprise) {
+        return;
+      }
+
+      await deleteEnterpriseBranch(peopleEnterprise.enterpriseId, enterpriseBranchId, apiBaseUrl);
+    },
+    onSuccess: async () => {
+      if (!peopleEnterprise) {
+        return;
+      }
+
+      await queryClient.invalidateQueries({
+        queryKey: ["enterprise-branchs", peopleEnterprise.enterpriseId, apiBaseUrl]
+      });
+      messageApi.success("Enterprise branch deleted");
+    },
+    onError: (error) => {
+      messageApi.error(error instanceof Error ? error.message : "Delete enterprise branch failed");
     }
   });
 
@@ -747,8 +837,8 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
       value: item.id,
       label: `${item.name}${item.code ? ` (${item.code})` : ""}`
     }));
-
   const employments = employmentsQuery.data ?? [];
+  const enterpriseBranchs = enterpriseBranchsQuery.data ?? [];
   const facilitiesTree = facilitiesTreeQuery.data?.buildings ?? [];
   const buildingOptions = facilitiesTree.map((node) => ({
     value: node.building.buildingId,
@@ -1023,11 +1113,13 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                 onClick={() => {
                   setPeopleEnterprise(null);
                   setEditingEmployment(null);
+                  setEditingEnterpriseBranch(null);
                   setEditingBuilding(null);
                   setEditingFloor(null);
                   setEditingRoom(null);
                   setEditingBed(null);
                   setCreateEmploymentOpen(false);
+                  setCreateEnterpriseBranchOpen(false);
                   setCreateBuildingOpen(false);
                   setCreateFloorOpen(false);
                   setCreateRoomOpen(false);
@@ -1039,6 +1131,8 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                   setPeopleTabKey("people");
                   employmentForm.resetFields();
                   editEmploymentForm.resetFields();
+                  enterpriseBranchForm.resetFields();
+                  editEnterpriseBranchForm.resetFields();
                   createBuildingForm.resetFields();
                   editBuildingForm.resetFields();
                   createFloorForm.resetFields();
@@ -1228,6 +1322,80 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                   )
                 },
                 {
+                  key: "branchs",
+                  label: "Branchs",
+                  children: (
+                    <Space direction="vertical" size="middle" style={{ width: "100%" }}>
+                      <Space style={{ width: "100%", justifyContent: "flex-end" }}>
+                        <Button type="primary" onClick={() => setCreateEnterpriseBranchOpen(true)}>
+                          Add Branch
+                        </Button>
+                      </Space>
+
+                      {enterpriseBranchsQuery.isError ? (
+                        <Alert
+                          type="error"
+                          message="Failed to load enterprise branchs"
+                          description={
+                            enterpriseBranchsQuery.error instanceof Error
+                              ? enterpriseBranchsQuery.error.message
+                              : "Unknown error"
+                          }
+                          showIcon
+                        />
+                      ) : enterpriseBranchsQuery.isLoading ? (
+                        <Spin />
+                      ) : enterpriseBranchs.length === 0 ? (
+                        <Empty description="No enterprise branchs found." />
+                      ) : (
+                        <div className="tanstack-table-wrapper">
+                          <table className="tanstack-table">
+                            <thead>
+                              <tr>
+                                <th>Branch Legal Name</th>
+                                <th>Actions</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {enterpriseBranchs.map((enterpriseBranch) => (
+                                <tr key={enterpriseBranch.enterpriseBranchId}>
+                                  <td>{enterpriseBranch.branchLegalName}</td>
+                                  <td>
+                                    <Space>
+                                      <Button
+                                        size="small"
+                                        onClick={() => {
+                                          setEditingEnterpriseBranch(enterpriseBranch);
+                                          editEnterpriseBranchForm.setFieldsValue({
+                                            name: enterpriseBranch.branchLegalName
+                                          });
+                                        }}
+                                      >
+                                        Edit
+                                      </Button>
+                                      <Popconfirm
+                                        title="Delete branch?"
+                                        description="This removes the branch relationship from this enterprise."
+                                        okText="Delete"
+                                        okButtonProps={{ danger: true, loading: deleteEnterpriseBranchMutation.isPending }}
+                                        onConfirm={() => deleteEnterpriseBranchMutation.mutate(enterpriseBranch.enterpriseBranchId)}
+                                      >
+                                        <Button size="small" danger>
+                                          Delete
+                                        </Button>
+                                      </Popconfirm>
+                                    </Space>
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      )}
+                    </Space>
+                  )
+                },
+                {
                   key: "facilities",
                   label: "Facilities",
                   children: (
@@ -1362,6 +1530,58 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                     placeholder="Select party roles"
                     optionFilterProp="label"
                   />
+                </Form.Item>
+              </Form>
+            </TopDrawerForm>
+
+            <TopDrawerForm
+              open={isCreateEnterpriseBranchOpen}
+              title="Add Enterprise Branch"
+              submitText="Add"
+              onClose={() => {
+                setCreateEnterpriseBranchOpen(false);
+                enterpriseBranchForm.resetFields();
+              }}
+              onSubmit={() => enterpriseBranchForm.submit()}
+              loading={createEnterpriseBranchMutation.isPending}
+            >
+              <Form<EnterpriseBranchFormValues>
+                form={enterpriseBranchForm}
+                layout="vertical"
+                onFinish={(values) => createEnterpriseBranchMutation.mutate(values)}
+              >
+                <Form.Item
+                  name="name"
+                  label="Branch Name"
+                  rules={[{ required: true, message: "Branch name is required" }]}
+                >
+                  <Input maxLength={200} />
+                </Form.Item>
+              </Form>
+            </TopDrawerForm>
+
+            <TopDrawerForm
+              open={Boolean(editingEnterpriseBranch)}
+              title="Edit Enterprise Branch"
+              submitText="Update"
+              onClose={() => {
+                setEditingEnterpriseBranch(null);
+                editEnterpriseBranchForm.resetFields();
+              }}
+              onSubmit={() => editEnterpriseBranchForm.submit()}
+              loading={updateEnterpriseBranchMutation.isPending}
+            >
+              <Form<EnterpriseBranchFormValues>
+                form={editEnterpriseBranchForm}
+                layout="vertical"
+                onFinish={(values) => updateEnterpriseBranchMutation.mutate(values)}
+              >
+                <Form.Item
+                  name="name"
+                  label="Branch Name"
+                  rules={[{ required: true, message: "Branch name is required" }]}
+                >
+                  <Input maxLength={200} />
                 </Form.Item>
               </Form>
             </TopDrawerForm>
