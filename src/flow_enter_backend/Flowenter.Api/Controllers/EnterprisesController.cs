@@ -1031,6 +1031,15 @@ public class EnterprisesController : ControllerBase
             {
                 RoomId = room.Id!.Value,
                 Number = room.Number ?? string.Empty,
+                Description = room.Description,
+                BedCount = context.Facilities
+                    .OfType<Bed>()
+                    .Count(bed =>
+                        bed.RoomId == room.Id
+                        && context.FacilityRoles.Any(role =>
+                            role.Id == bed.Id
+                            && role.PartyId == enterprise.PartyId
+                            && role.PartyRoleTypeId == enterprise.TypeId)),
                 CreatedAtUtc = room.CreatedAtUtc,
                 UpdatedAtUtc = room.UpdatedAtUtc,
                 Revision = room.Revision
@@ -1084,6 +1093,7 @@ public class EnterprisesController : ControllerBase
         {
             Id = Guid.NewGuid(),
             Number = createDto.Number.Trim(),
+            Description = string.IsNullOrWhiteSpace(createDto.Description) ? null : createDto.Description.Trim(),
             FacilityTypeId = roomFacilityType.Id
         };
 
@@ -1105,6 +1115,8 @@ public class EnterprisesController : ControllerBase
         {
             RoomId = room.Id!.Value,
             Number = room.Number ?? string.Empty,
+            Description = room.Description,
+            BedCount = 0,
             CreatedAtUtc = room.CreatedAtUtc,
             UpdatedAtUtc = room.UpdatedAtUtc,
             Revision = room.Revision
@@ -1147,12 +1159,25 @@ public class EnterprisesController : ControllerBase
         }
 
         room.Number = updateDto.Number.Trim();
+        room.Description = string.IsNullOrWhiteSpace(updateDto.Description) ? null : updateDto.Description.Trim();
         await context.SaveChangesAsync(cancellationToken);
+
+        var roomBedCount = await context.Facilities
+            .OfType<Bed>()
+            .CountAsync(bed =>
+                    bed.RoomId == room.Id
+                    && context.FacilityRoles.Any(role =>
+                        role.Id == bed.Id
+                        && role.PartyId == enterprise.PartyId
+                        && role.PartyRoleTypeId == enterprise.TypeId),
+                cancellationToken);
 
         return Ok(new RoomDto
         {
             RoomId = room.Id!.Value,
             Number = room.Number ?? string.Empty,
+            Description = room.Description,
+            BedCount = roomBedCount,
             CreatedAtUtc = room.CreatedAtUtc,
             UpdatedAtUtc = room.UpdatedAtUtc,
             Revision = room.Revision
@@ -1249,6 +1274,7 @@ public class EnterprisesController : ControllerBase
             {
                 BedId = bed.Id!.Value,
                 Number = bed.Number ?? string.Empty,
+                Description = bed.Description,
                 RoomId = bed.RoomId!.Value,
                 RoomNumber = bed.Room != null && bed.Room.Number != null ? bed.Room.Number : string.Empty,
                 CreatedAtUtc = bed.CreatedAtUtc,
@@ -1318,6 +1344,7 @@ public class EnterprisesController : ControllerBase
         {
             Id = Guid.NewGuid(),
             Number = createDto.Number.Trim(),
+            Description = string.IsNullOrWhiteSpace(createDto.Description) ? null : createDto.Description.Trim(),
             FacilityTypeId = bedFacilityType.Id,
             RoomId = room.Id
         };
@@ -1338,6 +1365,7 @@ public class EnterprisesController : ControllerBase
         {
             BedId = bed.Id!.Value,
             Number = bed.Number ?? string.Empty,
+            Description = bed.Description,
             RoomId = room.Id!.Value,
             RoomNumber = room.Number ?? string.Empty,
             CreatedAtUtc = bed.CreatedAtUtc,
@@ -1397,6 +1425,7 @@ public class EnterprisesController : ControllerBase
         }
 
         bed.Number = updateDto.Number.Trim();
+        bed.Description = string.IsNullOrWhiteSpace(updateDto.Description) ? null : updateDto.Description.Trim();
         bed.RoomId = room.Id;
 
         await context.SaveChangesAsync(cancellationToken);
@@ -1405,12 +1434,63 @@ public class EnterprisesController : ControllerBase
         {
             BedId = bed.Id!.Value,
             Number = bed.Number ?? string.Empty,
+            Description = bed.Description,
             RoomId = room.Id!.Value,
             RoomNumber = room.Number ?? string.Empty,
             CreatedAtUtc = bed.CreatedAtUtc,
             UpdatedAtUtc = bed.UpdatedAtUtc,
             Revision = bed.Revision
         });
+    }
+
+    [HttpDelete("{enterprise_role_id:guid}/facilities/beds/{bed_id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteEnterpriseBed(
+        [FromRoute] Guid enterprise_role_id,
+        [FromRoute] Guid bed_id,
+        CancellationToken cancellationToken)
+    {
+        using var context = _factory.CreateDbContext();
+
+        var enterprise = await context.PartyRoles
+            .OfType<Enterprise>()
+            .Select(e => new { e.Id, e.PartyId, e.TypeId })
+            .FirstOrDefaultAsync(e => e.Id == enterprise_role_id, cancellationToken);
+        if (enterprise == null || !enterprise.PartyId.HasValue || !enterprise.TypeId.HasValue)
+        {
+            return NotFound();
+        }
+
+        var enterpriseBedRoles = await context.FacilityRoles
+            .Where(role => role.Id == bed_id
+                           && role.PartyId == enterprise.PartyId
+                           && role.PartyRoleTypeId == enterprise.TypeId)
+            .ToListAsync(cancellationToken);
+        if (enterpriseBedRoles.Count == 0)
+        {
+            return NotFound();
+        }
+
+        context.FacilityRoles.RemoveRange(enterpriseBedRoles);
+
+        var hasOtherFacilityRoleReferences = await context.FacilityRoles
+            .AnyAsync(role => role.Id == bed_id
+                              && (role.PartyId != enterprise.PartyId || role.PartyRoleTypeId != enterprise.TypeId),
+                cancellationToken);
+        if (!hasOtherFacilityRoleReferences)
+        {
+            var bed = await context.Facilities
+                .OfType<Bed>()
+                .FirstOrDefaultAsync(item => item.Id == bed_id, cancellationToken);
+            if (bed != null)
+            {
+                context.Facilities.Remove(bed);
+            }
+        }
+
+        await context.SaveChangesAsync(cancellationToken);
+        return NoContent();
     }
 
     [HttpGet("legal-structures")]

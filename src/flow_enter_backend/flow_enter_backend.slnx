@@ -2,19 +2,5 @@
   <Folder Name="/Api/">
     <Project Path="Flowenter.Api/Flowenter.Api.csproj" Id="a66b1c02-a35a-490b-a6fd-05116c2ddf7c" />
   </Folder>
-  <Folder Name="/Core/">
-    <Project Path="Flowenter.Domain.Models/Flowenter.Domain.Models.csproj" Id="ced4bbdc-4f3a-4d2a-9186-109612d60d27" />
-  </Folder>
-  <Folder Name="/Core/Invoinces/" />
-  <Folder Name="/Core/Orders/" />
-  <Folder Name="/Core/Parties/">
-    <Project Path="Flowenter.Parties.IServices/Flowenter.Parties.IServices.csproj" Id="dec52951-d494-4aab-8da4-1343d4c27248" />
-    <Project Path="Flowenter.Parties.Mappings/Flowenter.Parties.Mappings.csproj" Id="81ae8854-6d50-496a-95c6-d1f82d76d803" />
-    <Project Path="Flowenter.Parties.Models/Flowenter.Parties.Models.csproj" Id="4d7254cd-8952-4b30-b8e6-7aa2f915eb14" />
-    <Project Path="Flowenter.Parties.Services/Flowenter.Parties.Services.csproj" Id="739868e7-da10-45ec-9872-48c0557f4c0a" />
-  </Folder>
-  <Folder Name="/Core/Products/" />
-  <Folder Name="/Test/">
-    <Project Path="../../test/Parties.Tests/Parties.Tests.csproj" Id="37e8b310-e18d-4e73-b9a4-547be4404581" />
-  </Folder>
+  <Project Path="../flow_enter_backend_domains/Flowenter.Parties.Services/Flowenter.Parties.Services.csproj" />
 </Solution>

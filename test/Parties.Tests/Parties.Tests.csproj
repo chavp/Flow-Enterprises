@@ -25,6 +25,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\flow_enter_backend\Flowenter.Parties.Mappings\Flowenter.Parties.Mappings.csproj" />
+    <ProjectReference Include="..\..\src\flow_enter_backend_domains\Flowenter.Parties.Mappings\Flowenter.Parties.Mappings.csproj" />
+    <ProjectReference Include="..\..\src\flow_enter_backend_domains\Flowenter.Parties.Models\Flowenter.Parties.Models.csproj" />
   </ItemGroup>
 
 </Project>

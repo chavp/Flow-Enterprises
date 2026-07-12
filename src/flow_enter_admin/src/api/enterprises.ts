@@ -233,3 +233,15 @@ export async function updateEnterpriseBed(
     apiBaseUrl
   );
 }
+
+export async function deleteEnterpriseBed(
+  enterpriseId: string,
+  bedId: string,
+  apiBaseUrl?: string
+): Promise<void> {
+  await requestJson(
+    `/api/parties/enterprises/${enterpriseId}/facilities/beds/${bedId}`,
+    { method: "DELETE" },
+    apiBaseUrl
+  );
+}

@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/share/">
+    <Project Path="Flowenter.Domain.Models/Flowenter.Domain.Models.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="../../test/Parties.Tests/Parties.Tests.csproj" />
+  </Folder>
+  <Project Path="Flowenter.Parties.IServices/Flowenter.Parties.IServices.csproj" />
+  <Project Path="Flowenter.Parties.Mappings/Flowenter.Parties.Mappings.csproj" />
+  <Project Path="Flowenter.Parties.Models/Flowenter.Parties.Models.csproj" />
+  <Project Path="Flowenter.Parties.Services/Flowenter.Parties.Services.csproj" />
+</Solution>

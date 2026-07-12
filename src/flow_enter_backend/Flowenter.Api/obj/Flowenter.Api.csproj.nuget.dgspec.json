@@ -34,14 +34,8 @@
             "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.IServices\\Flowenter.Parties.IServices.csproj": {
-                "projectPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.IServices\\Flowenter.Parties.IServices.csproj"
-              },
-              "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Mappings\\Flowenter.Parties.Mappings.csproj": {
-                "projectPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Mappings\\Flowenter.Parties.Mappings.csproj"
-              },
-              "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Services\\Flowenter.Parties.Services.csproj": {
-                "projectPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Services\\Flowenter.Parties.Services.csproj"
+              "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend_domains\\Flowenter.Parties.Services\\Flowenter.Parties.Services.csproj": {
+                "projectPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend_domains\\Flowenter.Parties.Services\\Flowenter.Parties.Services.csproj"
               }
             }
           }
@@ -549,14 +543,14 @@
         }
       }
     },
-    "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Domain.Models\\Flowenter.Domain.Models.csproj": {
+    "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend_domains\\Flowenter.Domain.Models\\Flowenter.Domain.Models.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Domain.Models\\Flowenter.Domain.Models.csproj",
+        "projectUniqueName": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend_domains\\Flowenter.Domain.Models\\Flowenter.Domain.Models.csproj",
         "projectName": "Flowenter.Domain.Models",
-        "projectPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Domain.Models\\Flowenter.Domain.Models.csproj",
+        "projectPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend_domains\\Flowenter.Domain.Models\\Flowenter.Domain.Models.csproj",
         "packagesPath": "C:\\Users\\asus\\.nuget\\packages\\",
-        "outputPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Domain.Models\\obj\\",
+        "outputPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend_domains\\Flowenter.Domain.Models\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "D:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -897,14 +891,14 @@
         }
       }
     },
-    "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.IServices\\Flowenter.Parties.IServices.csproj": {
+    "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend_domains\\Flowenter.Parties.IServices\\Flowenter.Parties.IServices.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.IServices\\Flowenter.Parties.IServices.csproj",
+        "projectUniqueName": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend_domains\\Flowenter.Parties.IServices\\Flowenter.Parties.IServices.csproj",
         "projectName": "Flowenter.Parties.IServices",
-        "projectPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.IServices\\Flowenter.Parties.IServices.csproj",
+        "projectPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend_domains\\Flowenter.Parties.IServices\\Flowenter.Parties.IServices.csproj",
         "packagesPath": "C:\\Users\\asus\\.nuget\\packages\\",
-        "outputPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.IServices\\obj\\",
+        "outputPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend_domains\\Flowenter.Parties.IServices\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "D:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -927,8 +921,8 @@
             "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj": {
-                "projectPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj"
+              "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend_domains\\Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj": {
+                "projectPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend_domains\\Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj"
               }
             }
           }
@@ -1249,14 +1243,14 @@
         }
       }
     },
-    "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Mappings\\Flowenter.Parties.Mappings.csproj": {
+    "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend_domains\\Flowenter.Parties.Mappings\\Flowenter.Parties.Mappings.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Mappings\\Flowenter.Parties.Mappings.csproj",
+        "projectUniqueName": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend_domains\\Flowenter.Parties.Mappings\\Flowenter.Parties.Mappings.csproj",
         "projectName": "Flowenter.Parties.Mappings",
-        "projectPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Mappings\\Flowenter.Parties.Mappings.csproj",
+        "projectPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend_domains\\Flowenter.Parties.Mappings\\Flowenter.Parties.Mappings.csproj",
         "packagesPath": "C:\\Users\\asus\\.nuget\\packages\\",
-        "outputPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Mappings\\obj\\",
+        "outputPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend_domains\\Flowenter.Parties.Mappings\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "D:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -1279,8 +1273,8 @@
             "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj": {
-                "projectPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj"
+              "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend_domains\\Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj": {
+                "projectPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend_domains\\Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj"
               }
             }
           }
@@ -1607,14 +1601,14 @@
         }
       }
     },
-    "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj": {
+    "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend_domains\\Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj",
+        "projectUniqueName": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend_domains\\Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj",
         "projectName": "Flowenter.Parties.Models",
-        "projectPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj",
+        "projectPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend_domains\\Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj",
         "packagesPath": "C:\\Users\\asus\\.nuget\\packages\\",
-        "outputPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\obj\\",
+        "outputPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend_domains\\Flowenter.Parties.Models\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "D:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -1637,8 +1631,8 @@
             "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Domain.Models\\Flowenter.Domain.Models.csproj": {
-                "projectPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Domain.Models\\Flowenter.Domain.Models.csproj"
+              "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend_domains\\Flowenter.Domain.Models\\Flowenter.Domain.Models.csproj": {
+                "projectPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend_domains\\Flowenter.Domain.Models\\Flowenter.Domain.Models.csproj"
               }
             }
           }
@@ -1953,14 +1947,14 @@
         }
       }
     },
-    "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Services\\Flowenter.Parties.Services.csproj": {
+    "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend_domains\\Flowenter.Parties.Services\\Flowenter.Parties.Services.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Services\\Flowenter.Parties.Services.csproj",
+        "projectUniqueName": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend_domains\\Flowenter.Parties.Services\\Flowenter.Parties.Services.csproj",
         "projectName": "Flowenter.Parties.Services",
-        "projectPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Services\\Flowenter.Parties.Services.csproj",
+        "projectPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend_domains\\Flowenter.Parties.Services\\Flowenter.Parties.Services.csproj",
         "packagesPath": "C:\\Users\\asus\\.nuget\\packages\\",
-        "outputPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Services\\obj\\",
+        "outputPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend_domains\\Flowenter.Parties.Services\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "D:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -1983,14 +1977,14 @@
             "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.IServices\\Flowenter.Parties.IServices.csproj": {
-                "projectPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.IServices\\Flowenter.Parties.IServices.csproj"
+              "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend_domains\\Flowenter.Parties.IServices\\Flowenter.Parties.IServices.csproj": {
+                "projectPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend_domains\\Flowenter.Parties.IServices\\Flowenter.Parties.IServices.csproj"
               },
-              "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Mappings\\Flowenter.Parties.Mappings.csproj": {
-                "projectPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Mappings\\Flowenter.Parties.Mappings.csproj"
+              "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend_domains\\Flowenter.Parties.Mappings\\Flowenter.Parties.Mappings.csproj": {
+                "projectPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend_domains\\Flowenter.Parties.Mappings\\Flowenter.Parties.Mappings.csproj"
               },
-              "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj": {
-                "projectPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj"
+              "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend_domains\\Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj": {
+                "projectPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend_domains\\Flowenter.Parties.Models\\Flowenter.Parties.Models.csproj"
               }
             }
           }

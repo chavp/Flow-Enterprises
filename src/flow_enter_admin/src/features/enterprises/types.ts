@@ -91,6 +91,8 @@ export type UpdateEmploymentEffectiveDateRequest = {
 export type Room = {
   roomId: string;
   number: string;
+  description?: string;
+  bedCount: number;
   createdAtUtc: string;
   updatedAtUtc?: string;
   revision: number;
@@ -98,6 +100,7 @@ export type Room = {
 
 export type CreateRoomRequest = {
   number: string;
+  description?: string;
 };
 
 export type UpdateRoomRequest = CreateRoomRequest;
@@ -105,6 +108,7 @@ export type UpdateRoomRequest = CreateRoomRequest;
 export type Bed = {
   bedId: string;
   number: string;
+  description?: string;
   roomId: string;
   roomNumber: string;
   createdAtUtc: string;
@@ -115,6 +119,7 @@ export type Bed = {
 export type CreateBedRequest = {
   number: string;
   roomId: string;
+  description?: string;
 };
 
 export type UpdateBedRequest = CreateBedRequest;

@@ -2090,34 +2090,32 @@
     },
     "Flowenter.Domain.Models/1.0.0": {
       "type": "project",
-      "path": "../Flowenter.Domain.Models/Flowenter.Domain.Models.csproj",
-      "msbuildProject": "../Flowenter.Domain.Models/Flowenter.Domain.Models.csproj"
+      "path": "../../flow_enter_backend_domains/Flowenter.Domain.Models/Flowenter.Domain.Models.csproj",
+      "msbuildProject": "../../flow_enter_backend_domains/Flowenter.Domain.Models/Flowenter.Domain.Models.csproj"
     },
     "Flowenter.Parties.IServices/1.0.0": {
       "type": "project",
-      "path": "../Flowenter.Parties.IServices/Flowenter.Parties.IServices.csproj",
-      "msbuildProject": "../Flowenter.Parties.IServices/Flowenter.Parties.IServices.csproj"
+      "path": "../../flow_enter_backend_domains/Flowenter.Parties.IServices/Flowenter.Parties.IServices.csproj",
+      "msbuildProject": "../../flow_enter_backend_domains/Flowenter.Parties.IServices/Flowenter.Parties.IServices.csproj"
     },
     "Flowenter.Parties.Mappings/1.0.0": {
       "type": "project",
-      "path": "../Flowenter.Parties.Mappings/Flowenter.Parties.Mappings.csproj",
-      "msbuildProject": "../Flowenter.Parties.Mappings/Flowenter.Parties.Mappings.csproj"
+      "path": "../../flow_enter_backend_domains/Flowenter.Parties.Mappings/Flowenter.Parties.Mappings.csproj",
+      "msbuildProject": "../../flow_enter_backend_domains/Flowenter.Parties.Mappings/Flowenter.Parties.Mappings.csproj"
     },
     "Flowenter.Parties.Models/1.0.0": {
       "type": "project",
-      "path": "../Flowenter.Parties.Models/Flowenter.Parties.Models.csproj",
-      "msbuildProject": "../Flowenter.Parties.Models/Flowenter.Parties.Models.csproj"
+      "path": "../../flow_enter_backend_domains/Flowenter.Parties.Models/Flowenter.Parties.Models.csproj",
+      "msbuildProject": "../../flow_enter_backend_domains/Flowenter.Parties.Models/Flowenter.Parties.Models.csproj"
     },
     "Flowenter.Parties.Services/1.0.0": {
       "type": "project",
-      "path": "../Flowenter.Parties.Services/Flowenter.Parties.Services.csproj",
-      "msbuildProject": "../Flowenter.Parties.Services/Flowenter.Parties.Services.csproj"
+      "path": "../../flow_enter_backend_domains/Flowenter.Parties.Services/Flowenter.Parties.Services.csproj",
+      "msbuildProject": "../../flow_enter_backend_domains/Flowenter.Parties.Services/Flowenter.Parties.Services.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net10.0": [
-      "Flowenter.Parties.IServices >= 1.0.0",
-      "Flowenter.Parties.Mappings >= 1.0.0",
       "Flowenter.Parties.Services >= 1.0.0",
       "Microsoft.AspNetCore.JsonPatch >= 9.0.10",
       "Microsoft.AspNetCore.Mvc.NewtonsoftJson >= 9.0.10",
@@ -2167,14 +2165,8 @@
           "framework": "net10.0",
           "targetAlias": "net10.0",
           "projectReferences": {
-            "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.IServices\\Flowenter.Parties.IServices.csproj": {
-              "projectPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.IServices\\Flowenter.Parties.IServices.csproj"
-            },
-            "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Mappings\\Flowenter.Parties.Mappings.csproj": {
-              "projectPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Mappings\\Flowenter.Parties.Mappings.csproj"
-            },
-            "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Services\\Flowenter.Parties.Services.csproj": {
-              "projectPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Parties.Services\\Flowenter.Parties.Services.csproj"
+            "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend_domains\\Flowenter.Parties.Services\\Flowenter.Parties.Services.csproj": {
+              "projectPath": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend_domains\\Flowenter.Parties.Services\\Flowenter.Parties.Services.csproj"
             }
           }
         }

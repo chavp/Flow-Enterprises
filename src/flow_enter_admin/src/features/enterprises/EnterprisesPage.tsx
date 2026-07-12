@@ -29,6 +29,7 @@ import {
   createEnterpriseBed,
   createEnperprise,
   createEnterpriseRoom,
+  deleteEnterpriseBed,
   deleteEnterprise,
   deleteEnterpriseRoom,
   deleteEnterpriseEmployment,
@@ -414,6 +415,9 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
       await queryClient.invalidateQueries({
         queryKey: ["enterprise-beds", peopleEnterprise.enterpriseId, bedSearchText, apiBaseUrl]
       });
+      await queryClient.invalidateQueries({
+        queryKey: ["enterprise-rooms", peopleEnterprise.enterpriseId, roomSearchText, apiBaseUrl]
+      });
       setCreateBedOpen(false);
       createBedForm.resetFields();
       messageApi.success("Bed added");
@@ -439,12 +443,41 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
       await queryClient.invalidateQueries({
         queryKey: ["enterprise-beds", peopleEnterprise.enterpriseId, bedSearchText, apiBaseUrl]
       });
+      await queryClient.invalidateQueries({
+        queryKey: ["enterprise-rooms", peopleEnterprise.enterpriseId, roomSearchText, apiBaseUrl]
+      });
       setEditingBed(null);
       editBedForm.resetFields();
       messageApi.success("Bed updated");
     },
     onError: (error) => {
       messageApi.error(error instanceof Error ? error.message : "Update bed failed");
+    }
+  });
+
+  const deleteBedMutation = useMutation({
+    mutationFn: async (bedId: string) => {
+      if (!peopleEnterprise) {
+        return;
+      }
+
+      await deleteEnterpriseBed(peopleEnterprise.enterpriseId, bedId, apiBaseUrl);
+    },
+    onSuccess: async () => {
+      if (!peopleEnterprise) {
+        return;
+      }
+
+      await queryClient.invalidateQueries({
+        queryKey: ["enterprise-beds", peopleEnterprise.enterpriseId, bedSearchText, apiBaseUrl]
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["enterprise-rooms", peopleEnterprise.enterpriseId, roomSearchText, apiBaseUrl]
+      });
+      messageApi.success("Bed deleted");
+    },
+    onError: (error) => {
+      messageApi.error(error instanceof Error ? error.message : "Delete bed failed");
     }
   });
 
@@ -832,6 +865,8 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                                 <thead>
                                   <tr>
                                     <th>Room Number</th>
+                                    <th>Description</th>
+                                    <th>Beds</th>
                                     <th>Actions</th>
                                   </tr>
                                 </thead>
@@ -839,13 +874,15 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                                   {rooms.map((room) => (
                                     <tr key={room.roomId}>
                                       <td>{room.number}</td>
+                                      <td>{room.description || "-"}</td>
+                                      <td>{room.bedCount}</td>
                                       <td>
                                         <Space>
                                           <Button
                                             size="small"
                                             onClick={() => {
                                               setEditingRoom(room);
-                                              editRoomForm.setFieldsValue({ number: room.number });
+                                              editRoomForm.setFieldsValue({ number: room.number, description: room.description });
                                             }}
                                           >
                                             Edit
@@ -904,6 +941,7 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                                 <thead>
                                   <tr>
                                     <th>Bed Number</th>
+                                    <th>Description</th>
                                     <th>Room</th>
                                     <th>Actions</th>
                                   </tr>
@@ -912,17 +950,35 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                                   {beds.map((bed) => (
                                     <tr key={bed.bedId}>
                                       <td>{bed.number}</td>
+                                      <td>{bed.description || "-"}</td>
                                       <td>{bed.roomNumber}</td>
                                       <td>
-                                        <Button
-                                          size="small"
-                                          onClick={() => {
-                                            setEditingBed(bed);
-                                            editBedForm.setFieldsValue({ number: bed.number, roomId: bed.roomId });
-                                          }}
-                                        >
-                                          Edit
-                                        </Button>
+                                        <Space>
+                                          <Button
+                                            size="small"
+                                            onClick={() => {
+                                              setEditingBed(bed);
+                                              editBedForm.setFieldsValue({
+                                                number: bed.number,
+                                                roomId: bed.roomId,
+                                                description: bed.description
+                                              });
+                                            }}
+                                          >
+                                            Edit
+                                          </Button>
+                                          <Popconfirm
+                                            title="Delete bed?"
+                                            description="This removes the bed from this enterprise."
+                                            okText="Delete"
+                                            okButtonProps={{ danger: true, loading: deleteBedMutation.isPending }}
+                                            onConfirm={() => deleteBedMutation.mutate(bed.bedId)}
+                                          >
+                                            <Button size="small" danger>
+                                              Delete
+                                            </Button>
+                                          </Popconfirm>
+                                        </Space>
                                       </td>
                                     </tr>
                                   ))}
@@ -1057,6 +1113,9 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                 >
                   <Input maxLength={100} />
                 </Form.Item>
+                <Form.Item name="description" label="Description">
+                  <Input.TextArea rows={3} maxLength={500} />
+                </Form.Item>
               </Form>
             </TopDrawerForm>
 
@@ -1079,6 +1138,9 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                 >
                   <Input maxLength={100} />
                 </Form.Item>
+                <Form.Item name="description" label="Description">
+                  <Input.TextArea rows={3} maxLength={500} />
+                </Form.Item>
               </Form>
             </TopDrawerForm>
 
@@ -1100,6 +1162,9 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                   rules={[{ required: true, message: "Bed number is required" }]}
                 >
                   <Input maxLength={100} />
+                </Form.Item>
+                <Form.Item name="description" label="Description">
+                  <Input.TextArea rows={3} maxLength={500} />
                 </Form.Item>
                 <Form.Item
                   name="roomId"
@@ -1135,6 +1200,9 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                   rules={[{ required: true, message: "Bed number is required" }]}
                 >
                   <Input maxLength={100} />
+                </Form.Item>
+                <Form.Item name="description" label="Description">
+                  <Input.TextArea rows={3} maxLength={500} />
                 </Form.Item>
                 <Form.Item
                   name="roomId"
