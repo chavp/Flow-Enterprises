@@ -484,6 +484,24 @@ public sealed class PartiesContext : DbContext
                 CreatedBy = "seed",
                 CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 Revision = 0
+            },
+            new GeographicBoundaryType
+            {
+                Id = Guid.Parse("abababab-abab-abab-abab-abababababab"),
+                Code = GeographicBoundaryType.District,
+                Name = "District",
+                CreatedBy = "seed",
+                CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                Revision = 0
+            },
+            new GeographicBoundaryType
+            {
+                Id = Guid.Parse("cdcdcdcd-cdcd-cdcd-cdcd-cdcdcdcdcdcd"),
+                Code = GeographicBoundaryType.Subdistrict,
+                Name = "Subdistrict",
+                CreatedBy = "seed",
+                CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                Revision = 0
             }
         ]);
     }

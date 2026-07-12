@@ -1,12 +1,16 @@
 import { requestJson } from "./http";
 import {
   CountryTreeNode,
+  CreateDistrictRequest,
   CreateProvinceRequest,
+  CreateSubdistrictRequest,
   CountriesResponse,
   CreateCountryRequest,
   PatchOperation,
   Province,
+  UpdateDistrictRequest,
   UpdateProvinceRequest,
+  UpdateSubdistrictRequest,
   UpdateCountryRequest
 } from "../features/countries/types";
 
@@ -105,4 +109,74 @@ export async function updateProvince(payload: UpdateProvinceRequest, apiBaseUrl?
 
 export async function deleteProvince(provinceId: string, apiBaseUrl?: string): Promise<void> {
   await requestJson(`/api/geographic-boundaries/provinces/${provinceId}`, { method: "DELETE" }, apiBaseUrl);
+}
+
+export async function createDistrict(
+  provinceId: string,
+  payload: CreateDistrictRequest,
+  apiBaseUrl?: string
+): Promise<void> {
+  await requestJson(
+    `/api/geographic-boundaries/provinces/${provinceId}/districts`,
+    { method: "POST", body: JSON.stringify(payload) },
+    apiBaseUrl
+  );
+}
+
+export async function updateDistrict(payload: UpdateDistrictRequest, apiBaseUrl?: string): Promise<void> {
+  const operations = toPatchOperations(payload.changes);
+  if (operations.length === 0) {
+    return;
+  }
+
+  await requestJson(
+    `/api/geographic-boundaries/districts/${payload.id}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json-patch+json"
+      },
+      body: JSON.stringify(operations)
+    },
+    apiBaseUrl
+  );
+}
+
+export async function deleteDistrict(districtId: string, apiBaseUrl?: string): Promise<void> {
+  await requestJson(`/api/geographic-boundaries/districts/${districtId}`, { method: "DELETE" }, apiBaseUrl);
+}
+
+export async function createSubdistrict(
+  districtId: string,
+  payload: CreateSubdistrictRequest,
+  apiBaseUrl?: string
+): Promise<void> {
+  await requestJson(
+    `/api/geographic-boundaries/districts/${districtId}/subdistricts`,
+    { method: "POST", body: JSON.stringify(payload) },
+    apiBaseUrl
+  );
+}
+
+export async function updateSubdistrict(payload: UpdateSubdistrictRequest, apiBaseUrl?: string): Promise<void> {
+  const operations = toPatchOperations(payload.changes);
+  if (operations.length === 0) {
+    return;
+  }
+
+  await requestJson(
+    `/api/geographic-boundaries/subdistricts/${payload.id}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json-patch+json"
+      },
+      body: JSON.stringify(operations)
+    },
+    apiBaseUrl
+  );
+}
+
+export async function deleteSubdistrict(subdistrictId: string, apiBaseUrl?: string): Promise<void> {
+  await requestJson(`/api/geographic-boundaries/subdistricts/${subdistrictId}`, { method: "DELETE" }, apiBaseUrl);
 }

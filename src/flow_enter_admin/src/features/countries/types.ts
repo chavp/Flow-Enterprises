@@ -48,9 +48,43 @@ export type Province = {
   revision: number;
 };
 
+export type District = {
+  id: string;
+  provinceId: string;
+  name: string;
+  prefixName?: string;
+  prefixShortName?: string;
+  postalCode?: string;
+  createdAtUtc: string;
+  updatedAtUtc?: string;
+  revision: number;
+};
+
+export type Subdistrict = {
+  id: string;
+  districtId: string;
+  name: string;
+  prefixName?: string;
+  prefixShortName?: string;
+  postalCode?: string;
+  createdAtUtc: string;
+  updatedAtUtc?: string;
+  revision: number;
+};
+
+export type DistrictTreeNode = {
+  district: District;
+  subdistricts: Subdistrict[];
+};
+
+export type ProvinceTreeNode = {
+  province: Province;
+  districts: DistrictTreeNode[];
+};
+
 export type CountryTreeNode = {
   country: Country;
-  provinces: Province[];
+  provinces: ProvinceTreeNode[];
 };
 
 export type CreateProvinceRequest = {
@@ -63,4 +97,28 @@ export type CreateProvinceRequest = {
 export type UpdateProvinceRequest = {
   id: string;
   changes: Partial<CreateProvinceRequest>;
+};
+
+export type CreateDistrictRequest = {
+  name: string;
+  prefixName?: string;
+  prefixShortName?: string;
+  postalCode?: string;
+};
+
+export type UpdateDistrictRequest = {
+  id: string;
+  changes: Partial<CreateDistrictRequest>;
+};
+
+export type CreateSubdistrictRequest = {
+  name: string;
+  prefixName?: string;
+  prefixShortName?: string;
+  postalCode?: string;
+};
+
+export type UpdateSubdistrictRequest = {
+  id: string;
+  changes: Partial<CreateSubdistrictRequest>;
 };

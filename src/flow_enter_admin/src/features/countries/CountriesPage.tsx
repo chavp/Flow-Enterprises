@@ -4,14 +4,29 @@ import type { TreeDataNode } from "antd";
 import { useMemo, useState } from "react";
 import {
   createCountry,
+  createDistrict,
   createProvince,
+  createSubdistrict,
+  deleteDistrict,
   deleteProvince,
+  deleteSubdistrict,
   fetchCountriesTree,
   updateCountry,
-  updateProvince
+  updateDistrict,
+  updateProvince,
+  updateSubdistrict
 } from "../../api/countries";
 import { TopDrawerForm } from "../../components/TopDrawerForm";
-import { Country, CreateCountryRequest, CreateProvinceRequest, Province } from "./types";
+import {
+  Country,
+  CreateCountryRequest,
+  CreateDistrictRequest,
+  CreateProvinceRequest,
+  CreateSubdistrictRequest,
+  District,
+  Province,
+  Subdistrict
+} from "./types";
 
 const { Title, Text } = Typography;
 
@@ -21,6 +36,8 @@ type CountriesPageProps = {
 
 type CountryFormValues = CreateCountryRequest;
 type ProvinceFormValues = CreateProvinceRequest;
+type DistrictFormValues = CreateDistrictRequest;
+type SubdistrictFormValues = CreateSubdistrictRequest;
 
 export function CountriesPage({ apiBaseUrl }: CountriesPageProps) {
   const queryClient = useQueryClient();
@@ -30,10 +47,20 @@ export function CountriesPage({ apiBaseUrl }: CountriesPageProps) {
   const [isCreateProvinceOpen, setCreateProvinceOpen] = useState(false);
   const [activeCountryIdForProvinceCreate, setActiveCountryIdForProvinceCreate] = useState<string | null>(null);
   const [editingProvince, setEditingProvince] = useState<Province | null>(null);
+  const [isCreateDistrictOpen, setCreateDistrictOpen] = useState(false);
+  const [activeProvinceIdForDistrictCreate, setActiveProvinceIdForDistrictCreate] = useState<string | null>(null);
+  const [editingDistrict, setEditingDistrict] = useState<District | null>(null);
+  const [isCreateSubdistrictOpen, setCreateSubdistrictOpen] = useState(false);
+  const [activeDistrictIdForSubdistrictCreate, setActiveDistrictIdForSubdistrictCreate] = useState<string | null>(null);
+  const [editingSubdistrict, setEditingSubdistrict] = useState<Subdistrict | null>(null);
   const [countryForm] = Form.useForm<CountryFormValues>();
   const [editCountryForm] = Form.useForm<CountryFormValues>();
   const [provinceForm] = Form.useForm<ProvinceFormValues>();
   const [editProvinceForm] = Form.useForm<ProvinceFormValues>();
+  const [districtForm] = Form.useForm<DistrictFormValues>();
+  const [editDistrictForm] = Form.useForm<DistrictFormValues>();
+  const [subdistrictForm] = Form.useForm<SubdistrictFormValues>();
+  const [editSubdistrictForm] = Form.useForm<SubdistrictFormValues>();
 
   const countriesTreeQuery = useQuery({
     queryKey: ["countries-tree", apiBaseUrl],
@@ -134,28 +161,140 @@ export function CountriesPage({ apiBaseUrl }: CountriesPageProps) {
     }
   });
 
+  const createDistrictMutation = useMutation({
+    mutationFn: async (values: DistrictFormValues) => {
+      if (!activeProvinceIdForDistrictCreate) {
+        return;
+      }
+
+      await createDistrict(activeProvinceIdForDistrictCreate, values, apiBaseUrl);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["countries-tree"] });
+      setCreateDistrictOpen(false);
+      setActiveProvinceIdForDistrictCreate(null);
+      districtForm.resetFields();
+      messageApi.success("District created");
+    },
+    onError: (error) => {
+      messageApi.error(error instanceof Error ? error.message : "Create district failed");
+    }
+  });
+
+  const updateDistrictMutation = useMutation({
+    mutationFn: async (values: DistrictFormValues) => {
+      if (!editingDistrict) {
+        return;
+      }
+
+      await updateDistrict(
+        {
+          id: editingDistrict.id,
+          changes: values
+        },
+        apiBaseUrl
+      );
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["countries-tree"] });
+      setEditingDistrict(null);
+      editDistrictForm.resetFields();
+      messageApi.success("District updated");
+    },
+    onError: (error) => {
+      messageApi.error(error instanceof Error ? error.message : "Update district failed");
+    }
+  });
+
+  const deleteDistrictMutation = useMutation({
+    mutationFn: (districtId: string) => deleteDistrict(districtId, apiBaseUrl),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["countries-tree"] });
+      messageApi.success("District deleted");
+    },
+    onError: (error) => {
+      messageApi.error(error instanceof Error ? error.message : "Delete district failed");
+    }
+  });
+
+  const createSubdistrictMutation = useMutation({
+    mutationFn: async (values: SubdistrictFormValues) => {
+      if (!activeDistrictIdForSubdistrictCreate) {
+        return;
+      }
+
+      await createSubdistrict(activeDistrictIdForSubdistrictCreate, values, apiBaseUrl);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["countries-tree"] });
+      setCreateSubdistrictOpen(false);
+      setActiveDistrictIdForSubdistrictCreate(null);
+      subdistrictForm.resetFields();
+      messageApi.success("Subdistrict created");
+    },
+    onError: (error) => {
+      messageApi.error(error instanceof Error ? error.message : "Create subdistrict failed");
+    }
+  });
+
+  const updateSubdistrictMutation = useMutation({
+    mutationFn: async (values: SubdistrictFormValues) => {
+      if (!editingSubdistrict) {
+        return;
+      }
+
+      await updateSubdistrict(
+        {
+          id: editingSubdistrict.id,
+          changes: values
+        },
+        apiBaseUrl
+      );
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["countries-tree"] });
+      setEditingSubdistrict(null);
+      editSubdistrictForm.resetFields();
+      messageApi.success("Subdistrict updated");
+    },
+    onError: (error) => {
+      messageApi.error(error instanceof Error ? error.message : "Update subdistrict failed");
+    }
+  });
+
+  const deleteSubdistrictMutation = useMutation({
+    mutationFn: (subdistrictId: string) => deleteSubdistrict(subdistrictId, apiBaseUrl),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["countries-tree"] });
+      messageApi.success("Subdistrict deleted");
+    },
+    onError: (error) => {
+      messageApi.error(error instanceof Error ? error.message : "Delete subdistrict failed");
+    }
+  });
+
   const treeData = useMemo<TreeDataNode[]>(() => {
     const items = countriesTreeQuery.data ?? [];
 
-    return items.map((item) => ({
-      key: `country-${item.country.id}`,
+    return items.map((countryItem) => ({
+      key: `country-${countryItem.country.id}`,
       title: (
         <Space style={{ width: "100%", justifyContent: "space-between" }}>
           <span>
-            <strong>{item.country.name}</strong> ({item.country.isoCode2}) - {item.country.nationality}
+            <strong>{countryItem.country.name}</strong> ({countryItem.country.isoCode2}) - {countryItem.country.nationality}
           </span>
           <Space>
             <Button
               size="small"
               onClick={(event) => {
                 event.stopPropagation();
-                setEditingCountry(item.country);
+                setEditingCountry(countryItem.country);
                 editCountryForm.setFieldsValue({
-                  name: item.country.name,
-                  nationality: item.country.nationality,
-                  numeric: item.country.numeric,
-                  isoCode2: item.country.isoCode2,
-                  isoCode3: item.country.isoCode3
+                  name: countryItem.country.name,
+                  nationality: countryItem.country.nationality,
+                  numeric: countryItem.country.numeric,
+                  isoCode2: countryItem.country.isoCode2,
+                  isoCode3: countryItem.country.isoCode3
                 });
               }}
             >
@@ -166,7 +305,7 @@ export function CountriesPage({ apiBaseUrl }: CountriesPageProps) {
               type="primary"
               onClick={(event) => {
                 event.stopPropagation();
-                setActiveCountryIdForProvinceCreate(item.country.id);
+                setActiveCountryIdForProvinceCreate(countryItem.country.id);
                 setCreateProvinceOpen(true);
               }}
             >
@@ -175,29 +314,37 @@ export function CountriesPage({ apiBaseUrl }: CountriesPageProps) {
           </Space>
         </Space>
       ),
-      children: item.provinces.map((province) => ({
-        key: `province-${province.id}`,
+      children: countryItem.provinces.map((provinceItem) => ({
+        key: `province-${provinceItem.province.id}`,
         title: (
           <Space style={{ width: "100%", justifyContent: "space-between" }}>
-            <span>
-              {province.name}
-              {province.iso ? ` (ISO: ${province.iso})` : ""}
-            </span>
+            <span>{provinceItem.province.name}</span>
             <Space>
               <Button
                 size="small"
                 onClick={(event) => {
                   event.stopPropagation();
-                  setEditingProvince(province);
+                  setEditingProvince(provinceItem.province);
                   editProvinceForm.setFieldsValue({
-                    name: province.name,
-                    hs: province.hs,
-                    iso: province.iso,
-                    fips: province.fips
+                    name: provinceItem.province.name,
+                    hs: provinceItem.province.hs,
+                    iso: provinceItem.province.iso,
+                    fips: provinceItem.province.fips
                   });
                 }}
               >
-                Edit
+                Edit Province
+              </Button>
+              <Button
+                size="small"
+                type="primary"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setActiveProvinceIdForDistrictCreate(provinceItem.province.id);
+                  setCreateDistrictOpen(true);
+                }}
+              >
+                Add District
               </Button>
               <Popconfirm
                 title="Delete province?"
@@ -205,23 +352,115 @@ export function CountriesPage({ apiBaseUrl }: CountriesPageProps) {
                 okButtonProps={{ danger: true, loading: deleteProvinceMutation.isPending }}
                 onConfirm={(event) => {
                   event?.stopPropagation();
-                  deleteProvinceMutation.mutate(province.id);
+                  deleteProvinceMutation.mutate(provinceItem.province.id);
                 }}
               >
-                <Button
-                  size="small"
-                  danger
-                  onClick={(event) => event.stopPropagation()}
-                >
+                <Button size="small" danger onClick={(event) => event.stopPropagation()}>
                   Delete
                 </Button>
               </Popconfirm>
             </Space>
           </Space>
-        )
+        ),
+        children: provinceItem.districts.map((districtItem) => ({
+          key: `district-${districtItem.district.id}`,
+          title: (
+            <Space style={{ width: "100%", justifyContent: "space-between" }}>
+              <span>{districtItem.district.name}</span>
+              <Space>
+                <Button
+                  size="small"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    setEditingDistrict(districtItem.district);
+                    editDistrictForm.setFieldsValue({
+                      name: districtItem.district.name,
+                      prefixName: districtItem.district.prefixName,
+                      prefixShortName: districtItem.district.prefixShortName,
+                      postalCode: districtItem.district.postalCode
+                    });
+                  }}
+                >
+                  Edit District
+                </Button>
+                <Button
+                  size="small"
+                  type="primary"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    setActiveDistrictIdForSubdistrictCreate(districtItem.district.id);
+                    setCreateSubdistrictOpen(true);
+                  }}
+                >
+                  Add Subdistrict
+                </Button>
+                <Popconfirm
+                  title="Delete district?"
+                  okText="Delete"
+                  okButtonProps={{ danger: true, loading: deleteDistrictMutation.isPending }}
+                  onConfirm={(event) => {
+                    event?.stopPropagation();
+                    deleteDistrictMutation.mutate(districtItem.district.id);
+                  }}
+                >
+                  <Button size="small" danger onClick={(event) => event.stopPropagation()}>
+                    Delete
+                  </Button>
+                </Popconfirm>
+              </Space>
+            </Space>
+          ),
+          children: districtItem.subdistricts.map((subdistrict) => ({
+            key: `subdistrict-${subdistrict.id}`,
+            title: (
+              <Space style={{ width: "100%", justifyContent: "space-between" }}>
+                <span>{subdistrict.name}</span>
+                <Space>
+                  <Button
+                    size="small"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      setEditingSubdistrict(subdistrict);
+                      editSubdistrictForm.setFieldsValue({
+                        name: subdistrict.name,
+                        prefixName: subdistrict.prefixName,
+                        prefixShortName: subdistrict.prefixShortName,
+                        postalCode: subdistrict.postalCode
+                      });
+                    }}
+                  >
+                    Edit
+                  </Button>
+                  <Popconfirm
+                    title="Delete subdistrict?"
+                    okText="Delete"
+                    okButtonProps={{ danger: true, loading: deleteSubdistrictMutation.isPending }}
+                    onConfirm={(event) => {
+                      event?.stopPropagation();
+                      deleteSubdistrictMutation.mutate(subdistrict.id);
+                    }}
+                  >
+                    <Button size="small" danger onClick={(event) => event.stopPropagation()}>
+                      Delete
+                    </Button>
+                  </Popconfirm>
+                </Space>
+              </Space>
+            )
+          }))
+        }))
       }))
     }));
-  }, [countriesTreeQuery.data, deleteProvinceMutation.isPending, editCountryForm, editProvinceForm]);
+  }, [
+    countriesTreeQuery.data,
+    deleteProvinceMutation.isPending,
+    deleteDistrictMutation.isPending,
+    deleteSubdistrictMutation.isPending,
+    editCountryForm,
+    editProvinceForm,
+    editDistrictForm,
+    editSubdistrictForm
+  ]);
 
   return (
     <div className="page-container">
@@ -233,7 +472,7 @@ export function CountriesPage({ apiBaseUrl }: CountriesPageProps) {
               <Title level={3} style={{ margin: 0 }}>
                 Countries
               </Title>
-              <Text type="secondary">Manage countries and provinces in tree view.</Text>
+              <Text type="secondary">Manage countries, provinces, districts and subdistricts in tree view.</Text>
             </div>
             <Button type="primary" onClick={() => setCreateCountryOpen(true)}>
               New Country
@@ -250,12 +489,7 @@ export function CountriesPage({ apiBaseUrl }: CountriesPageProps) {
           ) : countriesTreeQuery.isLoading ? (
             <Spin />
           ) : (
-            <Tree
-              showLine
-              defaultExpandAll
-              blockNode
-              treeData={treeData}
-            />
+            <Tree showLine defaultExpandAll blockNode treeData={treeData} />
           )}
         </Space>
       </Card>
@@ -316,6 +550,64 @@ export function CountriesPage({ apiBaseUrl }: CountriesPageProps) {
       >
         <ProvinceForm form={editProvinceForm} onFinish={(values) => updateProvinceMutation.mutate(values)} />
       </TopDrawerForm>
+
+      <TopDrawerForm
+        open={isCreateDistrictOpen}
+        title="Add District"
+        submitText="Add"
+        onClose={() => {
+          setCreateDistrictOpen(false);
+          setActiveProvinceIdForDistrictCreate(null);
+          districtForm.resetFields();
+        }}
+        onSubmit={() => districtForm.submit()}
+        loading={createDistrictMutation.isPending}
+      >
+        <DistrictForm form={districtForm} onFinish={(values) => createDistrictMutation.mutate(values)} />
+      </TopDrawerForm>
+
+      <TopDrawerForm
+        open={Boolean(editingDistrict)}
+        title="Edit District"
+        submitText="Update"
+        onClose={() => {
+          setEditingDistrict(null);
+          editDistrictForm.resetFields();
+        }}
+        onSubmit={() => editDistrictForm.submit()}
+        loading={updateDistrictMutation.isPending}
+      >
+        <DistrictForm form={editDistrictForm} onFinish={(values) => updateDistrictMutation.mutate(values)} />
+      </TopDrawerForm>
+
+      <TopDrawerForm
+        open={isCreateSubdistrictOpen}
+        title="Add Subdistrict"
+        submitText="Add"
+        onClose={() => {
+          setCreateSubdistrictOpen(false);
+          setActiveDistrictIdForSubdistrictCreate(null);
+          subdistrictForm.resetFields();
+        }}
+        onSubmit={() => subdistrictForm.submit()}
+        loading={createSubdistrictMutation.isPending}
+      >
+        <SubdistrictForm form={subdistrictForm} onFinish={(values) => createSubdistrictMutation.mutate(values)} />
+      </TopDrawerForm>
+
+      <TopDrawerForm
+        open={Boolean(editingSubdistrict)}
+        title="Edit Subdistrict"
+        submitText="Update"
+        onClose={() => {
+          setEditingSubdistrict(null);
+          editSubdistrictForm.resetFields();
+        }}
+        onSubmit={() => editSubdistrictForm.submit()}
+        loading={updateSubdistrictMutation.isPending}
+      >
+        <SubdistrictForm form={editSubdistrictForm} onFinish={(values) => updateSubdistrictMutation.mutate(values)} />
+      </TopDrawerForm>
     </div>
   );
 }
@@ -366,6 +658,54 @@ function ProvinceForm({ form, onFinish }: ProvinceFormProps) {
       </Form.Item>
       <Form.Item name="fips" label="FIPS">
         <Input maxLength={5} />
+      </Form.Item>
+    </Form>
+  );
+}
+
+type DistrictFormProps = {
+  form: ReturnType<typeof Form.useForm<DistrictFormValues>>[0];
+  onFinish: (values: DistrictFormValues) => void;
+};
+
+function DistrictForm({ form, onFinish }: DistrictFormProps) {
+  return (
+    <Form<DistrictFormValues> form={form} layout="vertical" onFinish={onFinish}>
+      <Form.Item name="name" label="District Name" rules={[{ required: true, message: "District name is required" }]}>
+        <Input maxLength={200} />
+      </Form.Item>
+      <Form.Item name="prefixName" label="Prefix Name">
+        <Input maxLength={10} />
+      </Form.Item>
+      <Form.Item name="prefixShortName" label="Prefix Short Name">
+        <Input maxLength={5} />
+      </Form.Item>
+      <Form.Item name="postalCode" label="Postal Code">
+        <Input maxLength={10} />
+      </Form.Item>
+    </Form>
+  );
+}
+
+type SubdistrictFormProps = {
+  form: ReturnType<typeof Form.useForm<SubdistrictFormValues>>[0];
+  onFinish: (values: SubdistrictFormValues) => void;
+};
+
+function SubdistrictForm({ form, onFinish }: SubdistrictFormProps) {
+  return (
+    <Form<SubdistrictFormValues> form={form} layout="vertical" onFinish={onFinish}>
+      <Form.Item name="name" label="Subdistrict Name" rules={[{ required: true, message: "Subdistrict name is required" }]}>
+        <Input maxLength={200} />
+      </Form.Item>
+      <Form.Item name="prefixName" label="Prefix Name">
+        <Input maxLength={10} />
+      </Form.Item>
+      <Form.Item name="prefixShortName" label="Prefix Short Name">
+        <Input maxLength={5} />
+      </Form.Item>
+      <Form.Item name="postalCode" label="Postal Code">
+        <Input maxLength={10} />
       </Form.Item>
     </Form>
   );

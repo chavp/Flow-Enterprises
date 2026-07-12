@@ -12,6 +12,8 @@ public sealed class GeographicBoundaryType : BaseEntity
 {
     public const string Country = "COUNTRY";
     public const string Province = "PROVINCE";
+    public const string District = "DISTRICT";
+    public const string Subdistrict = "SUBDISTRICT";
 
     [Required, StringLength(100)]
     public string? Code { get; set; }
