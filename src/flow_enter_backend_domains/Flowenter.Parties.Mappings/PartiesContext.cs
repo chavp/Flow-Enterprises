@@ -206,7 +206,10 @@ public sealed class PartiesContext : DbContext
             }
         ]);
 
+
+        // Person Role Types
         modelBuilder.Entity<PartyRoleType>().HasData([
+            // Organization Role Types
             new PartyRoleType
             {
                 Id = Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc"),
@@ -225,6 +228,17 @@ public sealed class PartiesContext : DbContext
                 CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 Revision = 0
             },
+            new PartyRoleType
+            {
+                Id = Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccd"),
+                Code = PartyRoleType.Branch,
+                Name = "สาขา",
+                CreatedBy = "seed",
+                CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                Revision = 0
+            },
+
+            // Person Role Types
             new PartyRoleType
             {
                 Id = Guid.Parse("aaaaaaaa-1111-1111-1111-111111111111"),
@@ -359,6 +373,15 @@ public sealed class PartiesContext : DbContext
                 Id = Guid.Parse("ffffffff-ffff-ffff-ffff-ffffffffffff"),
                 Code = PartyRelationshipType.Employment,
                 Name = "การจ้างงาน",
+                CreatedBy = "seed",
+                CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                Revision = 0
+            },
+            new PartyRelationshipType
+            {
+                Id = Guid.Parse("ffffffff-ffff-ffff-ffff-fffffffffffg"),
+                Code = PartyRelationshipType.EnterpriseBranch,
+                Name = "สาขา",
                 CreatedBy = "seed",
                 CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 Revision = 0
