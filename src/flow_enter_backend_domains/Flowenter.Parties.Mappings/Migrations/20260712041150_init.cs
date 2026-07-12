@@ -744,6 +744,36 @@ namespace Flowenter.Parties.Mappings.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Provinces",
+                schema: "parties",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CountryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Hs = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: true),
+                    Iso = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: true),
+                    Fips = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Provinces", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Provinces_Countries_CountryId",
+                        column: x => x.CountryId,
+                        principalSchema: "parties",
+                        principalTable: "Countries",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Provinces_GeographicBoundaries_Id",
+                        column: x => x.Id,
+                        principalSchema: "parties",
+                        principalTable: "GeographicBoundaries",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TelecommunicationNumbers",
                 schema: "parties",
                 columns: table => new
@@ -927,6 +957,36 @@ namespace Flowenter.Parties.Mappings.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Districts",
+                schema: "parties",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProvinceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PrefixName = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
+                    PrefixShortName = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    PostalCode = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Districts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Districts_GeographicBoundaries_Id",
+                        column: x => x.Id,
+                        principalSchema: "parties",
+                        principalTable: "GeographicBoundaries",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Districts_Provinces_ProvinceId",
+                        column: x => x.ProvinceId,
+                        principalSchema: "parties",
+                        principalTable: "Provinces",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Beds",
                 schema: "parties",
                 columns: table => new
@@ -951,6 +1011,36 @@ namespace Flowenter.Parties.Mappings.Migrations
                         principalSchema: "parties",
                         principalTable: "Rooms",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Sudistricts",
+                schema: "parties",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DistrictId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PrefixName = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
+                    PrefixShortName = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    PostalCode = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Sudistricts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Sudistricts_Districts_DistrictId",
+                        column: x => x.DistrictId,
+                        principalSchema: "parties",
+                        principalTable: "Districts",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Sudistricts_GeographicBoundaries_Id",
+                        column: x => x.Id,
+                        principalSchema: "parties",
+                        principalTable: "GeographicBoundaries",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
@@ -1083,6 +1173,14 @@ namespace Flowenter.Parties.Mappings.Migrations
                 column: "Name",
                 unique: true,
                 filter: "[Name] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Districts_ProvinceId_Name",
+                schema: "parties",
+                table: "Districts",
+                columns: new[] { "ProvinceId", "Name" },
+                unique: true,
+                filter: "[ProvinceId] IS NOT NULL AND [Name] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ElectronicAddresses_Address",
@@ -1336,6 +1434,14 @@ namespace Flowenter.Parties.Mappings.Migrations
                 column: "CountryId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Provinces_CountryId_Name",
+                schema: "parties",
+                table: "Provinces",
+                columns: new[] { "CountryId", "Name" },
+                unique: true,
+                filter: "[CountryId] IS NOT NULL AND [Name] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Rooms_FloorId",
                 schema: "parties",
                 table: "Rooms",
@@ -1346,6 +1452,14 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties",
                 table: "Rooms",
                 column: "Number");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sudistricts_DistrictId_Name",
+                schema: "parties",
+                table: "Sudistricts",
+                columns: new[] { "DistrictId", "Name" },
+                unique: true,
+                filter: "[DistrictId] IS NOT NULL AND [Name] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TelecommunicationNumbers_CountryId_Number",
@@ -1408,6 +1522,10 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties");
 
             migrationBuilder.DropTable(
+                name: "Sudistricts",
+                schema: "parties");
+
+            migrationBuilder.DropTable(
                 name: "TelecommunicationNumbers",
                 schema: "parties");
 
@@ -1444,11 +1562,11 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties");
 
             migrationBuilder.DropTable(
-                name: "ContactMechanisms",
+                name: "Districts",
                 schema: "parties");
 
             migrationBuilder.DropTable(
-                name: "Countries",
+                name: "ContactMechanisms",
                 schema: "parties");
 
             migrationBuilder.DropTable(
@@ -1472,11 +1590,11 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties");
 
             migrationBuilder.DropTable(
-                name: "ContactMechanismTypes",
+                name: "Provinces",
                 schema: "parties");
 
             migrationBuilder.DropTable(
-                name: "GeographicBoundaries",
+                name: "ContactMechanismTypes",
                 schema: "parties");
 
             migrationBuilder.DropTable(
@@ -1488,7 +1606,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties");
 
             migrationBuilder.DropTable(
-                name: "GeographicBoundaryTypes",
+                name: "Countries",
                 schema: "parties");
 
             migrationBuilder.DropTable(
@@ -1496,7 +1614,15 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties");
 
             migrationBuilder.DropTable(
+                name: "GeographicBoundaries",
+                schema: "parties");
+
+            migrationBuilder.DropTable(
                 name: "FacilityTypes",
+                schema: "parties");
+
+            migrationBuilder.DropTable(
+                name: "GeographicBoundaryTypes",
                 schema: "parties");
         }
     }

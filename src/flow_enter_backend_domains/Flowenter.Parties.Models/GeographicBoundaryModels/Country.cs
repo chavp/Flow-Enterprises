@@ -7,7 +7,6 @@ using System.Text;
 
 namespace Flowenter.Parties.Models.GeographicBoundaryModels;
 
-[Table("Countries")]
 [Index(nameof(Name), IsUnique = true)]
 public sealed class Country: GeographicBoundary
 {

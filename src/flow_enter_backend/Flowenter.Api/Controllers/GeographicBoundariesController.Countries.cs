@@ -17,7 +17,9 @@ public partial class GeographicBoundariesController
     {
         using var context = _factory.CreateDbContext();
 
-        var countries = await context.Countries
+        var countries = await context
+            .GeographicBoundaries
+            .OfType<Country>()
             .OrderBy(c => c.Name)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
@@ -26,7 +28,10 @@ public partial class GeographicBoundariesController
         return Ok(new
         {
             Data = countries,
-            TotalCount = await context.Countries.CountAsync(cancellationToken),
+            TotalCount = await context
+            .GeographicBoundaries
+            .OfType<Country>()
+            .CountAsync(cancellationToken),
             PageNumber = pageNumber,
             PageSize = pageSize
         });
@@ -77,7 +82,10 @@ public partial class GeographicBoundariesController
     {
         using var context = _factory.CreateDbContext();
 
-        var country = await context.Countries.FindAsync(country_id, cancellationToken);
+        var country = await context
+            .GeographicBoundaries
+            .OfType<Country>()
+            .SingleOrDefaultAsync(x => x.Id == country_id, cancellationToken);
         if (country == null)
         {
             return NotFound();
@@ -102,7 +110,10 @@ public partial class GeographicBoundariesController
 
         using var context = _factory.CreateDbContext();
 
-        var country = await context.Countries.FindAsync(country_id, cancellationToken);
+        var country = await context
+            .GeographicBoundaries
+            .OfType<Country>()
+            .SingleAsync( c => c.Id == country_id, cancellationToken);
         if (country == null)
         {
             return NotFound();
@@ -125,13 +136,15 @@ public partial class GeographicBoundariesController
     {
         using var context = _factory.CreateDbContext();
 
-        var country = await context.Countries.FindAsync(country_id, cancellationToken);
+        var country = await context.GeographicBoundaries
+            .OfType<Country>()
+            .SingleOrDefaultAsync(x => x.Id == country_id, cancellationToken);
         if (country == null)
         {
             return NotFound();
         }
 
-        context.Countries.Remove(country);
+        context.Remove(country);
         await context.SaveChangesAsync(cancellationToken);
 
         return NoContent();

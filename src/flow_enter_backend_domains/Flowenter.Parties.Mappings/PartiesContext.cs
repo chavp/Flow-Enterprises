@@ -31,7 +31,6 @@ public sealed class PartiesContext : DbContext
     // GeographicBoundaryModels
     public DbSet<GeographicBoundaryType> GeographicBoundaryTypes => Set<GeographicBoundaryType>();
     public DbSet<GeographicBoundary> GeographicBoundaries => Set<GeographicBoundary>();
-    public DbSet<Country> Countries => Set<Country>();
 
     // ContactMechanismModels
     public DbSet<ContactMechanismType> ContactMechanismTypes => Set<ContactMechanismType>();
@@ -85,7 +84,32 @@ public sealed class PartiesContext : DbContext
         modelBuilder.Entity<TelecommunicationNumber>();
 
         modelBuilder.Entity<GeographicBoundary>();
-        modelBuilder.Entity<Country>();
+        modelBuilder.Entity<Country>().ToTable("Countries");
+        modelBuilder.Entity<Province>().ToTable("Provinces");
+        modelBuilder.Entity<District>().ToTable("Districts");
+        modelBuilder.Entity<Subdistrict>().ToTable("Sudistricts");
+
+        modelBuilder.Entity<Province>(builder =>
+        {
+            builder.HasOne(e => e.Country)
+                .WithMany()
+                .HasForeignKey(e => e.CountryId)
+                .OnDelete(DeleteBehavior.NoAction);
+        });
+        modelBuilder.Entity<District>(builder =>
+        {
+            builder.HasOne(e => e.Province)
+                .WithMany()
+                .HasForeignKey(e => e.ProvinceId)
+                .OnDelete(DeleteBehavior.NoAction);
+        });
+        modelBuilder.Entity<Subdistrict>(builder =>
+        {
+            builder.HasOne(e => e.District)
+                .WithMany()
+                .HasForeignKey(e => e.DistrictId)
+                .OnDelete(DeleteBehavior.NoAction);
+        });
 
         modelBuilder.ApplyUpperConverter(["Code", "Number"]);
 

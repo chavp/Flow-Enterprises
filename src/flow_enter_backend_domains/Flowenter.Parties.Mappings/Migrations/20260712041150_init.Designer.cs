@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Flowenter.Parties.Mappings.Migrations
 {
     [DbContext(typeof(PartiesContext))]
-    [Migration("20260712031307_init")]
+    [Migration("20260712041150_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -1589,6 +1589,99 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.ToTable("Countries", "parties");
                 });
 
+            modelBuilder.Entity("Flowenter.Parties.Models.GeographicBoundaryModels.District", b =>
+                {
+                    b.HasBaseType("Flowenter.Parties.Models.GeographicBoundaryModels.GeographicBoundary");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("PostalCode")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("PrefixName")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("PrefixShortName")
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)");
+
+                    b.Property<Guid>("ProvinceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasIndex("ProvinceId", "Name")
+                        .IsUnique()
+                        .HasFilter("[ProvinceId] IS NOT NULL AND [Name] IS NOT NULL");
+
+                    b.ToTable("Districts", "parties");
+                });
+
+            modelBuilder.Entity("Flowenter.Parties.Models.GeographicBoundaryModels.Province", b =>
+                {
+                    b.HasBaseType("Flowenter.Parties.Models.GeographicBoundaryModels.GeographicBoundary");
+
+                    b.Property<Guid>("CountryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Fips")
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)");
+
+                    b.Property<string>("Hs")
+                        .HasMaxLength(3)
+                        .HasColumnType("nvarchar(3)");
+
+                    b.Property<string>("Iso")
+                        .HasMaxLength(6)
+                        .HasColumnType("nvarchar(6)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasIndex("CountryId", "Name")
+                        .IsUnique()
+                        .HasFilter("[CountryId] IS NOT NULL AND [Name] IS NOT NULL");
+
+                    b.ToTable("Provinces", "parties");
+                });
+
+            modelBuilder.Entity("Flowenter.Parties.Models.GeographicBoundaryModels.Subdistrict", b =>
+                {
+                    b.HasBaseType("Flowenter.Parties.Models.GeographicBoundaryModels.GeographicBoundary");
+
+                    b.Property<Guid>("DistrictId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("PostalCode")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("PrefixName")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("PrefixShortName")
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)");
+
+                    b.HasIndex("DistrictId", "Name")
+                        .IsUnique()
+                        .HasFilter("[DistrictId] IS NOT NULL AND [Name] IS NOT NULL");
+
+                    b.ToTable("Sudistricts", "parties");
+                });
+
             modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.Organization", b =>
                 {
                     b.HasBaseType("Flowenter.Parties.Models.PartyModels.Party");
@@ -1983,6 +2076,57 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasForeignKey("Flowenter.Parties.Models.GeographicBoundaryModels.Country", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Flowenter.Parties.Models.GeographicBoundaryModels.District", b =>
+                {
+                    b.HasOne("Flowenter.Parties.Models.GeographicBoundaryModels.GeographicBoundary", null)
+                        .WithOne()
+                        .HasForeignKey("Flowenter.Parties.Models.GeographicBoundaryModels.District", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Flowenter.Parties.Models.GeographicBoundaryModels.Province", "Province")
+                        .WithMany()
+                        .HasForeignKey("ProvinceId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Province");
+                });
+
+            modelBuilder.Entity("Flowenter.Parties.Models.GeographicBoundaryModels.Province", b =>
+                {
+                    b.HasOne("Flowenter.Parties.Models.GeographicBoundaryModels.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Flowenter.Parties.Models.GeographicBoundaryModels.GeographicBoundary", null)
+                        .WithOne()
+                        .HasForeignKey("Flowenter.Parties.Models.GeographicBoundaryModels.Province", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Country");
+                });
+
+            modelBuilder.Entity("Flowenter.Parties.Models.GeographicBoundaryModels.Subdistrict", b =>
+                {
+                    b.HasOne("Flowenter.Parties.Models.GeographicBoundaryModels.District", "District")
+                        .WithMany()
+                        .HasForeignKey("DistrictId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Flowenter.Parties.Models.GeographicBoundaryModels.GeographicBoundary", null)
+                        .WithOne()
+                        .HasForeignKey("Flowenter.Parties.Models.GeographicBoundaryModels.Subdistrict", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("District");
                 });
 
             modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.Organization", b =>
