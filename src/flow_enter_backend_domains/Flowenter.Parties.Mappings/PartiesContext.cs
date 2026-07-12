@@ -475,6 +475,15 @@ public sealed class PartiesContext : DbContext
                 CreatedBy = "seed",
                 CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 Revision = 0
+            },
+            new GeographicBoundaryType
+            {
+                Id = Guid.Parse("efefefef-efef-efef-efef-efefefefefef"),
+                Code = GeographicBoundaryType.Province,
+                Name = "Province",
+                CreatedBy = "seed",
+                CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                Revision = 0
             }
         ]);
     }

@@ -35,3 +35,32 @@ export type UpdateCountryRequest = {
   id: string;
   changes: Partial<CreateCountryRequest>;
 };
+
+export type Province = {
+  id: string;
+  countryId: string;
+  name: string;
+  hs?: string;
+  iso?: string;
+  fips?: string;
+  createdAtUtc: string;
+  updatedAtUtc?: string;
+  revision: number;
+};
+
+export type CountryTreeNode = {
+  country: Country;
+  provinces: Province[];
+};
+
+export type CreateProvinceRequest = {
+  name: string;
+  hs?: string;
+  iso?: string;
+  fips?: string;
+};
+
+export type UpdateProvinceRequest = {
+  id: string;
+  changes: Partial<CreateProvinceRequest>;
+};

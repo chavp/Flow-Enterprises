@@ -1,8 +1,12 @@
 import { requestJson } from "./http";
 import {
+  CountryTreeNode,
+  CreateProvinceRequest,
   CountriesResponse,
   CreateCountryRequest,
   PatchOperation,
+  Province,
+  UpdateProvinceRequest,
   UpdateCountryRequest
 } from "../features/countries/types";
 
@@ -58,4 +62,47 @@ export async function updateCountry(payload: UpdateCountryRequest, apiBaseUrl?: 
     },
     apiBaseUrl
   );
+}
+
+export async function fetchCountriesTree(apiBaseUrl?: string): Promise<CountryTreeNode[]> {
+  return requestJson<CountryTreeNode[]>("/api/geographic-boundaries/countries/tree", { method: "GET" }, apiBaseUrl);
+}
+
+export async function fetchCountryProvinces(countryId: string, apiBaseUrl?: string): Promise<Province[]> {
+  return requestJson<Province[]>(`/api/geographic-boundaries/countries/${countryId}/provinces`, { method: "GET" }, apiBaseUrl);
+}
+
+export async function createProvince(
+  countryId: string,
+  payload: CreateProvinceRequest,
+  apiBaseUrl?: string
+): Promise<void> {
+  await requestJson(
+    `/api/geographic-boundaries/countries/${countryId}/provinces`,
+    { method: "POST", body: JSON.stringify(payload) },
+    apiBaseUrl
+  );
+}
+
+export async function updateProvince(payload: UpdateProvinceRequest, apiBaseUrl?: string): Promise<void> {
+  const operations = toPatchOperations(payload.changes);
+  if (operations.length === 0) {
+    return;
+  }
+
+  await requestJson(
+    `/api/geographic-boundaries/provinces/${payload.id}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json-patch+json"
+      },
+      body: JSON.stringify(operations)
+    },
+    apiBaseUrl
+  );
+}
+
+export async function deleteProvince(provinceId: string, apiBaseUrl?: string): Promise<void> {
+  await requestJson(`/api/geographic-boundaries/provinces/${provinceId}`, { method: "DELETE" }, apiBaseUrl);
 }

@@ -11,6 +11,7 @@ namespace Flowenter.Parties.Models.GeographicBoundaryModels;
 public sealed class GeographicBoundaryType : BaseEntity
 {
     public const string Country = "COUNTRY";
+    public const string Province = "PROVINCE";
 
     [Required, StringLength(100)]
     public string? Code { get; set; }

@@ -8,6 +8,50 @@ namespace Flowenter.Api.Controllers;
 
 public partial class GeographicBoundariesController
 {
+    [HttpGet("countries/tree")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetCountriesTree(CancellationToken cancellationToken = default)
+    {
+        using var context = _factory.CreateDbContext();
+
+        var countries = await context.GeographicBoundaries
+            .OfType<Country>()
+            .OrderBy(item => item.Name)
+            .ToListAsync(cancellationToken);
+
+        var countryIds = countries
+            .Where(item => item.Id.HasValue)
+            .Select(item => item.Id!.Value)
+            .ToList();
+
+        var provinces = await context.GeographicBoundaries
+            .OfType<Province>()
+            .Where(item => item.CountryId.HasValue && countryIds.Contains(item.CountryId.Value))
+            .OrderBy(item => item.Name)
+            .ToListAsync(cancellationToken);
+
+        var provincesByCountryId = provinces
+            .Where(item => item.CountryId.HasValue)
+            .GroupBy(item => item.CountryId!.Value)
+            .ToDictionary(group => group.Key, group => group.ToList());
+
+        var result = countries.Select(country =>
+        {
+            var countryId = country.Id!.Value;
+            var countryProvinces = provincesByCountryId.TryGetValue(countryId, out var values)
+                ? values
+                : [];
+
+            return new
+            {
+                Country = country,
+                Provinces = countryProvinces
+            };
+        });
+
+        return Ok(result);
+    }
+
     [HttpGet("countries")]
     [ProducesResponseType(typeof(List<Country>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetCountries(
@@ -144,7 +188,148 @@ public partial class GeographicBoundariesController
             return NotFound();
         }
 
+        var provinces = await context.GeographicBoundaries
+            .OfType<Province>()
+            .Where(item => item.CountryId == country_id)
+            .ToListAsync(cancellationToken);
+        if (provinces.Count > 0)
+        {
+            context.RemoveRange(provinces);
+        }
+
         context.Remove(country);
+        await context.SaveChangesAsync(cancellationToken);
+
+        return NoContent();
+    }
+
+    [HttpGet("countries/{country_id:guid}/provinces")]
+    [ProducesResponseType(typeof(List<Province>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetCountryProvinces(
+        [FromRoute] Guid country_id,
+        CancellationToken cancellationToken = default)
+    {
+        using var context = _factory.CreateDbContext();
+
+        var countryExists = await context.GeographicBoundaries
+            .OfType<Country>()
+            .AnyAsync(item => item.Id == country_id, cancellationToken);
+        if (!countryExists)
+        {
+            return NotFound();
+        }
+
+        var provinces = await context.GeographicBoundaries
+            .OfType<Province>()
+            .Where(item => item.CountryId == country_id)
+            .OrderBy(item => item.Name)
+            .ToListAsync(cancellationToken);
+
+        return Ok(provinces);
+    }
+
+    [HttpPost("countries/{country_id:guid}/provinces")]
+    [ProducesResponseType(typeof(Province), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> CreateProvince(
+        [FromRoute] Guid country_id,
+        [FromBody] CreateProvince createProvince,
+        CancellationToken cancellationToken = default)
+    {
+        using var context = _factory.CreateDbContext();
+
+        var country = await context.GeographicBoundaries
+            .OfType<Country>()
+            .FirstOrDefaultAsync(item => item.Id == country_id, cancellationToken);
+        if (country == null)
+        {
+            return NotFound();
+        }
+
+        var provinceBoundaryType = await context.GeographicBoundaryTypes
+            .FirstOrDefaultAsync(item => item.Code == GeographicBoundaryType.Province, cancellationToken);
+        if (provinceBoundaryType == null)
+        {
+            provinceBoundaryType = new GeographicBoundaryType
+            {
+                Id = Guid.NewGuid(),
+                Code = GeographicBoundaryType.Province,
+                Name = "Province"
+            };
+            await context.AddAsync(provinceBoundaryType, cancellationToken);
+        }
+
+        var province = new Province
+        {
+            Id = Guid.NewGuid(),
+            Type = provinceBoundaryType,
+            CountryId = country.Id,
+            Name = createProvince.Name?.Trim(),
+            Hs = createProvince.Hs?.Trim(),
+            Iso = createProvince.Iso?.Trim(),
+            Fips = createProvince.Fips?.Trim()
+        };
+
+        await context.AddAsync(province, cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
+
+        return Created($"/api/geographic-boundaries/provinces/{province.Id}", province);
+    }
+
+    [HttpPatch("provinces/{province_id:guid}")]
+    [ProducesResponseType(typeof(Province), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> PatchProvince(
+        [FromRoute] Guid province_id,
+        [FromBody] JsonPatchDocument<Province> patchDoc,
+        CancellationToken cancellationToken = default)
+    {
+        if (patchDoc == null)
+        {
+            return BadRequest();
+        }
+
+        using var context = _factory.CreateDbContext();
+
+        var province = await context.GeographicBoundaries
+            .OfType<Province>()
+            .SingleOrDefaultAsync(item => item.Id == province_id, cancellationToken);
+        if (province == null)
+        {
+            return NotFound();
+        }
+
+        patchDoc.ApplyTo(province, ModelState);
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        await context.SaveChangesAsync(cancellationToken);
+        return Ok(province);
+    }
+
+    [HttpDelete("provinces/{province_id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteProvince(
+        [FromRoute] Guid province_id,
+        CancellationToken cancellationToken = default)
+    {
+        using var context = _factory.CreateDbContext();
+
+        var province = await context.GeographicBoundaries
+            .OfType<Province>()
+            .SingleOrDefaultAsync(item => item.Id == province_id, cancellationToken);
+        if (province == null)
+        {
+            return NotFound();
+        }
+
+        context.Remove(province);
         await context.SaveChangesAsync(cancellationToken);
 
         return NoContent();

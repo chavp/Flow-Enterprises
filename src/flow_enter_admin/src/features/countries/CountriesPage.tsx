@@ -1,10 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { Alert, Button, Card, Form, Input, InputNumber, Space, Spin, Typography, message } from "antd";
+import { Alert, Button, Card, Form, Input, InputNumber, Popconfirm, Space, Spin, Tree, Typography, message } from "antd";
+import type { TreeDataNode } from "antd";
 import { useMemo, useState } from "react";
-import { createCountry, fetchCountries, updateCountry } from "../../api/countries";
+import {
+  createCountry,
+  createProvince,
+  deleteProvince,
+  fetchCountriesTree,
+  updateCountry,
+  updateProvince
+} from "../../api/countries";
 import { TopDrawerForm } from "../../components/TopDrawerForm";
-import { Country, CreateCountryRequest } from "./types";
+import { Country, CreateCountryRequest, CreateProvinceRequest, Province } from "./types";
 
 const { Title, Text } = Typography;
 
@@ -12,40 +19,42 @@ type CountriesPageProps = {
   apiBaseUrl?: string;
 };
 
-type FormValues = CreateCountryRequest;
-
-const defaultPageSize = 10;
+type CountryFormValues = CreateCountryRequest;
+type ProvinceFormValues = CreateProvinceRequest;
 
 export function CountriesPage({ apiBaseUrl }: CountriesPageProps) {
   const queryClient = useQueryClient();
   const [messageApi, contextHolder] = message.useMessage();
-  const [pageIndex, setPageIndex] = useState(0);
-  const [pageSize, setPageSize] = useState(defaultPageSize);
-  const [isCreateOpen, setCreateOpen] = useState(false);
+  const [isCreateCountryOpen, setCreateCountryOpen] = useState(false);
   const [editingCountry, setEditingCountry] = useState<Country | null>(null);
-  const [createForm] = Form.useForm<FormValues>();
-  const [editForm] = Form.useForm<FormValues>();
+  const [isCreateProvinceOpen, setCreateProvinceOpen] = useState(false);
+  const [activeCountryIdForProvinceCreate, setActiveCountryIdForProvinceCreate] = useState<string | null>(null);
+  const [editingProvince, setEditingProvince] = useState<Province | null>(null);
+  const [countryForm] = Form.useForm<CountryFormValues>();
+  const [editCountryForm] = Form.useForm<CountryFormValues>();
+  const [provinceForm] = Form.useForm<ProvinceFormValues>();
+  const [editProvinceForm] = Form.useForm<ProvinceFormValues>();
 
-  const countriesQuery = useQuery({
-    queryKey: ["countries", pageIndex, pageSize, apiBaseUrl],
-    queryFn: () => fetchCountries(pageIndex + 1, pageSize, apiBaseUrl)
+  const countriesTreeQuery = useQuery({
+    queryKey: ["countries-tree", apiBaseUrl],
+    queryFn: () => fetchCountriesTree(apiBaseUrl)
   });
 
-  const createMutation = useMutation({
-    mutationFn: (values: FormValues) => createCountry(values, apiBaseUrl),
+  const createCountryMutation = useMutation({
+    mutationFn: (values: CountryFormValues) => createCountry(values, apiBaseUrl),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["countries"] });
-      setCreateOpen(false);
-      createForm.resetFields();
+      await queryClient.invalidateQueries({ queryKey: ["countries-tree"] });
+      setCreateCountryOpen(false);
+      countryForm.resetFields();
       messageApi.success("Country created");
     },
     onError: (error) => {
-      messageApi.error(error instanceof Error ? error.message : "Create failed");
+      messageApi.error(error instanceof Error ? error.message : "Create country failed");
     }
   });
 
-  const updateMutation = useMutation({
-    mutationFn: async (values: FormValues) => {
+  const updateCountryMutation = useMutation({
+    mutationFn: async (values: CountryFormValues) => {
       if (!editingCountry) {
         return;
       }
@@ -59,82 +68,160 @@ export function CountriesPage({ apiBaseUrl }: CountriesPageProps) {
       );
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["countries"] });
+      await queryClient.invalidateQueries({ queryKey: ["countries-tree"] });
       setEditingCountry(null);
-      editForm.resetFields();
+      editCountryForm.resetFields();
       messageApi.success("Country updated");
     },
     onError: (error) => {
-      messageApi.error(error instanceof Error ? error.message : "Update failed");
+      messageApi.error(error instanceof Error ? error.message : "Update country failed");
     }
   });
 
-  const columns = useMemo<ColumnDef<Country>[]>(
-    () => [
-      {
-        accessorKey: "name",
-        header: "Country",
-        cell: (info) => info.getValue<string>()
-      },
-      {
-        accessorKey: "nationality",
-        header: "Nationality",
-        cell: (info) => info.getValue<string>() ?? "-"
-      },
-      {
-        accessorKey: "numeric",
-        header: "Numeric",
-        cell: (info) => info.getValue<number>() ?? "-"
-      },
-      {
-        accessorKey: "isoCode2",
-        header: "ISO Code 2",
-        cell: (info) => info.getValue<string>()
-      },
-      {
-        accessorKey: "isoCode3",
-        header: "ISO Code 3",
-        cell: (info) => info.getValue<string>()
-      },
-      {
-        id: "actions",
-        header: "Actions",
-        cell: ({ row }) => (
-          <Button
-            size="small"
-            onClick={() => {
-              setEditingCountry(row.original);
-              editForm.setFieldsValue({
-                name: row.original.name,
-                nationality: row.original.nationality,
-                numeric: row.original.numeric,
-                isoCode2: row.original.isoCode2,
-                isoCode3: row.original.isoCode3
-              });
-            }}
-          >
-            Edit
-          </Button>
-        )
+  const createProvinceMutation = useMutation({
+    mutationFn: async (values: ProvinceFormValues) => {
+      if (!activeCountryIdForProvinceCreate) {
+        return;
       }
-    ],
-    [editForm]
-  );
 
-  const countries = countriesQuery.data?.data ?? [];
-  const totalCount = countriesQuery.data?.totalCount ?? 0;
-  const pageCount = Math.max(1, Math.ceil(totalCount / pageSize));
-
-  const table = useReactTable({
-    data: countries,
-    columns,
-    pageCount,
-    state: {
-      pagination: { pageIndex, pageSize }
+      await createProvince(activeCountryIdForProvinceCreate, values, apiBaseUrl);
     },
-    manualPagination: true,
-    getCoreRowModel: getCoreRowModel()
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["countries-tree"] });
+      setCreateProvinceOpen(false);
+      setActiveCountryIdForProvinceCreate(null);
+      provinceForm.resetFields();
+      messageApi.success("Province created");
+    },
+    onError: (error) => {
+      messageApi.error(error instanceof Error ? error.message : "Create province failed");
+    }
   });
+
+  const updateProvinceMutation = useMutation({
+    mutationFn: async (values: ProvinceFormValues) => {
+      if (!editingProvince) {
+        return;
+      }
+
+      await updateProvince(
+        {
+          id: editingProvince.id,
+          changes: values
+        },
+        apiBaseUrl
+      );
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["countries-tree"] });
+      setEditingProvince(null);
+      editProvinceForm.resetFields();
+      messageApi.success("Province updated");
+    },
+    onError: (error) => {
+      messageApi.error(error instanceof Error ? error.message : "Update province failed");
+    }
+  });
+
+  const deleteProvinceMutation = useMutation({
+    mutationFn: (provinceId: string) => deleteProvince(provinceId, apiBaseUrl),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["countries-tree"] });
+      messageApi.success("Province deleted");
+    },
+    onError: (error) => {
+      messageApi.error(error instanceof Error ? error.message : "Delete province failed");
+    }
+  });
+
+  const treeData = useMemo<TreeDataNode[]>(() => {
+    const items = countriesTreeQuery.data ?? [];
+
+    return items.map((item) => ({
+      key: `country-${item.country.id}`,
+      title: (
+        <Space style={{ width: "100%", justifyContent: "space-between" }}>
+          <span>
+            <strong>{item.country.name}</strong> ({item.country.isoCode2}) - {item.country.nationality}
+          </span>
+          <Space>
+            <Button
+              size="small"
+              onClick={(event) => {
+                event.stopPropagation();
+                setEditingCountry(item.country);
+                editCountryForm.setFieldsValue({
+                  name: item.country.name,
+                  nationality: item.country.nationality,
+                  numeric: item.country.numeric,
+                  isoCode2: item.country.isoCode2,
+                  isoCode3: item.country.isoCode3
+                });
+              }}
+            >
+              Edit Country
+            </Button>
+            <Button
+              size="small"
+              type="primary"
+              onClick={(event) => {
+                event.stopPropagation();
+                setActiveCountryIdForProvinceCreate(item.country.id);
+                setCreateProvinceOpen(true);
+              }}
+            >
+              Add Province
+            </Button>
+          </Space>
+        </Space>
+      ),
+      children: item.provinces.map((province) => ({
+        key: `province-${province.id}`,
+        title: (
+          <Space style={{ width: "100%", justifyContent: "space-between" }}>
+            <span>
+              {province.name}
+              {province.iso ? ` (ISO: ${province.iso})` : ""}
+            </span>
+            <Space>
+              <Button
+                size="small"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setEditingProvince(province);
+                  editProvinceForm.setFieldsValue({
+                    name: province.name,
+                    hs: province.hs,
+                    iso: province.iso,
+                    fips: province.fips
+                  });
+                }}
+              >
+                Edit
+              </Button>
+              <Popconfirm
+                title="Delete province?"
+                okText="Delete"
+                okButtonProps={{ danger: true, loading: deleteProvinceMutation.isPending }}
+                onConfirm={(event) => {
+                  event?.stopPropagation();
+                  deleteProvinceMutation.mutate(province.id);
+                }}
+              >
+                <Button
+                  size="small"
+                  danger
+                  onClick={(event) => event.stopPropagation()}
+                >
+                  Delete
+                </Button>
+              </Popconfirm>
+            </Space>
+          </Space>
+        )
+      }))
+    }));
+  }, [countriesTreeQuery.data, deleteProvinceMutation.isPending, editCountryForm, editProvinceForm]);
 
   return (
     <div className="page-container">
@@ -146,98 +233,45 @@ export function CountriesPage({ apiBaseUrl }: CountriesPageProps) {
               <Title level={3} style={{ margin: 0 }}>
                 Countries
               </Title>
-              <Text type="secondary">Manage countries from Flow Enter backend.</Text>
+              <Text type="secondary">Manage countries and provinces in tree view.</Text>
             </div>
-            <Button type="primary" onClick={() => setCreateOpen(true)}>
+            <Button type="primary" onClick={() => setCreateCountryOpen(true)}>
               New Country
             </Button>
           </Space>
 
-          {countriesQuery.isError ? (
+          {countriesTreeQuery.isError ? (
             <Alert
               type="error"
               message="Failed to load countries"
-              description={countriesQuery.error instanceof Error ? countriesQuery.error.message : "Unknown error"}
+              description={countriesTreeQuery.error instanceof Error ? countriesTreeQuery.error.message : "Unknown error"}
               showIcon
             />
+          ) : countriesTreeQuery.isLoading ? (
+            <Spin />
           ) : (
-            <div className="tanstack-table-wrapper">
-              <table className="tanstack-table">
-                <thead>
-                  {table.getHeaderGroups().map((headerGroup) => (
-                    <tr key={headerGroup.id}>
-                      {headerGroup.headers.map((header) => (
-                        <th key={header.id}>
-                          {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                        </th>
-                      ))}
-                    </tr>
-                  ))}
-                </thead>
-                <tbody>
-                  {countriesQuery.isLoading ? (
-                    <tr>
-                      <td colSpan={columns.length}>
-                        <div className="table-loading">
-                          <Spin />
-                        </div>
-                      </td>
-                    </tr>
-                  ) : table.getRowModel().rows.length === 0 ? (
-                    <tr>
-                      <td colSpan={columns.length}>No countries found.</td>
-                    </tr>
-                  ) : (
-                    table.getRowModel().rows.map((row) => (
-                      <tr key={row.id}>
-                        {row.getVisibleCells().map((cell) => (
-                          <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
-                        ))}
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
+            <Tree
+              showLine
+              defaultExpandAll
+              blockNode
+              treeData={treeData}
+            />
           )}
-
-          <Space style={{ justifyContent: "space-between", width: "100%" }}>
-            <Text type="secondary">
-              Total {totalCount} countries • Page {pageIndex + 1} / {pageCount}
-            </Text>
-            <Space>
-              <Button onClick={() => setPageSize(10)} disabled={pageSize === 10}>
-                10 rows
-              </Button>
-              <Button onClick={() => setPageSize(25)} disabled={pageSize === 25}>
-                25 rows
-              </Button>
-              <Button onClick={() => setPageIndex((value) => Math.max(0, value - 1))} disabled={pageIndex <= 0}>
-                Prev
-              </Button>
-              <Button
-                onClick={() => setPageIndex((value) => Math.min(pageCount - 1, value + 1))}
-                disabled={pageIndex >= pageCount - 1}
-              >
-                Next
-              </Button>
-            </Space>
-          </Space>
         </Space>
       </Card>
 
       <TopDrawerForm
-        open={isCreateOpen}
+        open={isCreateCountryOpen}
         title="Create Country"
         submitText="Create"
-        onClose={() => setCreateOpen(false)}
-        onSubmit={() => createForm.submit()}
-        loading={createMutation.isPending}
+        onClose={() => {
+          setCreateCountryOpen(false);
+          countryForm.resetFields();
+        }}
+        onSubmit={() => countryForm.submit()}
+        loading={createCountryMutation.isPending}
       >
-        <CountryForm
-          form={createForm}
-          onFinish={(values) => createMutation.mutate(values)}
-        />
+        <CountryForm form={countryForm} onFinish={(values) => createCountryMutation.mutate(values)} />
       </TopDrawerForm>
 
       <TopDrawerForm
@@ -246,28 +280,54 @@ export function CountriesPage({ apiBaseUrl }: CountriesPageProps) {
         submitText="Update"
         onClose={() => {
           setEditingCountry(null);
-          editForm.resetFields();
+          editCountryForm.resetFields();
         }}
-        onSubmit={() => editForm.submit()}
-        loading={updateMutation.isPending}
+        onSubmit={() => editCountryForm.submit()}
+        loading={updateCountryMutation.isPending}
       >
-        <CountryForm
-          form={editForm}
-          onFinish={(values) => updateMutation.mutate(values)}
-        />
+        <CountryForm form={editCountryForm} onFinish={(values) => updateCountryMutation.mutate(values)} />
+      </TopDrawerForm>
+
+      <TopDrawerForm
+        open={isCreateProvinceOpen}
+        title="Add Province"
+        submitText="Add"
+        onClose={() => {
+          setCreateProvinceOpen(false);
+          setActiveCountryIdForProvinceCreate(null);
+          provinceForm.resetFields();
+        }}
+        onSubmit={() => provinceForm.submit()}
+        loading={createProvinceMutation.isPending}
+      >
+        <ProvinceForm form={provinceForm} onFinish={(values) => createProvinceMutation.mutate(values)} />
+      </TopDrawerForm>
+
+      <TopDrawerForm
+        open={Boolean(editingProvince)}
+        title="Edit Province"
+        submitText="Update"
+        onClose={() => {
+          setEditingProvince(null);
+          editProvinceForm.resetFields();
+        }}
+        onSubmit={() => editProvinceForm.submit()}
+        loading={updateProvinceMutation.isPending}
+      >
+        <ProvinceForm form={editProvinceForm} onFinish={(values) => updateProvinceMutation.mutate(values)} />
       </TopDrawerForm>
     </div>
   );
 }
 
 type CountryFormProps = {
-  form: ReturnType<typeof Form.useForm<FormValues>>[0];
-  onFinish: (values: FormValues) => void;
+  form: ReturnType<typeof Form.useForm<CountryFormValues>>[0];
+  onFinish: (values: CountryFormValues) => void;
 };
 
 function CountryForm({ form, onFinish }: CountryFormProps) {
   return (
-    <Form<FormValues> form={form} layout="vertical" onFinish={onFinish}>
+    <Form<CountryFormValues> form={form} layout="vertical" onFinish={onFinish}>
       <Form.Item name="name" label="Country Name" rules={[{ required: true, message: "Country name is required" }]}>
         <Input maxLength={200} />
       </Form.Item>
@@ -282,6 +342,30 @@ function CountryForm({ form, onFinish }: CountryFormProps) {
       </Form.Item>
       <Form.Item name="isoCode3" label="ISO Code 3" rules={[{ required: true, message: "ISO code 3 is required" }]}>
         <Input maxLength={3} />
+      </Form.Item>
+    </Form>
+  );
+}
+
+type ProvinceFormProps = {
+  form: ReturnType<typeof Form.useForm<ProvinceFormValues>>[0];
+  onFinish: (values: ProvinceFormValues) => void;
+};
+
+function ProvinceForm({ form, onFinish }: ProvinceFormProps) {
+  return (
+    <Form<ProvinceFormValues> form={form} layout="vertical" onFinish={onFinish}>
+      <Form.Item name="name" label="Province Name" rules={[{ required: true, message: "Province name is required" }]}>
+        <Input maxLength={200} />
+      </Form.Item>
+      <Form.Item name="hs" label="HS">
+        <Input maxLength={3} />
+      </Form.Item>
+      <Form.Item name="iso" label="ISO">
+        <Input maxLength={6} />
+      </Form.Item>
+      <Form.Item name="fips" label="FIPS">
+        <Input maxLength={5} />
       </Form.Item>
     </Form>
   );
