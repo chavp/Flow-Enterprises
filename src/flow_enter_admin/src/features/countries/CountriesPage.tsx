@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Alert, Button, Card, Form, Input, InputNumber, Popconfirm, Space, Spin, Tree, Typography, message } from "antd";
 import type { TreeDataNode } from "antd";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   createCountry,
   createDistrict,
@@ -29,6 +29,7 @@ import {
 } from "./types";
 
 const { Title, Text } = Typography;
+const COUNTRIES_TREE_EXPANDED_KEYS_STORAGE_KEY = "countries-tree-expanded-keys";
 
 type CountriesPageProps = {
   apiBaseUrl?: string;
@@ -38,10 +39,14 @@ type CountryFormValues = CreateCountryRequest;
 type ProvinceFormValues = CreateProvinceRequest;
 type DistrictFormValues = CreateDistrictRequest;
 type SubdistrictFormValues = CreateSubdistrictRequest;
+type PersistedTreeState = {
+  expandedKeys: string[];
+};
 
 export function CountriesPage({ apiBaseUrl }: CountriesPageProps) {
   const queryClient = useQueryClient();
   const [messageApi, contextHolder] = message.useMessage();
+  const legacyExpandedKeysStorageKey = `countries-tree-expanded-keys:${apiBaseUrl ?? "default"}`;
   const [isCreateCountryOpen, setCreateCountryOpen] = useState(false);
   const [editingCountry, setEditingCountry] = useState<Country | null>(null);
   const [isCreateProvinceOpen, setCreateProvinceOpen] = useState(false);
@@ -61,6 +66,33 @@ export function CountriesPage({ apiBaseUrl }: CountriesPageProps) {
   const [editDistrictForm] = Form.useForm<DistrictFormValues>();
   const [subdistrictForm] = Form.useForm<SubdistrictFormValues>();
   const [editSubdistrictForm] = Form.useForm<SubdistrictFormValues>();
+  const [expandedKeys, setExpandedKeys] = useState<string[] | null>(() => {
+    if (typeof window === "undefined") {
+      return null;
+    }
+
+    try {
+      const stored =
+        localStorage.getItem(COUNTRIES_TREE_EXPANDED_KEYS_STORAGE_KEY) ??
+        localStorage.getItem(legacyExpandedKeysStorageKey);
+      if (!stored) {
+        return null;
+      }
+
+      const parsed = JSON.parse(stored) as PersistedTreeState | string[];
+      if (Array.isArray(parsed)) {
+        return parsed.filter((key): key is string => typeof key === "string");
+      }
+
+      if (!parsed || !Array.isArray(parsed.expandedKeys)) {
+        return null;
+      }
+
+      return parsed.expandedKeys.filter((key): key is string => typeof key === "string");
+    } catch {
+      return null;
+    }
+  });
 
   const countriesTreeQuery = useQuery({
     queryKey: ["countries-tree", apiBaseUrl],
@@ -462,6 +494,64 @@ export function CountriesPage({ apiBaseUrl }: CountriesPageProps) {
     editSubdistrictForm
   ]);
 
+  const allExpandableTreeKeys = useMemo<string[]>(() => {
+    const keys: string[] = [];
+    const collect = (nodes: TreeDataNode[]) => {
+      nodes.forEach((node) => {
+        if (node.children && node.children.length > 0) {
+          keys.push(String(node.key));
+          collect(node.children as TreeDataNode[]);
+        }
+      });
+    };
+
+    collect(treeData);
+    return keys;
+  }, [treeData]);
+
+  useEffect(() => {
+    if (expandedKeys !== null) {
+      return;
+    }
+
+    if (allExpandableTreeKeys.length === 0) {
+      return;
+    }
+
+    setExpandedKeys(allExpandableTreeKeys);
+  }, [allExpandableTreeKeys, expandedKeys]);
+
+  useEffect(() => {
+    if (expandedKeys === null) {
+      return;
+    }
+
+    if (allExpandableTreeKeys.length === 0) {
+      return;
+    }
+
+    const validKeys = new Set(allExpandableTreeKeys);
+    const filteredKeys = expandedKeys.filter((key) => validKeys.has(key));
+    if (filteredKeys.length !== expandedKeys.length) {
+      setExpandedKeys(filteredKeys);
+    }
+  }, [allExpandableTreeKeys, expandedKeys]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    if (expandedKeys === null) {
+      return;
+    }
+
+    localStorage.setItem(
+      COUNTRIES_TREE_EXPANDED_KEYS_STORAGE_KEY,
+      JSON.stringify({ expandedKeys } as PersistedTreeState)
+    );
+  }, [expandedKeys]);
+
   return (
     <div className="page-container">
       {contextHolder}
@@ -489,7 +579,13 @@ export function CountriesPage({ apiBaseUrl }: CountriesPageProps) {
           ) : countriesTreeQuery.isLoading ? (
             <Spin />
           ) : (
-            <Tree showLine defaultExpandAll blockNode treeData={treeData} />
+            <Tree
+              showLine
+              blockNode
+              treeData={treeData}
+              expandedKeys={expandedKeys ?? undefined}
+              onExpand={(keys) => setExpandedKeys(keys.map((key) => String(key)))}
+            />
           )}
         </Space>
       </Card>
