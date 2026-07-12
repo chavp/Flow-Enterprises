@@ -1,15 +1,12 @@
 namespace Flowenter.Parties.IServices.Dtos.EnterpriseDto;
 
-public record RoomDto
+public record FloorDto
 {
-    public Guid RoomId { get; init; }
-    public string Number { get; init; } = string.Empty;
-    public string? Description { get; init; }
     public Guid FloorId { get; init; }
-    public int FloorLevel { get; init; }
+    public int Level { get; init; }
+    public string? Description { get; init; }
     public Guid BuildingId { get; init; }
     public string BuildingName { get; init; } = string.Empty;
-    public int BedCount { get; init; }
     public DateTime CreatedAtUtc { get; init; }
     public DateTime? UpdatedAtUtc { get; init; }
     public ulong Revision { get; init; }

@@ -13,6 +13,7 @@ namespace Flowenter.Parties.Models.PartyModels;
 public sealed class PartyRelationshipType : BaseEntity
 {
     public const string Employment = "EMPLOYMENT";
+    public const string EnterpriseBranch = "ENTERPRISE_BRANCH";
 
     [Required, StringLength(100)]
     public string? Code { get; set; }

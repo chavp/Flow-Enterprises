@@ -92,6 +92,10 @@ export type Room = {
   roomId: string;
   number: string;
   description?: string;
+  floorId: string;
+  floorLevel: number;
+  buildingId: string;
+  buildingName: string;
   bedCount: number;
   createdAtUtc: string;
   updatedAtUtc?: string;
@@ -100,10 +104,31 @@ export type Room = {
 
 export type CreateRoomRequest = {
   number: string;
+  floorId: string;
   description?: string;
 };
 
 export type UpdateRoomRequest = CreateRoomRequest;
+
+export type Building = {
+  buildingId: string;
+  name: string;
+  description?: string;
+  createdAtUtc: string;
+  updatedAtUtc?: string;
+  revision: number;
+};
+
+export type Floor = {
+  floorId: string;
+  level: number;
+  description?: string;
+  buildingId: string;
+  buildingName: string;
+  createdAtUtc: string;
+  updatedAtUtc?: string;
+  revision: number;
+};
 
 export type Bed = {
   bedId: string;
@@ -111,6 +136,10 @@ export type Bed = {
   description?: string;
   roomId: string;
   roomNumber: string;
+  floorId?: string;
+  floorLevel?: number;
+  buildingId?: string;
+  buildingName?: string;
   createdAtUtc: string;
   updatedAtUtc?: string;
   revision: number;
@@ -123,3 +152,37 @@ export type CreateBedRequest = {
 };
 
 export type UpdateBedRequest = CreateBedRequest;
+
+export type CreateBuildingRequest = {
+  name: string;
+  description?: string;
+};
+
+export type UpdateBuildingRequest = CreateBuildingRequest;
+
+export type CreateFloorRequest = {
+  buildingId: string;
+  level: number;
+  description?: string;
+};
+
+export type UpdateFloorRequest = CreateFloorRequest;
+
+export type RoomFacilitiesNode = {
+  room: Room;
+  beds: Bed[];
+};
+
+export type FloorFacilitiesNode = {
+  floor: Floor;
+  rooms: RoomFacilitiesNode[];
+};
+
+export type BuildingFacilitiesNode = {
+  building: Building;
+  floors: FloorFacilitiesNode[];
+};
+
+export type EnterpriseFacilitiesTree = {
+  buildings: BuildingFacilitiesNode[];
+};

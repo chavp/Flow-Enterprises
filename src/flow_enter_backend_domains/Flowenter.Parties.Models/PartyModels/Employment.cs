@@ -6,8 +6,7 @@ using System.Text;
 
 namespace Flowenter.Parties.Models.PartyModels;
 
-[Table("Employments")]
-public class Employment : PartyRelationship
+public sealed class Employment : PartyRelationship
 {
     protected Employment() { }
     public Employment(Guid employerId, Guid employeeId, Guid partyRelationshipTypeId)

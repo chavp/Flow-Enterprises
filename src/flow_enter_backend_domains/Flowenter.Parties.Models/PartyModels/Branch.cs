@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Flowenter.Parties.Models.PartyModels;
 
-public sealed class Customer : PartyRole
+public sealed class Branch : PartyRole
 {
 }

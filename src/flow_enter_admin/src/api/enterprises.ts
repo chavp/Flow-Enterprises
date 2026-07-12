@@ -1,18 +1,25 @@
 import { requestJson } from "./http";
 import {
   Bed,
+  Building,
+  CreateBuildingRequest,
   CreateBedRequest,
   CreateEmploymentRequest,
   CreateEnterpriseRequest,
+  CreateFloorRequest,
   CreateRoomRequest,
+  EnterpriseFacilitiesTree,
   Employment,
+  Floor,
   LegalStructure,
   EnterprisesResponse,
   PatchOperation,
   PartyRoleType,
   Room,
+  UpdateBuildingRequest,
   UpdateEmploymentEffectiveDateRequest,
   UpdateEmploymentRequest,
+  UpdateFloorRequest,
   UpdateBedRequest,
   UpdateRoomRequest,
   UpdateEnterpriseRequest
@@ -151,6 +158,91 @@ export async function fetchEnterpriseRooms(
   return requestJson<Room[]>(
     `/api/parties/enterprises/${enterpriseId}/facilities/rooms${query.toString() ? `?${query.toString()}` : ""}`,
     { method: "GET" },
+    apiBaseUrl
+  );
+}
+
+export async function fetchEnterpriseFacilitiesTree(
+  enterpriseId: string,
+  apiBaseUrl?: string
+): Promise<EnterpriseFacilitiesTree> {
+  return requestJson<EnterpriseFacilitiesTree>(
+    `/api/parties/enterprises/${enterpriseId}/facilities/tree`,
+    { method: "GET" },
+    apiBaseUrl
+  );
+}
+
+export async function createEnterpriseBuilding(
+  enterpriseId: string,
+  payload: CreateBuildingRequest,
+  apiBaseUrl?: string
+): Promise<Building> {
+  return requestJson<Building>(
+    `/api/parties/enterprises/${enterpriseId}/facilities/buildings`,
+    { method: "POST", body: JSON.stringify(payload) },
+    apiBaseUrl
+  );
+}
+
+export async function updateEnterpriseBuilding(
+  enterpriseId: string,
+  buildingId: string,
+  payload: UpdateBuildingRequest,
+  apiBaseUrl?: string
+): Promise<Building> {
+  return requestJson<Building>(
+    `/api/parties/enterprises/${enterpriseId}/facilities/buildings/${buildingId}`,
+    { method: "PUT", body: JSON.stringify(payload) },
+    apiBaseUrl
+  );
+}
+
+export async function deleteEnterpriseBuilding(
+  enterpriseId: string,
+  buildingId: string,
+  apiBaseUrl?: string
+): Promise<void> {
+  await requestJson(
+    `/api/parties/enterprises/${enterpriseId}/facilities/buildings/${buildingId}`,
+    { method: "DELETE" },
+    apiBaseUrl
+  );
+}
+
+export async function createEnterpriseFloor(
+  enterpriseId: string,
+  payload: CreateFloorRequest,
+  apiBaseUrl?: string
+): Promise<Floor> {
+  return requestJson<Floor>(
+    `/api/parties/enterprises/${enterpriseId}/facilities/floors`,
+    { method: "POST", body: JSON.stringify(payload) },
+    apiBaseUrl
+  );
+}
+
+export async function updateEnterpriseFloor(
+  enterpriseId: string,
+  floorId: string,
+  payload: UpdateFloorRequest,
+  apiBaseUrl?: string
+): Promise<Floor> {
+  return requestJson<Floor>(
+    `/api/parties/enterprises/${enterpriseId}/facilities/floors/${floorId}`,
+    { method: "PUT", body: JSON.stringify(payload) },
+    apiBaseUrl
+  );
+}
+
+export async function deleteEnterpriseFloor(
+  enterpriseId: string,
+  floorId: string,
+  apiBaseUrl?: string
+): Promise<void> {
+  await requestJson(
+    `/api/parties/enterprises/${enterpriseId}/facilities/floors/${floorId}`,
+    { method: "DELETE" },
     apiBaseUrl
   );
 }

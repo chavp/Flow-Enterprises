@@ -21,33 +21,54 @@ import {
   Tabs,
   Popconfirm,
   Typography,
+  Tree,
   message
 } from "antd";
+import type { TreeDataNode } from "antd";
 import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 import {
   createEnterpriseBed,
+  createEnterpriseBuilding,
+  createEnterpriseFloor,
   createEnperprise,
   createEnterpriseRoom,
   deleteEnterpriseBed,
+  deleteEnterpriseBuilding,
   deleteEnterprise,
+  deleteEnterpriseFloor,
   deleteEnterpriseRoom,
   deleteEnterpriseEmployment,
   createEnterpriseEmployment,
-  fetchEnterpriseBeds,
+  fetchEnterpriseFacilitiesTree,
   fetchEnterpriseEmployments,
   fetchEnterprises,
   fetchLegalStructures,
   fetchPartyRoleTypes,
   fetchEnterpriseRooms,
   updateEnterpriseBed,
+  updateEnterpriseBuilding,
   updateEnterpriseEmploymentEffectiveDate,
   updateEnterpriseEmployment,
+  updateEnterpriseFloor,
   updateEnterpriseRoom,
   updateEnperprise
 } from "../../api/enterprises";
 import { TopDrawerForm } from "../../components/TopDrawerForm";
-import { Bed, CreateBedRequest, CreateEmploymentRequest, CreateEnterpriseRequest, CreateRoomRequest, Enterprise, Employment, Room } from "./types";
+import {
+  Bed,
+  Building,
+  CreateBedRequest,
+  CreateBuildingRequest,
+  CreateEmploymentRequest,
+  CreateEnterpriseRequest,
+  CreateFloorRequest,
+  CreateRoomRequest,
+  Enterprise,
+  Employment,
+  Floor,
+  Room
+} from "./types";
 
 const { Title, Text } = Typography;
 
@@ -57,6 +78,8 @@ type EnterprisesPageProps = {
 
 type FormValues = CreateEnterpriseRequest;
 type EmploymentFormValues = CreateEmploymentRequest;
+type BuildingFormValues = CreateBuildingRequest;
+type FloorFormValues = CreateFloorRequest;
 type RoomFormValues = CreateRoomRequest;
 type BedFormValues = CreateBedRequest;
 type EmploymentGroup = {
@@ -92,11 +115,16 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
   const [peopleEnterprise, setPeopleEnterprise] = useState<Enterprise | null>(null);
   const [editingEmployment, setEditingEmployment] = useState<Employment | null>(null);
   const [isCreateEmploymentOpen, setCreateEmploymentOpen] = useState(false);
-  const [roomSearchText, setRoomSearchText] = useState("");
+  const [isCreateBuildingOpen, setCreateBuildingOpen] = useState(false);
+  const [editingBuilding, setEditingBuilding] = useState<Building | null>(null);
+  const [isCreateFloorOpen, setCreateFloorOpen] = useState(false);
+  const [activeBuildingIdForFloorCreate, setActiveBuildingIdForFloorCreate] = useState<string | null>(null);
+  const [editingFloor, setEditingFloor] = useState<Floor | null>(null);
   const [isCreateRoomOpen, setCreateRoomOpen] = useState(false);
+  const [activeFloorIdForRoomCreate, setActiveFloorIdForRoomCreate] = useState<string | null>(null);
   const [editingRoom, setEditingRoom] = useState<Room | null>(null);
-  const [bedSearchText, setBedSearchText] = useState("");
   const [isCreateBedOpen, setCreateBedOpen] = useState(false);
+  const [activeRoomIdForBedCreate, setActiveRoomIdForBedCreate] = useState<string | null>(null);
   const [editingBed, setEditingBed] = useState<Bed | null>(null);
   const [effectiveDateDrafts, setEffectiveDateDrafts] = useState<
     Record<string, { fromDate: string; thruDate: string }>
@@ -106,6 +134,10 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
   const [editForm] = Form.useForm<FormValues>();
   const [employmentForm] = Form.useForm<EmploymentFormValues>();
   const [editEmploymentForm] = Form.useForm<EmploymentFormValues>();
+  const [createBuildingForm] = Form.useForm<BuildingFormValues>();
+  const [editBuildingForm] = Form.useForm<BuildingFormValues>();
+  const [createFloorForm] = Form.useForm<FloorFormValues>();
+  const [editFloorForm] = Form.useForm<FloorFormValues>();
   const [createRoomForm] = Form.useForm<RoomFormValues>();
   const [editRoomForm] = Form.useForm<RoomFormValues>();
   const [createBedForm] = Form.useForm<BedFormValues>();
@@ -133,21 +165,15 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
     enabled: Boolean(peopleEnterprise)
   });
 
-  const roomsQuery = useQuery({
-    queryKey: ["enterprise-rooms", peopleEnterprise?.enterpriseId, roomSearchText, apiBaseUrl],
-    queryFn: () => fetchEnterpriseRooms(peopleEnterprise!.enterpriseId, roomSearchText, apiBaseUrl),
+  const facilitiesTreeQuery = useQuery({
+    queryKey: ["enterprise-facilities-tree", peopleEnterprise?.enterpriseId, apiBaseUrl],
+    queryFn: () => fetchEnterpriseFacilitiesTree(peopleEnterprise!.enterpriseId, apiBaseUrl),
     enabled: Boolean(peopleEnterprise)
   });
 
   const roomOptionsQuery = useQuery({
     queryKey: ["enterprise-room-options", peopleEnterprise?.enterpriseId, apiBaseUrl],
     queryFn: () => fetchEnterpriseRooms(peopleEnterprise!.enterpriseId, "", apiBaseUrl),
-    enabled: Boolean(peopleEnterprise)
-  });
-
-  const bedsQuery = useQuery({
-    queryKey: ["enterprise-beds", peopleEnterprise?.enterpriseId, bedSearchText, apiBaseUrl],
-    queryFn: () => fetchEnterpriseBeds(peopleEnterprise!.enterpriseId, bedSearchText, apiBaseUrl),
     enabled: Boolean(peopleEnterprise)
   });
 
@@ -311,6 +337,153 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
     }
   });
 
+  const createBuildingMutation = useMutation({
+    mutationFn: async (values: BuildingFormValues) => {
+      if (!peopleEnterprise) {
+        return;
+      }
+
+      await createEnterpriseBuilding(peopleEnterprise.enterpriseId, values, apiBaseUrl);
+    },
+    onSuccess: async () => {
+      if (!peopleEnterprise) {
+        return;
+      }
+
+      await queryClient.invalidateQueries({
+        queryKey: ["enterprise-facilities-tree", peopleEnterprise.enterpriseId, apiBaseUrl]
+      });
+      setCreateBuildingOpen(false);
+      createBuildingForm.resetFields();
+      messageApi.success("Building added");
+    },
+    onError: (error) => {
+      messageApi.error(error instanceof Error ? error.message : "Create building failed");
+    }
+  });
+
+  const updateBuildingMutation = useMutation({
+    mutationFn: async (values: BuildingFormValues) => {
+      if (!peopleEnterprise || !editingBuilding) {
+        return;
+      }
+
+      await updateEnterpriseBuilding(peopleEnterprise.enterpriseId, editingBuilding.buildingId, values, apiBaseUrl);
+    },
+    onSuccess: async () => {
+      if (!peopleEnterprise) {
+        return;
+      }
+
+      await queryClient.invalidateQueries({
+        queryKey: ["enterprise-facilities-tree", peopleEnterprise.enterpriseId, apiBaseUrl]
+      });
+      setEditingBuilding(null);
+      editBuildingForm.resetFields();
+      messageApi.success("Building updated");
+    },
+    onError: (error) => {
+      messageApi.error(error instanceof Error ? error.message : "Update building failed");
+    }
+  });
+
+  const deleteBuildingMutation = useMutation({
+    mutationFn: async (buildingId: string) => {
+      if (!peopleEnterprise) {
+        return;
+      }
+
+      await deleteEnterpriseBuilding(peopleEnterprise.enterpriseId, buildingId, apiBaseUrl);
+    },
+    onSuccess: async () => {
+      if (!peopleEnterprise) {
+        return;
+      }
+
+      await queryClient.invalidateQueries({
+        queryKey: ["enterprise-facilities-tree", peopleEnterprise.enterpriseId, apiBaseUrl]
+      });
+      messageApi.success("Building deleted");
+    },
+    onError: (error) => {
+      messageApi.error(error instanceof Error ? error.message : "Delete building failed");
+    }
+  });
+
+  const createFloorMutation = useMutation({
+    mutationFn: async (values: FloorFormValues) => {
+      if (!peopleEnterprise) {
+        return;
+      }
+
+      await createEnterpriseFloor(peopleEnterprise.enterpriseId, values, apiBaseUrl);
+    },
+    onSuccess: async () => {
+      if (!peopleEnterprise) {
+        return;
+      }
+
+      await queryClient.invalidateQueries({
+        queryKey: ["enterprise-facilities-tree", peopleEnterprise.enterpriseId, apiBaseUrl]
+      });
+      setCreateFloorOpen(false);
+      setActiveBuildingIdForFloorCreate(null);
+      createFloorForm.resetFields();
+      messageApi.success("Floor added");
+    },
+    onError: (error) => {
+      messageApi.error(error instanceof Error ? error.message : "Create floor failed");
+    }
+  });
+
+  const updateFloorMutation = useMutation({
+    mutationFn: async (values: FloorFormValues) => {
+      if (!peopleEnterprise || !editingFloor) {
+        return;
+      }
+
+      await updateEnterpriseFloor(peopleEnterprise.enterpriseId, editingFloor.floorId, values, apiBaseUrl);
+    },
+    onSuccess: async () => {
+      if (!peopleEnterprise) {
+        return;
+      }
+
+      await queryClient.invalidateQueries({
+        queryKey: ["enterprise-facilities-tree", peopleEnterprise.enterpriseId, apiBaseUrl]
+      });
+      setEditingFloor(null);
+      editFloorForm.resetFields();
+      messageApi.success("Floor updated");
+    },
+    onError: (error) => {
+      messageApi.error(error instanceof Error ? error.message : "Update floor failed");
+    }
+  });
+
+  const deleteFloorMutation = useMutation({
+    mutationFn: async (floorId: string) => {
+      if (!peopleEnterprise) {
+        return;
+      }
+
+      await deleteEnterpriseFloor(peopleEnterprise.enterpriseId, floorId, apiBaseUrl);
+    },
+    onSuccess: async () => {
+      if (!peopleEnterprise) {
+        return;
+      }
+
+      await queryClient.invalidateQueries({
+        queryKey: ["enterprise-facilities-tree", peopleEnterprise.enterpriseId, apiBaseUrl]
+      });
+      messageApi.success("Floor deleted");
+    },
+    onError: (error) => {
+      messageApi.error(error instanceof Error ? error.message : "Delete floor failed");
+    }
+  });
+
   const createRoomMutation = useMutation({
     mutationFn: async (values: RoomFormValues) => {
       if (!peopleEnterprise) {
@@ -325,12 +498,13 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
       }
 
       await queryClient.invalidateQueries({
-        queryKey: ["enterprise-rooms", peopleEnterprise.enterpriseId, roomSearchText, apiBaseUrl]
-      });
-      await queryClient.invalidateQueries({
         queryKey: ["enterprise-room-options", peopleEnterprise.enterpriseId, apiBaseUrl]
       });
+      await queryClient.invalidateQueries({
+        queryKey: ["enterprise-facilities-tree", peopleEnterprise.enterpriseId, apiBaseUrl]
+      });
       setCreateRoomOpen(false);
+      setActiveFloorIdForRoomCreate(null);
       createRoomForm.resetFields();
       messageApi.success("Room added");
     },
@@ -353,13 +527,10 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
       }
 
       await queryClient.invalidateQueries({
-        queryKey: ["enterprise-rooms", peopleEnterprise.enterpriseId, roomSearchText, apiBaseUrl]
-      });
-      await queryClient.invalidateQueries({
         queryKey: ["enterprise-room-options", peopleEnterprise.enterpriseId, apiBaseUrl]
       });
       await queryClient.invalidateQueries({
-        queryKey: ["enterprise-beds", peopleEnterprise.enterpriseId, bedSearchText, apiBaseUrl]
+        queryKey: ["enterprise-facilities-tree", peopleEnterprise.enterpriseId, apiBaseUrl]
       });
       setEditingRoom(null);
       editRoomForm.resetFields();
@@ -384,13 +555,10 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
       }
 
       await queryClient.invalidateQueries({
-        queryKey: ["enterprise-rooms", peopleEnterprise.enterpriseId, roomSearchText, apiBaseUrl]
-      });
-      await queryClient.invalidateQueries({
         queryKey: ["enterprise-room-options", peopleEnterprise.enterpriseId, apiBaseUrl]
       });
       await queryClient.invalidateQueries({
-        queryKey: ["enterprise-beds", peopleEnterprise.enterpriseId, bedSearchText, apiBaseUrl]
+        queryKey: ["enterprise-facilities-tree", peopleEnterprise.enterpriseId, apiBaseUrl]
       });
       messageApi.success("Room deleted");
     },
@@ -413,12 +581,13 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
       }
 
       await queryClient.invalidateQueries({
-        queryKey: ["enterprise-beds", peopleEnterprise.enterpriseId, bedSearchText, apiBaseUrl]
+        queryKey: ["enterprise-room-options", peopleEnterprise.enterpriseId, apiBaseUrl]
       });
       await queryClient.invalidateQueries({
-        queryKey: ["enterprise-rooms", peopleEnterprise.enterpriseId, roomSearchText, apiBaseUrl]
+        queryKey: ["enterprise-facilities-tree", peopleEnterprise.enterpriseId, apiBaseUrl]
       });
       setCreateBedOpen(false);
+      setActiveRoomIdForBedCreate(null);
       createBedForm.resetFields();
       messageApi.success("Bed added");
     },
@@ -441,10 +610,10 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
       }
 
       await queryClient.invalidateQueries({
-        queryKey: ["enterprise-beds", peopleEnterprise.enterpriseId, bedSearchText, apiBaseUrl]
+        queryKey: ["enterprise-room-options", peopleEnterprise.enterpriseId, apiBaseUrl]
       });
       await queryClient.invalidateQueries({
-        queryKey: ["enterprise-rooms", peopleEnterprise.enterpriseId, roomSearchText, apiBaseUrl]
+        queryKey: ["enterprise-facilities-tree", peopleEnterprise.enterpriseId, apiBaseUrl]
       });
       setEditingBed(null);
       editBedForm.resetFields();
@@ -469,10 +638,10 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
       }
 
       await queryClient.invalidateQueries({
-        queryKey: ["enterprise-beds", peopleEnterprise.enterpriseId, bedSearchText, apiBaseUrl]
+        queryKey: ["enterprise-room-options", peopleEnterprise.enterpriseId, apiBaseUrl]
       });
       await queryClient.invalidateQueries({
-        queryKey: ["enterprise-rooms", peopleEnterprise.enterpriseId, roomSearchText, apiBaseUrl]
+        queryKey: ["enterprise-facilities-tree", peopleEnterprise.enterpriseId, apiBaseUrl]
       });
       messageApi.success("Bed deleted");
     },
@@ -580,12 +749,233 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
     }));
 
   const employments = employmentsQuery.data ?? [];
-  const rooms = roomsQuery.data ?? [];
+  const facilitiesTree = facilitiesTreeQuery.data?.buildings ?? [];
+  const buildingOptions = facilitiesTree.map((node) => ({
+    value: node.building.buildingId,
+    label: node.building.name
+  }));
+  const floorOptions = facilitiesTree.flatMap((buildingNode) =>
+    buildingNode.floors.map((floorNode) => ({
+      value: floorNode.floor.floorId,
+      label: `${buildingNode.building.name} / Floor ${floorNode.floor.level}`
+    }))
+  );
   const roomOptions = (roomOptionsQuery.data ?? []).map((item) => ({
     value: item.roomId,
-    label: item.number
+    label: `${item.buildingName} / Floor ${item.floorLevel} / Room ${item.number}`
   }));
-  const beds = bedsQuery.data ?? [];
+  const facilitiesTreeData = useMemo<TreeDataNode[]>(
+    () =>
+      facilitiesTree.map((buildingNode) => ({
+        key: `building-${buildingNode.building.buildingId}`,
+        title: (
+          <Space style={{ width: "100%", justifyContent: "space-between" }}>
+            <span>
+              <strong>{buildingNode.building.name}</strong>
+              {buildingNode.building.description ? ` - ${buildingNode.building.description}` : ""}
+            </span>
+            <Space>
+              <Button
+                size="small"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setEditingBuilding(buildingNode.building);
+                  editBuildingForm.setFieldsValue({
+                    name: buildingNode.building.name,
+                    description: buildingNode.building.description
+                  });
+                }}
+              >
+                Edit
+              </Button>
+              <Button
+                size="small"
+                type="primary"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setActiveBuildingIdForFloorCreate(buildingNode.building.buildingId);
+                  createFloorForm.setFieldsValue({ buildingId: buildingNode.building.buildingId });
+                  setCreateFloorOpen(true);
+                }}
+              >
+                Add Floor
+              </Button>
+              <Popconfirm
+                title="Delete building?"
+                okText="Delete"
+                okButtonProps={{ danger: true, loading: deleteBuildingMutation.isPending }}
+                onConfirm={(event) => {
+                  event?.stopPropagation();
+                  deleteBuildingMutation.mutate(buildingNode.building.buildingId);
+                }}
+              >
+                <Button size="small" danger onClick={(event) => event.stopPropagation()}>
+                  Delete
+                </Button>
+              </Popconfirm>
+            </Space>
+          </Space>
+        ),
+        children: buildingNode.floors.map((floorNode) => ({
+          key: `floor-${floorNode.floor.floorId}`,
+          title: (
+            <Space style={{ width: "100%", justifyContent: "space-between" }}>
+              <span>
+                Floor {floorNode.floor.level}
+                {floorNode.floor.description ? ` - ${floorNode.floor.description}` : ""}
+              </span>
+              <Space>
+                <Button
+                  size="small"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    setEditingFloor(floorNode.floor);
+                    editFloorForm.setFieldsValue({
+                      level: floorNode.floor.level,
+                      description: floorNode.floor.description,
+                      buildingId: floorNode.floor.buildingId
+                    });
+                  }}
+                >
+                  Edit
+                </Button>
+                <Button
+                  size="small"
+                  type="primary"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    setActiveFloorIdForRoomCreate(floorNode.floor.floorId);
+                    createRoomForm.setFieldsValue({ floorId: floorNode.floor.floorId });
+                    setCreateRoomOpen(true);
+                  }}
+                >
+                  Add Room
+                </Button>
+                <Popconfirm
+                  title="Delete floor?"
+                  okText="Delete"
+                  okButtonProps={{ danger: true, loading: deleteFloorMutation.isPending }}
+                  onConfirm={(event) => {
+                    event?.stopPropagation();
+                    deleteFloorMutation.mutate(floorNode.floor.floorId);
+                  }}
+                >
+                  <Button size="small" danger onClick={(event) => event.stopPropagation()}>
+                    Delete
+                  </Button>
+                </Popconfirm>
+              </Space>
+            </Space>
+          ),
+          children: floorNode.rooms.map((roomNode) => ({
+            key: `room-${roomNode.room.roomId}`,
+            title: (
+              <Space style={{ width: "100%", justifyContent: "space-between" }}>
+                <span>
+                  Room {roomNode.room.number}
+                  {roomNode.room.description ? ` - ${roomNode.room.description}` : ""} ({roomNode.room.bedCount} beds)
+                </span>
+                <Space>
+                  <Button
+                    size="small"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      setEditingRoom(roomNode.room);
+                      editRoomForm.setFieldsValue({
+                        number: roomNode.room.number,
+                        description: roomNode.room.description,
+                        floorId: roomNode.room.floorId
+                      });
+                    }}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    size="small"
+                    type="primary"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      setActiveRoomIdForBedCreate(roomNode.room.roomId);
+                      createBedForm.setFieldsValue({ roomId: roomNode.room.roomId });
+                      setCreateBedOpen(true);
+                    }}
+                  >
+                    Add Bed
+                  </Button>
+                  <Popconfirm
+                    title="Delete room?"
+                    okText="Delete"
+                    okButtonProps={{ danger: true, loading: deleteRoomMutation.isPending }}
+                    onConfirm={(event) => {
+                      event?.stopPropagation();
+                      deleteRoomMutation.mutate(roomNode.room.roomId);
+                    }}
+                  >
+                    <Button size="small" danger onClick={(event) => event.stopPropagation()}>
+                      Delete
+                    </Button>
+                  </Popconfirm>
+                </Space>
+              </Space>
+            ),
+            children: roomNode.beds.map((bed) => ({
+              key: `bed-${bed.bedId}`,
+              title: (
+                <Space style={{ width: "100%", justifyContent: "space-between" }}>
+                  <span>
+                    Bed {bed.number}
+                    {bed.description ? ` - ${bed.description}` : ""}
+                  </span>
+                  <Space>
+                    <Button
+                      size="small"
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        setEditingBed(bed);
+                        editBedForm.setFieldsValue({
+                          number: bed.number,
+                          roomId: bed.roomId,
+                          description: bed.description
+                        });
+                      }}
+                    >
+                      Edit
+                    </Button>
+                    <Popconfirm
+                      title="Delete bed?"
+                      okText="Delete"
+                      okButtonProps={{ danger: true, loading: deleteBedMutation.isPending }}
+                      onConfirm={(event) => {
+                        event?.stopPropagation();
+                        deleteBedMutation.mutate(bed.bedId);
+                      }}
+                    >
+                      <Button size="small" danger onClick={(event) => event.stopPropagation()}>
+                        Delete
+                      </Button>
+                    </Popconfirm>
+                  </Space>
+                </Space>
+              )
+            }))
+          }))
+        }))
+      })),
+    [
+      createBedForm,
+      createFloorForm,
+      createRoomForm,
+      deleteBedMutation.isPending,
+      deleteBuildingMutation.isPending,
+      deleteFloorMutation.isPending,
+      deleteRoomMutation.isPending,
+      editBedForm,
+      editBuildingForm,
+      editFloorForm,
+      editRoomForm,
+      facilitiesTree
+    ]
+  );
   const employmentGroups = useMemo<EmploymentGroup[]>(() => {
     const map = new Map<string, EmploymentGroup>();
     for (const employment of employments) {
@@ -633,17 +1023,26 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                 onClick={() => {
                   setPeopleEnterprise(null);
                   setEditingEmployment(null);
+                  setEditingBuilding(null);
+                  setEditingFloor(null);
                   setEditingRoom(null);
                   setEditingBed(null);
                   setCreateEmploymentOpen(false);
+                  setCreateBuildingOpen(false);
+                  setCreateFloorOpen(false);
                   setCreateRoomOpen(false);
                   setCreateBedOpen(false);
-                  setRoomSearchText("");
-                  setBedSearchText("");
+                  setActiveBuildingIdForFloorCreate(null);
+                  setActiveFloorIdForRoomCreate(null);
+                  setActiveRoomIdForBedCreate(null);
                   setEffectiveDateDrafts({});
                   setPeopleTabKey("people");
                   employmentForm.resetFields();
                   editEmploymentForm.resetFields();
+                  createBuildingForm.resetFields();
+                  editBuildingForm.resetFields();
+                  createFloorForm.resetFields();
+                  editFloorForm.resetFields();
                   createRoomForm.resetFields();
                   editRoomForm.resetFields();
                   createBedForm.resetFields();
@@ -833,158 +1232,31 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                   label: "Facilities",
                   children: (
                     <Space direction="vertical" size="middle" style={{ width: "100%" }}>
-                      <Card size="small" title="Rooms">
+                      <Card size="small" title="Buildings / Floors / Rooms / Beds">
                         <Space direction="vertical" size="middle" style={{ width: "100%" }}>
-                          <Space style={{ width: "100%", justifyContent: "space-between" }}>
-                            <Input.Search
-                              allowClear
-                              placeholder="Search room number"
-                              value={roomSearchText}
-                              onChange={(event) => setRoomSearchText(event.target.value)}
-                              style={{ maxWidth: 320 }}
-                            />
-                            <Button type="primary" onClick={() => setCreateRoomOpen(true)}>
-                              Add Room
+                          <Space style={{ width: "100%", justifyContent: "flex-end" }}>
+                            <Button type="primary" onClick={() => setCreateBuildingOpen(true)}>
+                              Add Building
                             </Button>
                           </Space>
 
-                          {roomsQuery.isError ? (
+                          {facilitiesTreeQuery.isError ? (
                             <Alert
                               type="error"
-                              message="Failed to load rooms"
-                              description={roomsQuery.error instanceof Error ? roomsQuery.error.message : "Unknown error"}
+                              message="Failed to load facilities"
+                              description={
+                                facilitiesTreeQuery.error instanceof Error
+                                  ? facilitiesTreeQuery.error.message
+                                  : "Unknown error"
+                              }
                               showIcon
                             />
-                          ) : roomsQuery.isLoading ? (
+                          ) : facilitiesTreeQuery.isLoading ? (
                             <Spin />
-                          ) : rooms.length === 0 ? (
-                            <Empty description="No rooms found." />
+                          ) : facilitiesTree.length === 0 ? (
+                            <Empty description="No facilities found." />
                           ) : (
-                            <div className="tanstack-table-wrapper">
-                              <table className="tanstack-table">
-                                <thead>
-                                  <tr>
-                                    <th>Room Number</th>
-                                    <th>Description</th>
-                                    <th>Beds</th>
-                                    <th>Actions</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {rooms.map((room) => (
-                                    <tr key={room.roomId}>
-                                      <td>{room.number}</td>
-                                      <td>{room.description || "-"}</td>
-                                      <td>{room.bedCount}</td>
-                                      <td>
-                                        <Space>
-                                          <Button
-                                            size="small"
-                                            onClick={() => {
-                                              setEditingRoom(room);
-                                              editRoomForm.setFieldsValue({ number: room.number, description: room.description });
-                                            }}
-                                          >
-                                            Edit
-                                          </Button>
-                                          <Popconfirm
-                                            title="Delete room?"
-                                            description="This removes the room from this enterprise."
-                                            okText="Delete"
-                                            okButtonProps={{ danger: true, loading: deleteRoomMutation.isPending }}
-                                            onConfirm={() => deleteRoomMutation.mutate(room.roomId)}
-                                          >
-                                            <Button size="small" danger>
-                                              Delete
-                                            </Button>
-                                          </Popconfirm>
-                                        </Space>
-                                      </td>
-                                    </tr>
-                                  ))}
-                                </tbody>
-                              </table>
-                            </div>
-                          )}
-                        </Space>
-                      </Card>
-
-                      <Card size="small" title="Beds">
-                        <Space direction="vertical" size="middle" style={{ width: "100%" }}>
-                          <Space style={{ width: "100%", justifyContent: "space-between" }}>
-                            <Input.Search
-                              allowClear
-                              placeholder="Search bed or room number"
-                              value={bedSearchText}
-                              onChange={(event) => setBedSearchText(event.target.value)}
-                              style={{ maxWidth: 320 }}
-                            />
-                            <Button type="primary" onClick={() => setCreateBedOpen(true)}>
-                              Add Bed
-                            </Button>
-                          </Space>
-
-                          {bedsQuery.isError ? (
-                            <Alert
-                              type="error"
-                              message="Failed to load beds"
-                              description={bedsQuery.error instanceof Error ? bedsQuery.error.message : "Unknown error"}
-                              showIcon
-                            />
-                          ) : bedsQuery.isLoading ? (
-                            <Spin />
-                          ) : beds.length === 0 ? (
-                            <Empty description="No beds found." />
-                          ) : (
-                            <div className="tanstack-table-wrapper">
-                              <table className="tanstack-table">
-                                <thead>
-                                  <tr>
-                                    <th>Bed Number</th>
-                                    <th>Description</th>
-                                    <th>Room</th>
-                                    <th>Actions</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {beds.map((bed) => (
-                                    <tr key={bed.bedId}>
-                                      <td>{bed.number}</td>
-                                      <td>{bed.description || "-"}</td>
-                                      <td>{bed.roomNumber}</td>
-                                      <td>
-                                        <Space>
-                                          <Button
-                                            size="small"
-                                            onClick={() => {
-                                              setEditingBed(bed);
-                                              editBedForm.setFieldsValue({
-                                                number: bed.number,
-                                                roomId: bed.roomId,
-                                                description: bed.description
-                                              });
-                                            }}
-                                          >
-                                            Edit
-                                          </Button>
-                                          <Popconfirm
-                                            title="Delete bed?"
-                                            description="This removes the bed from this enterprise."
-                                            okText="Delete"
-                                            okButtonProps={{ danger: true, loading: deleteBedMutation.isPending }}
-                                            onConfirm={() => deleteBedMutation.mutate(bed.bedId)}
-                                          >
-                                            <Button size="small" danger>
-                                              Delete
-                                            </Button>
-                                          </Popconfirm>
-                                        </Space>
-                                      </td>
-                                    </tr>
-                                  ))}
-                                </tbody>
-                              </table>
-                            </div>
+                            <Tree showLine defaultExpandAll blockNode treeData={facilitiesTreeData} />
                           )}
                         </Space>
                       </Card>
@@ -1095,11 +1367,128 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
             </TopDrawerForm>
 
             <TopDrawerForm
+              open={isCreateBuildingOpen}
+              title="Add Building"
+              submitText="Add"
+              onClose={() => {
+                setCreateBuildingOpen(false);
+                createBuildingForm.resetFields();
+              }}
+              onSubmit={() => createBuildingForm.submit()}
+              loading={createBuildingMutation.isPending}
+            >
+              <Form<BuildingFormValues>
+                form={createBuildingForm}
+                layout="vertical"
+                onFinish={(values) => createBuildingMutation.mutate(values)}
+              >
+                <Form.Item
+                  name="name"
+                  label="Building Name"
+                  rules={[{ required: true, message: "Building name is required" }]}
+                >
+                  <Input maxLength={200} />
+                </Form.Item>
+                <Form.Item name="description" label="Description">
+                  <Input.TextArea rows={3} maxLength={500} />
+                </Form.Item>
+              </Form>
+            </TopDrawerForm>
+
+            <TopDrawerForm
+              open={Boolean(editingBuilding)}
+              title="Edit Building"
+              submitText="Update"
+              onClose={() => {
+                setEditingBuilding(null);
+                editBuildingForm.resetFields();
+              }}
+              onSubmit={() => editBuildingForm.submit()}
+              loading={updateBuildingMutation.isPending}
+            >
+              <Form<BuildingFormValues>
+                form={editBuildingForm}
+                layout="vertical"
+                onFinish={(values) => updateBuildingMutation.mutate(values)}
+              >
+                <Form.Item
+                  name="name"
+                  label="Building Name"
+                  rules={[{ required: true, message: "Building name is required" }]}
+                >
+                  <Input maxLength={200} />
+                </Form.Item>
+                <Form.Item name="description" label="Description">
+                  <Input.TextArea rows={3} maxLength={500} />
+                </Form.Item>
+              </Form>
+            </TopDrawerForm>
+
+            <TopDrawerForm
+              open={isCreateFloorOpen}
+              title="Add Floor"
+              submitText="Add"
+              onClose={() => {
+                setCreateFloorOpen(false);
+                setActiveBuildingIdForFloorCreate(null);
+                createFloorForm.resetFields();
+              }}
+              onSubmit={() => createFloorForm.submit()}
+              loading={createFloorMutation.isPending}
+            >
+              <Form<FloorFormValues> form={createFloorForm} layout="vertical" onFinish={(values) => createFloorMutation.mutate(values)}>
+                <Form.Item
+                  name="buildingId"
+                  label="Building"
+                  initialValue={activeBuildingIdForFloorCreate ?? undefined}
+                  rules={[{ required: true, message: "Building is required" }]}
+                >
+                  <Select showSearch options={buildingOptions} placeholder="Select building" optionFilterProp="label" />
+                </Form.Item>
+                <Form.Item name="level" label="Floor Level" rules={[{ required: true, message: "Floor level is required" }]}>
+                  <InputNumber style={{ width: "100%" }} />
+                </Form.Item>
+                <Form.Item name="description" label="Description">
+                  <Input.TextArea rows={3} maxLength={500} />
+                </Form.Item>
+              </Form>
+            </TopDrawerForm>
+
+            <TopDrawerForm
+              open={Boolean(editingFloor)}
+              title="Edit Floor"
+              submitText="Update"
+              onClose={() => {
+                setEditingFloor(null);
+                editFloorForm.resetFields();
+              }}
+              onSubmit={() => editFloorForm.submit()}
+              loading={updateFloorMutation.isPending}
+            >
+              <Form<FloorFormValues> form={editFloorForm} layout="vertical" onFinish={(values) => updateFloorMutation.mutate(values)}>
+                <Form.Item
+                  name="buildingId"
+                  label="Building"
+                  rules={[{ required: true, message: "Building is required" }]}
+                >
+                  <Select showSearch options={buildingOptions} placeholder="Select building" optionFilterProp="label" />
+                </Form.Item>
+                <Form.Item name="level" label="Floor Level" rules={[{ required: true, message: "Floor level is required" }]}>
+                  <InputNumber style={{ width: "100%" }} />
+                </Form.Item>
+                <Form.Item name="description" label="Description">
+                  <Input.TextArea rows={3} maxLength={500} />
+                </Form.Item>
+              </Form>
+            </TopDrawerForm>
+
+            <TopDrawerForm
               open={isCreateRoomOpen}
               title="Add Room"
               submitText="Add"
               onClose={() => {
                 setCreateRoomOpen(false);
+                setActiveFloorIdForRoomCreate(null);
                 createRoomForm.resetFields();
               }}
               onSubmit={() => createRoomForm.submit()}
@@ -1112,6 +1501,14 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                   rules={[{ required: true, message: "Room number is required" }]}
                 >
                   <Input maxLength={100} />
+                </Form.Item>
+                <Form.Item
+                  name="floorId"
+                  label="Floor"
+                  initialValue={activeFloorIdForRoomCreate ?? undefined}
+                  rules={[{ required: true, message: "Floor is required" }]}
+                >
+                  <Select showSearch options={floorOptions} placeholder="Select floor" optionFilterProp="label" />
                 </Form.Item>
                 <Form.Item name="description" label="Description">
                   <Input.TextArea rows={3} maxLength={500} />
@@ -1138,6 +1535,13 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                 >
                   <Input maxLength={100} />
                 </Form.Item>
+                <Form.Item
+                  name="floorId"
+                  label="Floor"
+                  rules={[{ required: true, message: "Floor is required" }]}
+                >
+                  <Select showSearch options={floorOptions} placeholder="Select floor" optionFilterProp="label" />
+                </Form.Item>
                 <Form.Item name="description" label="Description">
                   <Input.TextArea rows={3} maxLength={500} />
                 </Form.Item>
@@ -1150,6 +1554,7 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
               submitText="Add"
               onClose={() => {
                 setCreateBedOpen(false);
+                setActiveRoomIdForBedCreate(null);
                 createBedForm.resetFields();
               }}
               onSubmit={() => createBedForm.submit()}
@@ -1169,6 +1574,7 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                 <Form.Item
                   name="roomId"
                   label="Room"
+                  initialValue={activeRoomIdForBedCreate ?? undefined}
                   rules={[{ required: true, message: "Room is required" }]}
                 >
                   <Select

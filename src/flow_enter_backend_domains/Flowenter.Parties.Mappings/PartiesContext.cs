@@ -72,8 +72,9 @@ public sealed class PartiesContext : DbContext
         //{
         //    builder.HasQueryFilter(pr => pr.TenantId == _tenantProvider.GetPartiesTenantId());
         //});
-        modelBuilder.Entity<Enterprise>();
-        modelBuilder.Entity<Customer>();
+        modelBuilder.Entity<Enterprise>().ToTable("Enterprises");
+        modelBuilder.Entity<Customer>().ToTable("Customers");
+        modelBuilder.Entity<Branch>().ToTable("Branchs");
 
         //modelBuilder.Entity<ContactMechanism>(builder =>
         //{
@@ -126,6 +127,7 @@ public sealed class PartiesContext : DbContext
                 l => l.HasOne(e => e.Party).WithMany()
             );
 
+        modelBuilder.Entity<Employment>().ToTable("Employments");
         modelBuilder.Entity<Employment>(builder =>
         {
             builder.HasOne(e => e.Employee)
@@ -136,6 +138,20 @@ public sealed class PartiesContext : DbContext
             builder.HasOne(e => e.Employer)
                 .WithMany()
                 .HasForeignKey(e => e.EmployerId)
+                .OnDelete(DeleteBehavior.NoAction);
+        });
+
+        modelBuilder.Entity<EnterpriseBranch>().ToTable("EnterpriseBranchs");
+        modelBuilder.Entity<EnterpriseBranch>(builder =>
+        {
+            builder.HasOne(e => e.Enterprise)
+                .WithMany()
+                .HasForeignKey(e => e.EnterpriseId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasOne(e => e.Branch)
+                .WithMany()
+                .HasForeignKey(e => e.BranchId)
                 .OnDelete(DeleteBehavior.NoAction);
         });
 

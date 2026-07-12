@@ -280,6 +280,8 @@ public class EnterprisesController : ControllerBase
 
         var orphanBedIds = new List<Guid>();
         var orphanRoomIds = new List<Guid>();
+        var orphanFloorIds = new List<Guid>();
+        var orphanBuildingIds = new List<Guid>();
         foreach (var facilityId in affectedFacilityIds)
         {
             var hasOtherFacilityRoleReferences = await context.FacilityRoles
@@ -313,6 +315,30 @@ public class EnterprisesController : ControllerBase
             if (orphanRoomId != Guid.Empty)
             {
                 orphanRoomIds.Add(orphanRoomId);
+                continue;
+            }
+
+            var orphanFloorId = await context.Facilities
+                .OfType<Floor>()
+                .Where(item => item.Id == facilityId)
+                .Select(item => item.Id!.Value)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (orphanFloorId != Guid.Empty)
+            {
+                orphanFloorIds.Add(orphanFloorId);
+                continue;
+            }
+
+            var orphanBuildingId = await context.Facilities
+                .OfType<Building>()
+                .Where(item => item.Id == facilityId)
+                .Select(item => item.Id!.Value)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (orphanBuildingId != Guid.Empty)
+            {
+                orphanBuildingIds.Add(orphanBuildingId);
             }
         }
 
@@ -361,6 +387,80 @@ public class EnterprisesController : ControllerBase
                 if (orphanRooms.Count > 0)
                 {
                     context.Facilities.RemoveRange(orphanRooms);
+                }
+            }
+        }
+
+        if (orphanFloorIds.Count > 0)
+        {
+            var removableFloorIds = new List<Guid>();
+            foreach (var floorId in orphanFloorIds.Distinct())
+            {
+                var hasRoomReference = await context.Facilities
+                    .OfType<Room>()
+                    .AnyAsync(item => item.FloorId == floorId && (!item.Id.HasValue || !orphanRoomIds.Contains(item.Id.Value)),
+                        cancellationToken);
+                if (hasRoomReference)
+                {
+                    continue;
+                }
+
+                var hasPartOfReference = await context.Facilities
+                    .AnyAsync(item => item.PartOfId == floorId, cancellationToken);
+                if (hasPartOfReference)
+                {
+                    continue;
+                }
+
+                removableFloorIds.Add(floorId);
+            }
+
+            if (removableFloorIds.Count > 0)
+            {
+                var orphanFloors = await context.Facilities
+                    .OfType<Floor>()
+                    .Where(item => item.Id.HasValue && removableFloorIds.Contains(item.Id.Value))
+                    .ToListAsync(cancellationToken);
+                if (orphanFloors.Count > 0)
+                {
+                    context.Facilities.RemoveRange(orphanFloors);
+                }
+            }
+        }
+
+        if (orphanBuildingIds.Count > 0)
+        {
+            var removableBuildingIds = new List<Guid>();
+            foreach (var buildingId in orphanBuildingIds.Distinct())
+            {
+                var hasFloorReference = await context.Facilities
+                    .OfType<Floor>()
+                    .AnyAsync(item => item.BuildingId == buildingId && (!item.Id.HasValue || !orphanFloorIds.Contains(item.Id.Value)),
+                        cancellationToken);
+                if (hasFloorReference)
+                {
+                    continue;
+                }
+
+                var hasPartOfReference = await context.Facilities
+                    .AnyAsync(item => item.PartOfId == buildingId, cancellationToken);
+                if (hasPartOfReference)
+                {
+                    continue;
+                }
+
+                removableBuildingIds.Add(buildingId);
+            }
+
+            if (removableBuildingIds.Count > 0)
+            {
+                var orphanBuildings = await context.Facilities
+                    .OfType<Building>()
+                    .Where(item => item.Id.HasValue && removableBuildingIds.Contains(item.Id.Value))
+                    .ToListAsync(cancellationToken);
+                if (orphanBuildings.Count > 0)
+                {
+                    context.Facilities.RemoveRange(orphanBuildings);
                 }
             }
         }
@@ -992,6 +1092,564 @@ public class EnterprisesController : ControllerBase
         return NoContent();
     }
 
+    [HttpGet("{enterprise_role_id:guid}/facilities/tree")]
+    [ProducesResponseType(typeof(EnterpriseFacilitiesTreeDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetEnterpriseFacilitiesTree(
+        [FromRoute] Guid enterprise_role_id,
+        CancellationToken cancellationToken)
+    {
+        using var context = _factory.CreateDbContext();
+
+        var enterprise = await context.PartyRoles
+            .OfType<Enterprise>()
+            .Select(e => new { e.Id, e.PartyId, e.TypeId })
+            .FirstOrDefaultAsync(e => e.Id == enterprise_role_id, cancellationToken);
+        if (enterprise == null || !enterprise.PartyId.HasValue || !enterprise.TypeId.HasValue)
+        {
+            return NotFound();
+        }
+
+        var facilityIds = await context.FacilityRoles
+            .Where(role =>
+                role.Id.HasValue
+                && role.PartyId == enterprise.PartyId
+                && role.PartyRoleTypeId == enterprise.TypeId)
+            .Select(role => role.Id!.Value)
+            .Distinct()
+            .ToListAsync(cancellationToken);
+
+        if (facilityIds.Count == 0)
+        {
+            return Ok(new EnterpriseFacilitiesTreeDto());
+        }
+
+        var buildings = await context.Facilities
+            .OfType<Building>()
+            .Where(item => item.Id.HasValue && facilityIds.Contains(item.Id.Value))
+            .OrderBy(item => item.Name)
+            .ToListAsync(cancellationToken);
+
+        var floors = await context.Facilities
+            .OfType<Floor>()
+            .Include(item => item.Building)
+            .Where(item => item.Id.HasValue && facilityIds.Contains(item.Id.Value))
+            .OrderBy(item => item.Level)
+            .ToListAsync(cancellationToken);
+
+        var rooms = await context.Facilities
+            .OfType<Room>()
+            .Include(item => item.Floor)
+            .ThenInclude(item => item!.Building)
+            .Where(item => item.Id.HasValue && facilityIds.Contains(item.Id.Value))
+            .OrderBy(item => item.Number)
+            .ToListAsync(cancellationToken);
+
+        var beds = await context.Facilities
+            .OfType<Bed>()
+            .Include(item => item.Room)
+            .ThenInclude(item => item!.Floor)
+            .ThenInclude(item => item!.Building)
+            .Where(item => item.Id.HasValue && facilityIds.Contains(item.Id.Value))
+            .OrderBy(item => item.Number)
+            .ToListAsync(cancellationToken);
+
+        var bedsByRoomId = beds
+            .Where(item => item.RoomId.HasValue)
+            .GroupBy(item => item.RoomId!.Value)
+            .ToDictionary(group => group.Key, group => group.ToList());
+
+        var roomsByFloorId = rooms
+            .Where(item => item.FloorId.HasValue)
+            .GroupBy(item => item.FloorId!.Value)
+            .ToDictionary(group => group.Key, group => group.ToList());
+
+        var floorsByBuildingId = floors
+            .Where(item => item.BuildingId.HasValue)
+            .GroupBy(item => item.BuildingId!.Value)
+            .ToDictionary(group => group.Key, group => group.ToList());
+
+        var tree = new EnterpriseFacilitiesTreeDto
+        {
+            Buildings = buildings.Select(building =>
+            {
+                var buildingId = building.Id!.Value;
+                var floorNodes = floorsByBuildingId.TryGetValue(buildingId, out var relatedFloors)
+                    ? relatedFloors.Select(floor =>
+                    {
+                        var floorId = floor.Id!.Value;
+                        var roomNodes = roomsByFloorId.TryGetValue(floorId, out var relatedRooms)
+                            ? relatedRooms.Select(room =>
+                            {
+                                var roomId = room.Id!.Value;
+                                var roomBeds = bedsByRoomId.TryGetValue(roomId, out var relatedBeds)
+                                    ? relatedBeds
+                                    : [];
+                                return new RoomFacilitiesNodeDto
+                                {
+                                    Room = new RoomDto
+                                    {
+                                        RoomId = roomId,
+                                        Number = room.Number ?? string.Empty,
+                                        Description = room.Description,
+                                        FloorId = floorId,
+                                        FloorLevel = floor.Level,
+                                        BuildingId = buildingId,
+                                        BuildingName = building.Name ?? string.Empty,
+                                        BedCount = roomBeds.Count,
+                                        CreatedAtUtc = room.CreatedAtUtc,
+                                        UpdatedAtUtc = room.UpdatedAtUtc,
+                                        Revision = room.Revision
+                                    },
+                                    Beds = roomBeds.Select(bed => new BedDto
+                                    {
+                                        BedId = bed.Id!.Value,
+                                        Number = bed.Number ?? string.Empty,
+                                        Description = bed.Description,
+                                        RoomId = roomId,
+                                        RoomNumber = room.Number ?? string.Empty,
+                                        FloorId = floorId,
+                                        FloorLevel = floor.Level,
+                                        BuildingId = buildingId,
+                                        BuildingName = building.Name,
+                                        CreatedAtUtc = bed.CreatedAtUtc,
+                                        UpdatedAtUtc = bed.UpdatedAtUtc,
+                                        Revision = bed.Revision
+                                    }).ToList()
+                                };
+                            }).ToList()
+                            : [];
+
+                        return new FloorFacilitiesNodeDto
+                        {
+                            Floor = new FloorDto
+                            {
+                                FloorId = floorId,
+                                Level = floor.Level,
+                                Description = floor.Description,
+                                BuildingId = buildingId,
+                                BuildingName = building.Name ?? string.Empty,
+                                CreatedAtUtc = floor.CreatedAtUtc,
+                                UpdatedAtUtc = floor.UpdatedAtUtc,
+                                Revision = floor.Revision
+                            },
+                            Rooms = roomNodes
+                        };
+                    }).ToList()
+                    : [];
+
+                return new BuildingFacilitiesNodeDto
+                {
+                    Building = new BuildingDto
+                    {
+                        BuildingId = buildingId,
+                        Name = building.Name ?? string.Empty,
+                        Description = building.Description,
+                        CreatedAtUtc = building.CreatedAtUtc,
+                        UpdatedAtUtc = building.UpdatedAtUtc,
+                        Revision = building.Revision
+                    },
+                    Floors = floorNodes
+                };
+            }).ToList()
+        };
+
+        return Ok(tree);
+    }
+
+    [HttpPost("{enterprise_role_id:guid}/facilities/buildings")]
+    [ProducesResponseType(typeof(BuildingDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> CreateEnterpriseBuilding(
+        [FromRoute] Guid enterprise_role_id,
+        [FromBody] CreateBuildingDto createDto,
+        CancellationToken cancellationToken)
+    {
+        using var context = _factory.CreateDbContext();
+
+        var enterprise = await context.PartyRoles
+            .OfType<Enterprise>()
+            .Select(e => new { e.Id, e.PartyId, e.TypeId })
+            .FirstOrDefaultAsync(e => e.Id == enterprise_role_id, cancellationToken);
+        if (enterprise == null || !enterprise.PartyId.HasValue || !enterprise.TypeId.HasValue)
+        {
+            return NotFound();
+        }
+
+        var buildingFacilityType = await context.FacilityTypes
+            .SingleOrDefaultAsync(item => item.Code == FacilityType.Building, cancellationToken);
+        if (buildingFacilityType == null)
+        {
+            return Problem(
+                statusCode: StatusCodes.Status500InternalServerError,
+                title: "Missing master data",
+                detail: $"FacilityType '{FacilityType.Building}' not found. Run database migration/seeding.");
+        }
+
+        var ownFacilityRoleType = await context.FacilityRoleTypes
+            .SingleOrDefaultAsync(item => item.Code == FacilityRoleType.Own, cancellationToken);
+        if (ownFacilityRoleType == null)
+        {
+            return Problem(
+                statusCode: StatusCodes.Status500InternalServerError,
+                title: "Missing master data",
+                detail: $"FacilityRoleType '{FacilityRoleType.Own}' not found. Run database migration/seeding.");
+        }
+
+        var building = new Building
+        {
+            Id = Guid.NewGuid(),
+            Name = createDto.Name.Trim(),
+            Description = string.IsNullOrWhiteSpace(createDto.Description) ? null : createDto.Description.Trim(),
+            FacilityTypeId = buildingFacilityType.Id
+        };
+
+        var facilityRole = new FacilityRole
+        {
+            Id = building.Id,
+            FacilityRoleTypeId = ownFacilityRoleType.Id,
+            PartyId = enterprise.PartyId,
+            PartyRoleTypeId = enterprise.TypeId
+        };
+
+        await context.AddAsync(building, cancellationToken);
+        await context.AddAsync(facilityRole, cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
+
+        return Created($"/api/parties/enterprises/{enterprise_role_id}/facilities/buildings/{building.Id}", new BuildingDto
+        {
+            BuildingId = building.Id!.Value,
+            Name = building.Name ?? string.Empty,
+            Description = building.Description,
+            CreatedAtUtc = building.CreatedAtUtc,
+            UpdatedAtUtc = building.UpdatedAtUtc,
+            Revision = building.Revision
+        });
+    }
+
+    [HttpPut("{enterprise_role_id:guid}/facilities/buildings/{building_id:guid}")]
+    [ProducesResponseType(typeof(BuildingDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateEnterpriseBuilding(
+        [FromRoute] Guid enterprise_role_id,
+        [FromRoute] Guid building_id,
+        [FromBody] UpdateBuildingDto updateDto,
+        CancellationToken cancellationToken)
+    {
+        using var context = _factory.CreateDbContext();
+
+        var enterprise = await context.PartyRoles
+            .OfType<Enterprise>()
+            .Select(e => new { e.Id, e.PartyId, e.TypeId })
+            .FirstOrDefaultAsync(e => e.Id == enterprise_role_id, cancellationToken);
+        if (enterprise == null || !enterprise.PartyId.HasValue || !enterprise.TypeId.HasValue)
+        {
+            return NotFound();
+        }
+
+        var building = await context.Facilities
+            .OfType<Building>()
+            .FirstOrDefaultAsync(item =>
+                    item.Id == building_id
+                    && context.FacilityRoles.Any(role =>
+                        role.Id == item.Id
+                        && role.PartyId == enterprise.PartyId
+                        && role.PartyRoleTypeId == enterprise.TypeId),
+                cancellationToken);
+        if (building == null)
+        {
+            return NotFound();
+        }
+
+        building.Name = updateDto.Name.Trim();
+        building.Description = string.IsNullOrWhiteSpace(updateDto.Description) ? null : updateDto.Description.Trim();
+        await context.SaveChangesAsync(cancellationToken);
+
+        return Ok(new BuildingDto
+        {
+            BuildingId = building.Id!.Value,
+            Name = building.Name ?? string.Empty,
+            Description = building.Description,
+            CreatedAtUtc = building.CreatedAtUtc,
+            UpdatedAtUtc = building.UpdatedAtUtc,
+            Revision = building.Revision
+        });
+    }
+
+    [HttpDelete("{enterprise_role_id:guid}/facilities/buildings/{building_id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteEnterpriseBuilding(
+        [FromRoute] Guid enterprise_role_id,
+        [FromRoute] Guid building_id,
+        CancellationToken cancellationToken)
+    {
+        using var context = _factory.CreateDbContext();
+
+        var enterprise = await context.PartyRoles
+            .OfType<Enterprise>()
+            .Select(e => new { e.Id, e.PartyId, e.TypeId })
+            .FirstOrDefaultAsync(e => e.Id == enterprise_role_id, cancellationToken);
+        if (enterprise == null || !enterprise.PartyId.HasValue || !enterprise.TypeId.HasValue)
+        {
+            return NotFound();
+        }
+
+        var enterpriseBuildingRoles = await context.FacilityRoles
+            .Where(role => role.Id == building_id
+                           && role.PartyId == enterprise.PartyId
+                           && role.PartyRoleTypeId == enterprise.TypeId)
+            .ToListAsync(cancellationToken);
+        if (enterpriseBuildingRoles.Count == 0)
+        {
+            return NotFound();
+        }
+
+        context.FacilityRoles.RemoveRange(enterpriseBuildingRoles);
+
+        var hasOtherFacilityRoleReferences = await context.FacilityRoles
+            .AnyAsync(role => role.Id == building_id
+                              && (role.PartyId != enterprise.PartyId || role.PartyRoleTypeId != enterprise.TypeId),
+                cancellationToken);
+        if (!hasOtherFacilityRoleReferences)
+        {
+            var hasFloorReference = await context.Facilities
+                .OfType<Floor>()
+                .AnyAsync(item => item.BuildingId == building_id, cancellationToken);
+            if (hasFloorReference)
+            {
+                return BadRequest("Cannot delete building while floors still exist.");
+            }
+
+            var building = await context.Facilities
+                .OfType<Building>()
+                .FirstOrDefaultAsync(item => item.Id == building_id, cancellationToken);
+            if (building != null)
+            {
+                context.Facilities.Remove(building);
+            }
+        }
+
+        await context.SaveChangesAsync(cancellationToken);
+        return NoContent();
+    }
+
+    [HttpPost("{enterprise_role_id:guid}/facilities/floors")]
+    [ProducesResponseType(typeof(FloorDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> CreateEnterpriseFloor(
+        [FromRoute] Guid enterprise_role_id,
+        [FromBody] CreateFloorDto createDto,
+        CancellationToken cancellationToken)
+    {
+        using var context = _factory.CreateDbContext();
+
+        var enterprise = await context.PartyRoles
+            .OfType<Enterprise>()
+            .Select(e => new { e.Id, e.PartyId, e.TypeId })
+            .FirstOrDefaultAsync(e => e.Id == enterprise_role_id, cancellationToken);
+        if (enterprise == null || !enterprise.PartyId.HasValue || !enterprise.TypeId.HasValue)
+        {
+            return NotFound();
+        }
+
+        var building = await context.Facilities
+            .OfType<Building>()
+            .FirstOrDefaultAsync(item =>
+                    item.Id == createDto.BuildingId
+                    && context.FacilityRoles.Any(role =>
+                        role.Id == item.Id
+                        && role.PartyId == enterprise.PartyId
+                        && role.PartyRoleTypeId == enterprise.TypeId),
+                cancellationToken);
+        if (building == null)
+        {
+            return NotFound();
+        }
+
+        var floorFacilityType = await context.FacilityTypes
+            .SingleOrDefaultAsync(item => item.Code == FacilityType.Floor, cancellationToken);
+        if (floorFacilityType == null)
+        {
+            return Problem(
+                statusCode: StatusCodes.Status500InternalServerError,
+                title: "Missing master data",
+                detail: $"FacilityType '{FacilityType.Floor}' not found. Run database migration/seeding.");
+        }
+
+        var ownFacilityRoleType = await context.FacilityRoleTypes
+            .SingleOrDefaultAsync(item => item.Code == FacilityRoleType.Own, cancellationToken);
+        if (ownFacilityRoleType == null)
+        {
+            return Problem(
+                statusCode: StatusCodes.Status500InternalServerError,
+                title: "Missing master data",
+                detail: $"FacilityRoleType '{FacilityRoleType.Own}' not found. Run database migration/seeding.");
+        }
+
+        var floor = new Floor
+        {
+            Id = Guid.NewGuid(),
+            BuildingId = building.Id,
+            PartOfId = building.Id,
+            Level = createDto.Level,
+            Description = string.IsNullOrWhiteSpace(createDto.Description) ? null : createDto.Description.Trim(),
+            FacilityTypeId = floorFacilityType.Id
+        };
+
+        var facilityRole = new FacilityRole
+        {
+            Id = floor.Id,
+            FacilityRoleTypeId = ownFacilityRoleType.Id,
+            PartyId = enterprise.PartyId,
+            PartyRoleTypeId = enterprise.TypeId
+        };
+
+        await context.AddAsync(floor, cancellationToken);
+        await context.AddAsync(facilityRole, cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
+
+        return Created($"/api/parties/enterprises/{enterprise_role_id}/facilities/floors/{floor.Id}", new FloorDto
+        {
+            FloorId = floor.Id!.Value,
+            Level = floor.Level,
+            Description = floor.Description,
+            BuildingId = building.Id!.Value,
+            BuildingName = building.Name ?? string.Empty,
+            CreatedAtUtc = floor.CreatedAtUtc,
+            UpdatedAtUtc = floor.UpdatedAtUtc,
+            Revision = floor.Revision
+        });
+    }
+
+    [HttpPut("{enterprise_role_id:guid}/facilities/floors/{floor_id:guid}")]
+    [ProducesResponseType(typeof(FloorDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateEnterpriseFloor(
+        [FromRoute] Guid enterprise_role_id,
+        [FromRoute] Guid floor_id,
+        [FromBody] UpdateFloorDto updateDto,
+        CancellationToken cancellationToken)
+    {
+        using var context = _factory.CreateDbContext();
+
+        var enterprise = await context.PartyRoles
+            .OfType<Enterprise>()
+            .Select(e => new { e.Id, e.PartyId, e.TypeId })
+            .FirstOrDefaultAsync(e => e.Id == enterprise_role_id, cancellationToken);
+        if (enterprise == null || !enterprise.PartyId.HasValue || !enterprise.TypeId.HasValue)
+        {
+            return NotFound();
+        }
+
+        var floor = await context.Facilities
+            .OfType<Floor>()
+            .FirstOrDefaultAsync(item =>
+                    item.Id == floor_id
+                    && context.FacilityRoles.Any(role =>
+                        role.Id == item.Id
+                        && role.PartyId == enterprise.PartyId
+                        && role.PartyRoleTypeId == enterprise.TypeId),
+                cancellationToken);
+        if (floor == null)
+        {
+            return NotFound();
+        }
+
+        var building = await context.Facilities
+            .OfType<Building>()
+            .FirstOrDefaultAsync(item =>
+                    item.Id == updateDto.BuildingId
+                    && context.FacilityRoles.Any(role =>
+                        role.Id == item.Id
+                        && role.PartyId == enterprise.PartyId
+                        && role.PartyRoleTypeId == enterprise.TypeId),
+                cancellationToken);
+        if (building == null)
+        {
+            return NotFound();
+        }
+
+        floor.Level = updateDto.Level;
+        floor.Description = string.IsNullOrWhiteSpace(updateDto.Description) ? null : updateDto.Description.Trim();
+        floor.BuildingId = building.Id;
+        floor.PartOfId = building.Id;
+
+        await context.SaveChangesAsync(cancellationToken);
+
+        return Ok(new FloorDto
+        {
+            FloorId = floor.Id!.Value,
+            Level = floor.Level,
+            Description = floor.Description,
+            BuildingId = building.Id!.Value,
+            BuildingName = building.Name ?? string.Empty,
+            CreatedAtUtc = floor.CreatedAtUtc,
+            UpdatedAtUtc = floor.UpdatedAtUtc,
+            Revision = floor.Revision
+        });
+    }
+
+    [HttpDelete("{enterprise_role_id:guid}/facilities/floors/{floor_id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteEnterpriseFloor(
+        [FromRoute] Guid enterprise_role_id,
+        [FromRoute] Guid floor_id,
+        CancellationToken cancellationToken)
+    {
+        using var context = _factory.CreateDbContext();
+
+        var enterprise = await context.PartyRoles
+            .OfType<Enterprise>()
+            .Select(e => new { e.Id, e.PartyId, e.TypeId })
+            .FirstOrDefaultAsync(e => e.Id == enterprise_role_id, cancellationToken);
+        if (enterprise == null || !enterprise.PartyId.HasValue || !enterprise.TypeId.HasValue)
+        {
+            return NotFound();
+        }
+
+        var enterpriseFloorRoles = await context.FacilityRoles
+            .Where(role => role.Id == floor_id
+                           && role.PartyId == enterprise.PartyId
+                           && role.PartyRoleTypeId == enterprise.TypeId)
+            .ToListAsync(cancellationToken);
+        if (enterpriseFloorRoles.Count == 0)
+        {
+            return NotFound();
+        }
+
+        context.FacilityRoles.RemoveRange(enterpriseFloorRoles);
+
+        var hasOtherFacilityRoleReferences = await context.FacilityRoles
+            .AnyAsync(role => role.Id == floor_id
+                              && (role.PartyId != enterprise.PartyId || role.PartyRoleTypeId != enterprise.TypeId),
+                cancellationToken);
+        if (!hasOtherFacilityRoleReferences)
+        {
+            var hasRoomReference = await context.Facilities
+                .OfType<Room>()
+                .AnyAsync(item => item.FloorId == floor_id, cancellationToken);
+            if (hasRoomReference)
+            {
+                return BadRequest("Cannot delete floor while rooms still exist.");
+            }
+
+            var floor = await context.Facilities
+                .OfType<Floor>()
+                .FirstOrDefaultAsync(item => item.Id == floor_id, cancellationToken);
+            if (floor != null)
+            {
+                context.Facilities.Remove(floor);
+            }
+        }
+
+        await context.SaveChangesAsync(cancellationToken);
+        return NoContent();
+    }
+
     [HttpGet("{enterprise_role_id:guid}/facilities/rooms")]
     [ProducesResponseType(typeof(List<RoomDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -1013,6 +1671,8 @@ public class EnterprisesController : ControllerBase
 
         var query = context.Facilities
             .OfType<Room>()
+            .Include(room => room.Floor)
+            .ThenInclude(floor => floor!.Building)
             .Where(room => context.FacilityRoles.Any(role =>
                 role.Id == room.Id
                 && role.PartyId == enterprise.PartyId
@@ -1022,7 +1682,10 @@ public class EnterprisesController : ControllerBase
         if (!string.IsNullOrWhiteSpace(searchText))
         {
             var keyword = searchText.Trim();
-            query = query.Where(room => room.Number != null && room.Number.Contains(keyword));
+            query = query.Where(room =>
+                (room.Number != null && room.Number.Contains(keyword))
+                || (room.Floor != null && room.Floor.Building != null && room.Floor.Building.Name != null && room.Floor.Building.Name.Contains(keyword))
+                || room.Floor != null && room.Floor.Level.ToString().Contains(keyword));
         }
 
         var rooms = await query
@@ -1032,6 +1695,10 @@ public class EnterprisesController : ControllerBase
                 RoomId = room.Id!.Value,
                 Number = room.Number ?? string.Empty,
                 Description = room.Description,
+                FloorId = room.FloorId ?? Guid.Empty,
+                FloorLevel = room.Floor != null ? room.Floor.Level : 0,
+                BuildingId = room.Floor != null && room.Floor.BuildingId.HasValue ? room.Floor.BuildingId.Value : Guid.Empty,
+                BuildingName = room.Floor != null && room.Floor.Building != null ? room.Floor.Building.Name ?? string.Empty : string.Empty,
                 BedCount = context.Facilities
                     .OfType<Bed>()
                     .Count(bed =>
@@ -1069,6 +1736,21 @@ public class EnterprisesController : ControllerBase
             return NotFound();
         }
 
+        var floor = await context.Facilities
+            .OfType<Floor>()
+            .Include(item => item.Building)
+            .FirstOrDefaultAsync(item =>
+                    item.Id == createDto.FloorId
+                    && context.FacilityRoles.Any(role =>
+                        role.Id == item.Id
+                        && role.PartyId == enterprise.PartyId
+                        && role.PartyRoleTypeId == enterprise.TypeId),
+                cancellationToken);
+        if (floor == null || !floor.BuildingId.HasValue)
+        {
+            return NotFound();
+        }
+
         var roomFacilityType = await context.FacilityTypes
             .SingleOrDefaultAsync(item => item.Code == FacilityType.Room, cancellationToken);
         if (roomFacilityType == null)
@@ -1094,6 +1776,8 @@ public class EnterprisesController : ControllerBase
             Id = Guid.NewGuid(),
             Number = createDto.Number.Trim(),
             Description = string.IsNullOrWhiteSpace(createDto.Description) ? null : createDto.Description.Trim(),
+            FloorId = floor.Id,
+            PartOfId = floor.Id,
             FacilityTypeId = roomFacilityType.Id
         };
 
@@ -1116,6 +1800,10 @@ public class EnterprisesController : ControllerBase
             RoomId = room.Id!.Value,
             Number = room.Number ?? string.Empty,
             Description = room.Description,
+            FloorId = floor.Id!.Value,
+            FloorLevel = floor.Level,
+            BuildingId = floor.BuildingId.Value,
+            BuildingName = floor.Building?.Name ?? string.Empty,
             BedCount = 0,
             CreatedAtUtc = room.CreatedAtUtc,
             UpdatedAtUtc = room.UpdatedAtUtc,
@@ -1158,8 +1846,25 @@ public class EnterprisesController : ControllerBase
             return NotFound();
         }
 
+        var floor = await context.Facilities
+            .OfType<Floor>()
+            .Include(item => item.Building)
+            .FirstOrDefaultAsync(item =>
+                    item.Id == updateDto.FloorId
+                    && context.FacilityRoles.Any(role =>
+                        role.Id == item.Id
+                        && role.PartyId == enterprise.PartyId
+                        && role.PartyRoleTypeId == enterprise.TypeId),
+                cancellationToken);
+        if (floor == null || !floor.BuildingId.HasValue)
+        {
+            return NotFound();
+        }
+
         room.Number = updateDto.Number.Trim();
         room.Description = string.IsNullOrWhiteSpace(updateDto.Description) ? null : updateDto.Description.Trim();
+        room.FloorId = floor.Id;
+        room.PartOfId = floor.Id;
         await context.SaveChangesAsync(cancellationToken);
 
         var roomBedCount = await context.Facilities
@@ -1177,6 +1882,10 @@ public class EnterprisesController : ControllerBase
             RoomId = room.Id!.Value,
             Number = room.Number ?? string.Empty,
             Description = room.Description,
+            FloorId = floor.Id!.Value,
+            FloorLevel = floor.Level,
+            BuildingId = floor.BuildingId.Value,
+            BuildingName = floor.Building?.Name ?? string.Empty,
             BedCount = roomBedCount,
             CreatedAtUtc = room.CreatedAtUtc,
             UpdatedAtUtc = room.UpdatedAtUtc,
@@ -1186,6 +1895,7 @@ public class EnterprisesController : ControllerBase
 
     [HttpDelete("{enterprise_role_id:guid}/facilities/rooms/{room_id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteEnterpriseRoom(
         [FromRoute] Guid enterprise_role_id,
@@ -1221,6 +1931,14 @@ public class EnterprisesController : ControllerBase
                 cancellationToken);
         if (!hasOtherFacilityRoleReferences)
         {
+            var hasBedReference = await context.Facilities
+                .OfType<Bed>()
+                .AnyAsync(item => item.RoomId == room_id, cancellationToken);
+            if (hasBedReference)
+            {
+                return BadRequest("Cannot delete room while beds still exist.");
+            }
+
             var room = await context.Facilities
                 .OfType<Room>()
                 .FirstOrDefaultAsync(item => item.Id == room_id, cancellationToken);
@@ -1255,6 +1973,9 @@ public class EnterprisesController : ControllerBase
 
         var query = context.Facilities
             .OfType<Bed>()
+            .Include(bed => bed.Room)
+            .ThenInclude(room => room!.Floor)
+            .ThenInclude(floor => floor!.Building)
             .Where(bed => context.FacilityRoles.Any(role =>
                 role.Id == bed.Id
                 && role.PartyId == enterprise.PartyId
@@ -1265,7 +1986,8 @@ public class EnterprisesController : ControllerBase
             var keyword = searchText.Trim();
             query = query.Where(bed =>
                 (bed.Number != null && bed.Number.Contains(keyword))
-                || (bed.Room != null && bed.Room.Number != null && bed.Room.Number.Contains(keyword)));
+                || (bed.Room != null && bed.Room.Number != null && bed.Room.Number.Contains(keyword))
+                || (bed.Room != null && bed.Room.Floor != null && bed.Room.Floor.Building != null && bed.Room.Floor.Building.Name != null && bed.Room.Floor.Building.Name.Contains(keyword)));
         }
 
         var beds = await query
@@ -1277,6 +1999,10 @@ public class EnterprisesController : ControllerBase
                 Description = bed.Description,
                 RoomId = bed.RoomId!.Value,
                 RoomNumber = bed.Room != null && bed.Room.Number != null ? bed.Room.Number : string.Empty,
+                FloorId = bed.Room != null ? bed.Room.FloorId : null,
+                FloorLevel = bed.Room != null && bed.Room.Floor != null ? bed.Room.Floor.Level : null,
+                BuildingId = bed.Room != null && bed.Room.Floor != null ? bed.Room.Floor.BuildingId : null,
+                BuildingName = bed.Room != null && bed.Room.Floor != null && bed.Room.Floor.Building != null ? bed.Room.Floor.Building.Name : null,
                 CreatedAtUtc = bed.CreatedAtUtc,
                 UpdatedAtUtc = bed.UpdatedAtUtc,
                 Revision = bed.Revision
@@ -1308,6 +2034,8 @@ public class EnterprisesController : ControllerBase
 
         var room = await context.Facilities
             .OfType<Room>()
+            .Include(item => item.Floor)
+            .ThenInclude(item => item!.Building)
             .FirstOrDefaultAsync(item =>
                     item.Id == createDto.RoomId
                     && context.FacilityRoles.Any(role =>
@@ -1346,7 +2074,8 @@ public class EnterprisesController : ControllerBase
             Number = createDto.Number.Trim(),
             Description = string.IsNullOrWhiteSpace(createDto.Description) ? null : createDto.Description.Trim(),
             FacilityTypeId = bedFacilityType.Id,
-            RoomId = room.Id
+            RoomId = room.Id,
+            PartOfId = room.Id
         };
 
         var facilityRole = new FacilityRole
@@ -1368,6 +2097,10 @@ public class EnterprisesController : ControllerBase
             Description = bed.Description,
             RoomId = room.Id!.Value,
             RoomNumber = room.Number ?? string.Empty,
+            FloorId = room.FloorId,
+            FloorLevel = room.Floor?.Level,
+            BuildingId = room.Floor?.BuildingId,
+            BuildingName = room.Floor?.Building?.Name,
             CreatedAtUtc = bed.CreatedAtUtc,
             UpdatedAtUtc = bed.UpdatedAtUtc,
             Revision = bed.Revision
@@ -1398,6 +2131,8 @@ public class EnterprisesController : ControllerBase
         var bed = await context.Facilities
             .OfType<Bed>()
             .Include(item => item.Room)
+            .ThenInclude(item => item!.Floor)
+            .ThenInclude(item => item!.Building)
             .FirstOrDefaultAsync(item =>
                     item.Id == bed_id
                     && context.FacilityRoles.Any(role =>
@@ -1412,6 +2147,8 @@ public class EnterprisesController : ControllerBase
 
         var room = await context.Facilities
             .OfType<Room>()
+            .Include(item => item.Floor)
+            .ThenInclude(item => item!.Building)
             .FirstOrDefaultAsync(item =>
                     item.Id == updateDto.RoomId
                     && context.FacilityRoles.Any(role =>
@@ -1427,6 +2164,7 @@ public class EnterprisesController : ControllerBase
         bed.Number = updateDto.Number.Trim();
         bed.Description = string.IsNullOrWhiteSpace(updateDto.Description) ? null : updateDto.Description.Trim();
         bed.RoomId = room.Id;
+        bed.PartOfId = room.Id;
 
         await context.SaveChangesAsync(cancellationToken);
 
@@ -1437,6 +2175,10 @@ public class EnterprisesController : ControllerBase
             Description = bed.Description,
             RoomId = room.Id!.Value,
             RoomNumber = room.Number ?? string.Empty,
+            FloorId = room.FloorId,
+            FloorLevel = room.Floor?.Level,
+            BuildingId = room.Floor?.BuildingId,
+            BuildingName = room.Floor?.Building?.Name,
             CreatedAtUtc = bed.CreatedAtUtc,
             UpdatedAtUtc = bed.UpdatedAtUtc,
             Revision = bed.Revision

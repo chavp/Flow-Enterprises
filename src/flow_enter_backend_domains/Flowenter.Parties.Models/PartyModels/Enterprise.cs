@@ -5,7 +5,6 @@ using System.Xml.Linq;
 
 namespace Flowenter.Parties.Models.PartyModels;
 
-[Table("Enterprises")]
 [Index(nameof(LegalName), IsUnique = true)]
 public sealed class Enterprise : PartyRole
 {

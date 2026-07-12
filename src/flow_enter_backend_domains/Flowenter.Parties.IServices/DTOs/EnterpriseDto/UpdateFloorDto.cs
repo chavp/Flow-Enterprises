@@ -2,13 +2,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Flowenter.Parties.IServices.Dtos.EnterpriseDto;
 
-public record UpdateRoomDto
+public record UpdateFloorDto
 {
-    [Required, StringLength(100)]
-    public string Number { get; init; } = string.Empty;
+    [Required]
+    public Guid BuildingId { get; init; }
 
     [Required]
-    public Guid FloorId { get; init; }
+    public int Level { get; init; }
 
     [StringLength(500)]
     public string? Description { get; init; }

@@ -10,6 +10,8 @@ public sealed class PartyRoleType: BaseEntity
     public const string Enterprise = "ENTERPRISE";
     public const string Customer = "CUSTOMER";
 
+    public const string Branch = "BRANCH";
+
     [Required, StringLength(100)]
     public string? Code { get; set; }
 

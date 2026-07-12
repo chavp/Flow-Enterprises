@@ -7,6 +7,9 @@ public record CreateRoomDto
     [Required, StringLength(100)]
     public string Number { get; init; } = string.Empty;
 
+    [Required]
+    public Guid FloorId { get; init; }
+
     [StringLength(500)]
     public string? Description { get; init; }
 }
