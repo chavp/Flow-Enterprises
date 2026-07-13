@@ -3,6 +3,7 @@ namespace Flowenter.Parties.IServices.Dtos.EnterpriseDto;
 public record EmploymentDto
 {
     public Guid EmploymentId { get; init; }
+    public string EmploymentNumber { get; init; } = string.Empty;
     public Guid EmployerId { get; init; }
     public Guid EmployeePartyRoleId { get; init; }
     public Guid EmployeePartyId { get; init; }

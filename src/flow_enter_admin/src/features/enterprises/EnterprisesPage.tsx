@@ -91,6 +91,7 @@ type RoomFormValues = CreateRoomRequest;
 type BedFormValues = CreateBedRequest;
 type EmploymentGroup = {
   employeePartyId: string;
+  employmentNumber: string;
   employeeFullName: string;
   firstName: string;
   middleName?: string;
@@ -1077,6 +1078,7 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
 
       map.set(employment.employeePartyId, {
         employeePartyId: employment.employeePartyId,
+        employmentNumber: employment.employmentNumber,
         employeeFullName: employment.employeeFullName,
         firstName: employment.firstName,
         middleName: employment.middleName,
@@ -1183,6 +1185,7 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                             <thead>
                               <tr>
                                 <th>Employee</th>
+                                <th>Employment Number</th>
                                 <th>Roles</th>
                                 <th>Actions</th>
                               </tr>
@@ -1191,6 +1194,7 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                               {employmentGroups.map((employmentGroup) => (
                                 <tr key={employmentGroup.employeePartyId}>
                                   <td>{employmentGroup.employeeFullName}</td>
+                                  <td>{employmentGroup.employmentNumber}</td>
                                   <td>
                                     <Popover
                                       trigger="click"
@@ -1288,6 +1292,7 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                                           const primaryEmployment = employmentGroup.employments[0];
                                           setEditingEmployment(primaryEmployment);
                                           editEmploymentForm.setFieldsValue({
+                                            employmentNumber: employmentGroup.employmentNumber,
                                             firstName: employmentGroup.firstName,
                                             middleName: employmentGroup.middleName,
                                             lastName: employmentGroup.lastName,
@@ -1451,6 +1456,13 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                 onFinish={(values) => createEmploymentMutation.mutate(values)}
               >
                 <Form.Item
+                  name="employmentNumber"
+                  label="Employment Number"
+                  rules={[{ required: true, message: "Employment number is required" }]}
+                >
+                  <Input maxLength={32} />
+                </Form.Item>
+                <Form.Item
                   name="firstName"
                   label="First Name"
                   rules={[{ required: true, message: "First name is required" }]}
@@ -1500,6 +1512,13 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                 layout="vertical"
                 onFinish={(values) => updateEmploymentMutation.mutate(values)}
               >
+                <Form.Item
+                  name="employmentNumber"
+                  label="Employment Number"
+                  rules={[{ required: true, message: "Employment number is required" }]}
+                >
+                  <Input maxLength={32} />
+                </Form.Item>
                 <Form.Item
                   name="firstName"
                   label="First Name"

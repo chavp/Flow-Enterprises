@@ -205,7 +205,7 @@ public class EnterprisesController : ControllerBase
 
         var relatedEmployments = await context.PartyRelationships
             .OfType<Employment>()
-            .Where(item => item.EmployerId == enterpriseRoleId || item.EmployeeId == enterpriseRoleId)
+            .Where(item => item.EnterpriseId == enterpriseRoleId || item.EmployeeId == enterpriseRoleId)
             .ToListAsync(cancellationToken);
 
         var removedEmployeeRoleIds = relatedEmployments
@@ -522,7 +522,7 @@ public class EnterprisesController : ControllerBase
             join employeeRole in context.PartyRoles on employment.EmployeeId equals employeeRole.Id
             join roleType in context.PartyRoleTypes on employeeRole.TypeId equals roleType.Id
             join person in context.Parties.OfType<Person>() on employeeRole.PartyId equals person.Id
-            where employment.EmployerId == enterprise_role_id
+            where employment.EnterpriseId == enterprise_role_id
             select new
             {
                 Employment = employment,
@@ -568,7 +568,8 @@ public class EnterprisesController : ControllerBase
                 return new EmploymentDto
                 {
                     EmploymentId = row.Employment.Id!.Value,
-                    EmployerId = row.Employment.EmployerId!.Value,
+                    EmploymentNumber = row.Employment.Number ?? string.Empty,
+                    EmployerId = row.Employment.EnterpriseId!.Value,
                     EmployeePartyRoleId = row.EmployeeRole.Id!.Value,
                     EmployeePartyId = row.PersonId!.Value,
                     FirstName = personName?.FirstName ?? string.Empty,
@@ -681,14 +682,15 @@ public class EnterprisesController : ControllerBase
         };
 
         var firstPartyRoleType = partyRoleTypes.First();
-        var firstEmployeeRole = default(Customer);
+        var firstEmployeeRole = default(Employee);
         var firstEmployment = default(Employment);
+        var employmentNumber = createDto.EmploymentNumber.Trim();
 
         await context.AddRangeAsync(person, personName);
 
         foreach (var partyRoleType in partyRoleTypes)
         {
-            var employeeRole = new Customer
+            var employeeRole = new Employee
             {
                 Id = Guid.NewGuid(),
                 TypeId = partyRoleType.Id,
@@ -699,8 +701,9 @@ public class EnterprisesController : ControllerBase
             {
                 Id = Guid.NewGuid(),
                 PartyRelationshipTypeId = employmentRelationshipType.Id,
-                EmployerId = enterpriseRole.Id,
-                EmployeeId = employeeRole.Id
+                EnterpriseId = enterpriseRole.Id,
+                EmployeeId = employeeRole.Id,
+                Number = employmentNumber
             };
 
             await context.AddRangeAsync(employeeRole, employment);
@@ -726,7 +729,8 @@ public class EnterprisesController : ControllerBase
         var response = new EmploymentDto
         {
             EmploymentId = firstEmployment!.Id!.Value,
-            EmployerId = firstEmployment.EmployerId!.Value,
+            EmploymentNumber = firstEmployment.Number ?? string.Empty,
+            EmployerId = firstEmployment.EnterpriseId!.Value,
             EmployeePartyRoleId = firstEmployeeRole!.Id!.Value,
             EmployeePartyId = person.Id!.Value,
             FirstName = personName.FirstName ?? string.Empty,
@@ -760,7 +764,7 @@ public class EnterprisesController : ControllerBase
 
         var employment = await context.PartyRelationships
             .OfType<Employment>()
-            .FirstOrDefaultAsync(item => item.Id == employment_id && item.EmployerId == enterprise_role_id, cancellationToken);
+            .FirstOrDefaultAsync(item => item.Id == employment_id && item.EnterpriseId == enterprise_role_id, cancellationToken);
         if (employment == null)
         {
             return NotFound();
@@ -790,6 +794,7 @@ public class EnterprisesController : ControllerBase
         var selectedRoleTypeIds = updateDto.PartyRoleTypeIds
             .Distinct()
             .ToList();
+        var employmentNumber = updateDto.EmploymentNumber.Trim();
         if (selectedRoleTypeIds.Count == 0)
         {
             return BadRequest("At least one PartyRoleType is required.");
@@ -849,7 +854,7 @@ public class EnterprisesController : ControllerBase
         var relatedEmployments = await (
             from employmentItem in context.PartyRelationships.OfType<Employment>()
             join role in context.PartyRoles on employmentItem.EmployeeId equals role.Id
-            where employmentItem.EmployerId == enterprise_role_id
+            where employmentItem.EnterpriseId == enterprise_role_id
                   && role.PartyId == person.Id
             select new
             {
@@ -873,6 +878,7 @@ public class EnterprisesController : ControllerBase
             var typeId = relatedEmployment.EmployeeRole.TypeId;
             if (!typeId.HasValue || selectedRoleTypeSet.Contains(typeId.Value))
             {
+                relatedEmployment.Employment.Number = employmentNumber;
                 continue;
             }
 
@@ -890,7 +896,7 @@ public class EnterprisesController : ControllerBase
                 detail: $"PartyRelationshipType '{PartyRelationshipType.Employment}' not found. Run database migration/seeding.");
         }
 
-        var createdEmployments = new Dictionary<Guid, (Employment Employment, Customer EmployeeRole)>();
+        var createdEmployments = new Dictionary<Guid, (Employment Employment, Employee EmployeeRole)>();
         foreach (var selectedRoleTypeId in selectedRoleTypeIds)
         {
             if (existingByRoleTypeId.ContainsKey(selectedRoleTypeId))
@@ -898,7 +904,7 @@ public class EnterprisesController : ControllerBase
                 continue;
             }
 
-            var employeeRoleToAdd = new Customer
+            var employeeRoleToAdd = new Employee
             {
                 Id = Guid.NewGuid(),
                 TypeId = selectedRoleTypeId,
@@ -909,8 +915,9 @@ public class EnterprisesController : ControllerBase
             {
                 Id = Guid.NewGuid(),
                 PartyRelationshipTypeId = employmentRelationshipType.Id,
-                EmployerId = enterprise_role_id,
-                EmployeeId = employeeRoleToAdd.Id
+                EnterpriseId = enterprise_role_id,
+                EmployeeId = employeeRoleToAdd.Id,
+                Number = employmentNumber
             };
 
             await context.AddRangeAsync(employeeRoleToAdd, employmentToAdd);
@@ -938,7 +945,8 @@ public class EnterprisesController : ControllerBase
         return Ok(new EmploymentDto
         {
             EmploymentId = responseEmployment.Id!.Value,
-            EmployerId = responseEmployment.EmployerId!.Value,
+            EmploymentNumber = responseEmployment.Number ?? string.Empty,
+            EmployerId = responseEmployment.EnterpriseId.Value,
             EmployeePartyRoleId = responseEmployeeRoleId!.Value,
             EmployeePartyId = person.Id!.Value,
             FirstName = personName.FirstName ?? string.Empty,
@@ -977,7 +985,7 @@ public class EnterprisesController : ControllerBase
             from employment in context.PartyRelationships.OfType<Employment>()
             join employeeRole in context.PartyRoles on employment.EmployeeId equals employeeRole.Id
             join roleType in context.PartyRoleTypes on employeeRole.TypeId equals roleType.Id
-            where employment.Id == employment_id && employment.EmployerId == enterprise_role_id
+            where employment.Id == employment_id && employment.EnterpriseId == enterprise_role_id
             select new
             {
                 Employment = employment,
@@ -1010,7 +1018,8 @@ public class EnterprisesController : ControllerBase
         return Ok(new EmploymentDto
         {
             EmploymentId = employmentRow.Employment.Id!.Value,
-            EmployerId = employmentRow.Employment.EmployerId!.Value,
+            EmploymentNumber = employmentRow.Employment.Number ?? string.Empty,
+            EmployerId = employmentRow.Employment.EnterpriseId!.Value,
             EmployeePartyRoleId = employmentRow.EmployeeRole.Id!.Value,
             EmployeePartyId = employmentRow.EmployeeRole.PartyId!.Value,
             FirstName = personName?.FirstName ?? string.Empty,
@@ -1372,7 +1381,7 @@ public class EnterprisesController : ControllerBase
 
         var employment = await context.PartyRelationships
             .OfType<Employment>()
-            .FirstOrDefaultAsync(item => item.Id == employment_id && item.EmployerId == enterprise_role_id, cancellationToken);
+            .FirstOrDefaultAsync(item => item.Id == employment_id && item.EnterpriseId == enterprise_role_id, cancellationToken);
         if (employment == null)
         {
             return NotFound();
@@ -1390,7 +1399,7 @@ public class EnterprisesController : ControllerBase
         var relatedEmployments = await (
             from employmentItem in context.PartyRelationships.OfType<Employment>()
             join role in context.PartyRoles on employmentItem.EmployeeId equals role.Id
-            where employmentItem.EmployerId == enterprise_role_id
+            where employmentItem.EnterpriseId == enterprise_role_id
                   && role.PartyId == employeeRole.PartyId
             select new
             {

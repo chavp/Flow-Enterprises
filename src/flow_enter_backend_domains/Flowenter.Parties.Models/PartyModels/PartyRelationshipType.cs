@@ -14,6 +14,7 @@ public sealed class PartyRelationshipType : BaseEntity
 {
     public const string Employment = "EMPLOYMENT";
     public const string EnterpriseBranch = "ENTERPRISE_BRANCH";
+    public const string BranchEmployment = "BRANCH_EMPLOYMENT";
 
     [Required, StringLength(100)]
     public string? Code { get; set; }

@@ -57,6 +57,7 @@ export type PartyRoleType = {
 
 export type Employment = {
   employmentId: string;
+  employmentNumber: string;
   employerId: string;
   employeePartyRoleId: string;
   employeePartyId: string;
@@ -75,6 +76,7 @@ export type Employment = {
 };
 
 export type CreateEmploymentRequest = {
+  employmentNumber: string;
   firstName: string;
   middleName?: string;
   lastName: string;

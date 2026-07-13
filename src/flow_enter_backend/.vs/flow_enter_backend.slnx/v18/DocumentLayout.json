@@ -10,12 +10,12 @@
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\github\\Flow-Enterprises\\src\\flow_enter_backend_domains\\Flowenter.Parties.Mappings\\PartiesContext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A66B1C02-A35A-490B-A6FD-05116C2DDF7C}|Flowenter.Api\\Flowenter.Api.csproj|d:\\github\\flow-enterprises\\src\\flow_enter_backend\\flowenter.api\\controllers\\geographicboundariescontroller.countries.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A66B1C02-A35A-490B-A6FD-05116C2DDF7C}|Flowenter.Api\\Flowenter.Api.csproj|solutionrelative:flowenter.api\\controllers\\geographicboundariescontroller.countries.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A66B1C02-A35A-490B-A6FD-05116C2DDF7C}|Flowenter.Api\\Flowenter.Api.csproj|d:\\github\\flow-enterprises\\src\\flow_enter_backend\\flowenter.api\\controllers\\geographicboundariescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A66B1C02-A35A-490B-A6FD-05116C2DDF7C}|Flowenter.Api\\Flowenter.Api.csproj|solutionrelative:flowenter.api\\controllers\\geographicboundariescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A66B1C02-A35A-490B-A6FD-05116C2DDF7C}|Flowenter.Api\\Flowenter.Api.csproj|d:\\github\\flow-enterprises\\src\\flow_enter_backend\\flowenter.api\\controllers\\geographicboundariescontroller.countries.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A66B1C02-A35A-490B-A6FD-05116C2DDF7C}|Flowenter.Api\\Flowenter.Api.csproj|solutionrelative:flowenter.api\\controllers\\geographicboundariescontroller.countries.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A66B1C02-A35A-490B-A6FD-05116C2DDF7C}|Flowenter.Api\\Flowenter.Api.csproj|d:\\github\\flow-enterprises\\src\\flow_enter_backend\\flowenter.api\\controllers\\partiescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -29,8 +29,21 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 0,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "EnterprisesController.cs",
+              "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Api\\Controllers\\EnterprisesController.cs",
+              "RelativeDocumentMoniker": "Flowenter.Api\\Controllers\\EnterprisesController.cs",
+              "ToolTip": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Api\\Controllers\\EnterprisesController.cs",
+              "RelativeToolTip": "Flowenter.Api\\Controllers\\EnterprisesController.cs",
+              "ViewState": "AgIAABQAAAAAAAAAAAAAAC8AAABlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-13T14:45:00.271Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Document",
               "DocumentIndex": 1,
@@ -39,14 +52,14 @@
               "RelativeDocumentMoniker": "..\\flow_enter_backend_domains\\Flowenter.Parties.Mappings\\PartiesContext.cs",
               "ToolTip": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend_domains\\Flowenter.Parties.Mappings\\PartiesContext.cs",
               "RelativeToolTip": "..\\flow_enter_backend_domains\\Flowenter.Parties.Mappings\\PartiesContext.cs",
-              "ViewState": "AgIAACUCAAAAAAAAAAAhwDACAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAAEoCAAAAAAAAAAAhwFoCAABKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-07-12T09:28:42.796Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "GeographicBoundariesController.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Api\\Controllers\\GeographicBoundariesController.cs",
               "RelativeDocumentMoniker": "Flowenter.Api\\Controllers\\GeographicBoundariesController.cs",
@@ -72,20 +85,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "EnterprisesController.cs",
-              "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Api\\Controllers\\EnterprisesController.cs",
-              "RelativeDocumentMoniker": "Flowenter.Api\\Controllers\\EnterprisesController.cs",
-              "ToolTip": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Api\\Controllers\\EnterprisesController.cs",
-              "RelativeToolTip": "Flowenter.Api\\Controllers\\EnterprisesController.cs",
-              "ViewState": "AgIAAHQEAAAAAAAAAAAAAIUEAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-12T08:24:57.878Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "GeographicBoundariesController.Countries.cs",
               "DocumentMoniker": "D:\\github\\Flow-Enterprises\\src\\flow_enter_backend\\Flowenter.Api\\Controllers\\GeographicBoundariesController.Countries.cs",
               "RelativeDocumentMoniker": "Flowenter.Api\\Controllers\\GeographicBoundariesController.Countries.cs",

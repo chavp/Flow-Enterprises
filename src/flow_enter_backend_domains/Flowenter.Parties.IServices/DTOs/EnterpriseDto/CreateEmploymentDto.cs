@@ -4,6 +4,9 @@ namespace Flowenter.Parties.IServices.Dtos.EnterpriseDto;
 
 public record CreateEmploymentDto
 {
+    [Required, StringLength(32)]
+    public string EmploymentNumber { get; init; } = string.Empty;
+
     [Required, StringLength(300)]
     public string FirstName { get; init; } = string.Empty;
 

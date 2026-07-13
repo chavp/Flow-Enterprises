@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -6,21 +7,25 @@ using System.Text;
 
 namespace Flowenter.Parties.Models.PartyModels;
 
+[Index(nameof(EnterpriseId), nameof(EmployeeId), nameof(Number), IsUnique = true)]
 public sealed class Employment : PartyRelationship
 {
     protected Employment() { }
-    public Employment(Guid employerId, Guid employeeId, Guid partyRelationshipTypeId)
+    public Employment(Guid enterpriseId, Guid employeeId, Guid partyRelationshipTypeId)
     {
-        EmployerId = employerId;
+        EnterpriseId = enterpriseId;
         EmployeeId = employeeId;
         PartyRelationshipTypeId = partyRelationshipTypeId;
     }
 
     [Required]
-    public Guid? EmployerId { get; set; }
-    public PartyRole? Employer { get; set; }
+    public Guid? EnterpriseId { get; set; }
+    public Enterprise? Enterprise { get; set; }
 
     [Required]
     public Guid? EmployeeId { get; set; }
-    public PartyRole? Employee { get; set; }
+    public Employee? Employee { get; set; }
+
+    [Required, StringLength(32)]
+    public string? Number { get; set; } = Guid.NewGuid().ToString("N");
 }

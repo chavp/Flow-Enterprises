@@ -1044,6 +1044,15 @@ namespace Flowenter.Parties.Mappings.Migrations
                             CreatedBy = "seed",
                             Name = "สาขา",
                             Revision = 0m
+                        },
+                        new
+                        {
+                            Id = new Guid("ffffffff-ffff-ffff-ffff-fffffffffffd"),
+                            Code = "BRANCH_EMPLOYMENT",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "seed",
+                            Name = "สาขา",
+                            Revision = 0m
                         });
                 });
 
@@ -1170,6 +1179,15 @@ namespace Flowenter.Parties.Mappings.Migrations
                             CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             CreatedBy = "seed",
                             Name = "สาขา",
+                            Revision = 0m
+                        },
+                        new
+                        {
+                            Id = new Guid("dddddddd-dddd-dddd-dddd-ddddddddddde"),
+                            Code = "EMPLOYEE",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "seed",
+                            Name = "พนักงาน",
                             Revision = 0m
                         },
                         new
@@ -1755,6 +1773,23 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.ToTable("People", "parties");
                 });
 
+            modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.BranchEmployment", b =>
+                {
+                    b.HasBaseType("Flowenter.Parties.Models.PartyModels.PartyRelationship");
+
+                    b.Property<Guid>("BranchId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("EmployeeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasIndex("BranchId");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("BranchEmployments", "parties");
+                });
+
             modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.Employment", b =>
                 {
                     b.HasBaseType("Flowenter.Parties.Models.PartyModels.PartyRelationship");
@@ -1762,12 +1797,19 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.Property<Guid>("EmployeeId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("EmployerId")
+                    b.Property<Guid>("EnterpriseId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Number")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
 
                     b.HasIndex("EmployeeId");
 
-                    b.HasIndex("EmployerId");
+                    b.HasIndex("EnterpriseId", "EmployeeId", "Number")
+                        .IsUnique()
+                        .HasFilter("[EnterpriseId] IS NOT NULL AND [EmployeeId] IS NOT NULL AND [Number] IS NOT NULL");
 
                     b.ToTable("Employments", "parties");
                 });
@@ -1801,6 +1843,13 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.HasBaseType("Flowenter.Parties.Models.PartyModels.PartyRole");
 
                     b.ToTable("Customers", "parties");
+                });
+
+            modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.Employee", b =>
+                {
+                    b.HasBaseType("Flowenter.Parties.Models.PartyModels.PartyRole");
+
+                    b.ToTable("Employees", "parties");
                 });
 
             modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.Enterprise", b =>
@@ -2219,17 +2268,42 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.Navigation("GenderType");
                 });
 
-            modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.Employment", b =>
+            modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.BranchEmployment", b =>
                 {
-                    b.HasOne("Flowenter.Parties.Models.PartyModels.PartyRole", "Employee")
+                    b.HasOne("Flowenter.Parties.Models.PartyModels.Branch", "Branch")
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Flowenter.Parties.Models.PartyModels.Employee", "Employee")
                         .WithMany()
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Flowenter.Parties.Models.PartyModels.PartyRole", "Employer")
+                    b.HasOne("Flowenter.Parties.Models.PartyModels.PartyRelationship", null)
+                        .WithOne()
+                        .HasForeignKey("Flowenter.Parties.Models.PartyModels.BranchEmployment", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Branch");
+
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.Employment", b =>
+                {
+                    b.HasOne("Flowenter.Parties.Models.PartyModels.Employee", "Employee")
                         .WithMany()
-                        .HasForeignKey("EmployerId")
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Flowenter.Parties.Models.PartyModels.Enterprise", "Enterprise")
+                        .WithMany()
+                        .HasForeignKey("EnterpriseId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -2241,7 +2315,7 @@ namespace Flowenter.Parties.Mappings.Migrations
 
                     b.Navigation("Employee");
 
-                    b.Navigation("Employer");
+                    b.Navigation("Enterprise");
                 });
 
             modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.EnterpriseBranch", b =>
@@ -2283,6 +2357,15 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.HasOne("Flowenter.Parties.Models.PartyModels.PartyRole", null)
                         .WithOne()
                         .HasForeignKey("Flowenter.Parties.Models.PartyModels.Customer", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Flowenter.Parties.Models.PartyModels.Employee", b =>
+                {
+                    b.HasOne("Flowenter.Parties.Models.PartyModels.PartyRole", null)
+                        .WithOne()
+                        .HasForeignKey("Flowenter.Parties.Models.PartyModels.Employee", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

@@ -75,6 +75,7 @@ public sealed class PartiesContext : DbContext
         modelBuilder.Entity<Enterprise>().ToTable("Enterprises");
         modelBuilder.Entity<Customer>().ToTable("Customers");
         modelBuilder.Entity<Branch>().ToTable("Branchs");
+        modelBuilder.Entity<Employee>().ToTable("Employees");
 
         //modelBuilder.Entity<ContactMechanism>(builder =>
         //{
@@ -130,14 +131,29 @@ public sealed class PartiesContext : DbContext
         modelBuilder.Entity<Employment>().ToTable("Employments");
         modelBuilder.Entity<Employment>(builder =>
         {
+            builder.HasOne(e => e.Enterprise)
+                .WithMany()
+                .HasForeignKey(e => e.EnterpriseId)
+                .OnDelete(DeleteBehavior.NoAction);
+
             builder.HasOne(e => e.Employee)
                 .WithMany()
                 .HasForeignKey(e => e.EmployeeId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasOne(e => e.Employer)
+        });
+
+        modelBuilder.Entity<BranchEmployment>().ToTable("BranchEmployments");
+        modelBuilder.Entity<BranchEmployment>(builder =>
+        {
+            builder.HasOne(e => e.Branch)
                 .WithMany()
-                .HasForeignKey(e => e.EmployerId)
+                .HasForeignKey(e => e.BranchId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasOne(e => e.Employee)
+                .WithMany()
+                .HasForeignKey(e => e.EmployeeId)
                 .OnDelete(DeleteBehavior.NoAction);
         });
 
@@ -233,6 +249,15 @@ public sealed class PartiesContext : DbContext
                 Id = Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccd"),
                 Code = PartyRoleType.Branch,
                 Name = "สาขา",
+                CreatedBy = "seed",
+                CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                Revision = 0
+            },
+            new PartyRoleType
+            {
+                Id = Guid.Parse("dddddddd-dddd-dddd-dddd-ddddddddddde"),
+                Code = PartyRoleType.Employee,
+                Name = "พนักงาน",
                 CreatedBy = "seed",
                 CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 Revision = 0
@@ -381,6 +406,15 @@ public sealed class PartiesContext : DbContext
             {
                 Id = Guid.Parse("ffffffff-ffff-ffff-ffff-fffffffffffe"),
                 Code = PartyRelationshipType.EnterpriseBranch,
+                Name = "สาขา",
+                CreatedBy = "seed",
+                CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                Revision = 0
+            },
+            new PartyRelationshipType
+            {
+                Id = Guid.Parse("ffffffff-ffff-ffff-ffff-fffffffffffd"),
+                Code = PartyRelationshipType.BranchEmployment,
                 Name = "สาขา",
                 CreatedBy = "seed",
                 CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
