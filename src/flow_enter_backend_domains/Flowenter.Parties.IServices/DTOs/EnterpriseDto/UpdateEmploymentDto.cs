@@ -18,4 +18,6 @@ public record UpdateEmploymentDto
 
     [Required, MinLength(1)]
     public List<Guid> PartyRoleTypeIds { get; init; } = [];
+
+    public List<Guid> BranchIds { get; init; } = [];
 }

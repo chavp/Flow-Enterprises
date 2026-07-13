@@ -19,6 +19,8 @@ public record CreateEmploymentDto
     [Required, MinLength(1)]
     public List<Guid> PartyRoleTypeIds { get; init; } = [];
 
+    public List<Guid> BranchIds { get; init; } = [];
+
     public Guid? LanguageId { get; init; }
     public DateOnly? DateOfBirth { get; init; }
 }

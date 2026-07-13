@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace Flowenter.Parties.Models.PartyModels;
 
+[Index(nameof(BranchId), nameof(EmployeeId), IsUnique = true)]
 public sealed class BranchEmployment : PartyRelationship
 {
     protected BranchEmployment() { }

@@ -92,6 +92,8 @@ type BedFormValues = CreateBedRequest;
 type EmploymentGroup = {
   employeePartyId: string;
   employmentNumber: string;
+  branchIds: string[];
+  branchLegalNames: string[];
   employeeFullName: string;
   firstName: string;
   middleName?: string;
@@ -840,6 +842,10 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
     }));
   const employments = employmentsQuery.data ?? [];
   const enterpriseBranchs = enterpriseBranchsQuery.data ?? [];
+  const enterpriseBranchOptions = enterpriseBranchs.map((item) => ({
+    value: item.branchId,
+    label: item.branchLegalName
+  }));
   const facilitiesTree = facilitiesTreeQuery.data?.buildings ?? [];
   const buildingOptions = facilitiesTree.map((node) => ({
     value: node.building.buildingId,
@@ -1073,12 +1079,16 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
       const existing = map.get(employment.employeePartyId);
       if (existing) {
         existing.employments.push(employment);
+        existing.branchIds = Array.from(new Set([...existing.branchIds, ...(employment.branchIds ?? [])]));
+        existing.branchLegalNames = Array.from(new Set([...existing.branchLegalNames, ...(employment.branchLegalNames ?? [])]));
         continue;
       }
 
       map.set(employment.employeePartyId, {
         employeePartyId: employment.employeePartyId,
         employmentNumber: employment.employmentNumber,
+        branchIds: employment.branchIds ?? [],
+        branchLegalNames: employment.branchLegalNames ?? [],
         employeeFullName: employment.employeeFullName,
         firstName: employment.firstName,
         middleName: employment.middleName,
@@ -1186,6 +1196,7 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                               <tr>
                                 <th>Employee</th>
                                 <th>Employment Number</th>
+                                <th>Branches</th>
                                 <th>Roles</th>
                                 <th>Actions</th>
                               </tr>
@@ -1195,6 +1206,7 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                                 <tr key={employmentGroup.employeePartyId}>
                                   <td>{employmentGroup.employeeFullName}</td>
                                   <td>{employmentGroup.employmentNumber}</td>
+                                  <td>{employmentGroup.branchLegalNames.join(", ") || "-"}</td>
                                   <td>
                                     <Popover
                                       trigger="click"
@@ -1293,6 +1305,7 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                                           setEditingEmployment(primaryEmployment);
                                           editEmploymentForm.setFieldsValue({
                                             employmentNumber: employmentGroup.employmentNumber,
+                                            branchIds: employmentGroup.branchIds,
                                             firstName: employmentGroup.firstName,
                                             middleName: employmentGroup.middleName,
                                             lastName: employmentGroup.lastName,
@@ -1480,6 +1493,19 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                   <Input maxLength={500} />
                 </Form.Item>
                 <Form.Item
+                  name="branchIds"
+                  label="Branches"
+                >
+                  <Select
+                    mode="multiple"
+                    showSearch
+                    options={enterpriseBranchOptions}
+                    loading={enterpriseBranchsQuery.isLoading}
+                    placeholder="Select branchs"
+                    optionFilterProp="label"
+                  />
+                </Form.Item>
+                <Form.Item
                   name="partyRoleTypeIds"
                   label="Party Roles"
                   rules={[{ required: true, message: "At least one party role is required" }]}
@@ -1535,6 +1561,19 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                   rules={[{ required: true, message: "Last name is required" }]}
                 >
                   <Input maxLength={500} />
+                </Form.Item>
+                <Form.Item
+                  name="branchIds"
+                  label="Branches"
+                >
+                  <Select
+                    mode="multiple"
+                    showSearch
+                    options={enterpriseBranchOptions}
+                    loading={enterpriseBranchsQuery.isLoading}
+                    placeholder="Select branchs"
+                    optionFilterProp="label"
+                  />
                 </Form.Item>
                 <Form.Item
                   name="partyRoleTypeIds"

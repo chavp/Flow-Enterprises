@@ -61,6 +61,8 @@ export type Employment = {
   employerId: string;
   employeePartyRoleId: string;
   employeePartyId: string;
+  branchIds: string[];
+  branchLegalNames: string[];
   firstName: string;
   middleName?: string;
   lastName: string;
@@ -81,6 +83,7 @@ export type CreateEmploymentRequest = {
   middleName?: string;
   lastName: string;
   partyRoleTypeIds: string[];
+  branchIds: string[];
 };
 
 export type UpdateEmploymentRequest = CreateEmploymentRequest;

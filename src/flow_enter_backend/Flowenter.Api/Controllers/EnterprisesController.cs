@@ -552,6 +552,42 @@ public class EnterprisesController : ControllerBase
             .GroupBy(name => name.PersonId!.Value)
             .ToDictionary(group => group.Key, group => group.First());
 
+        var employeeRoleIds = employmentRows
+            .Select(row => row.EmployeeRole.Id)
+            .Where(id => id.HasValue)
+            .Select(id => id!.Value)
+            .Distinct()
+            .ToList();
+
+        var employeeBranchRows = await (
+            from relation in context.PartyRelationships.OfType<BranchEmployment>()
+            join branchRole in context.PartyRoles.OfType<Branch>() on relation.BranchId equals branchRole.Id
+            join branchParty in context.Parties.OfType<Organization>() on branchRole.PartyId equals branchParty.Id
+            where relation.EmployeeId.HasValue
+                  && employeeRoleIds.Contains(relation.EmployeeId.Value)
+            select new
+            {
+                EmployeeRoleId = relation.EmployeeId!.Value,
+                BranchId = relation.BranchId!.Value,
+                BranchLegalName = branchParty.Name ?? string.Empty
+            })
+            .ToListAsync(cancellationToken);
+
+        var employeeBranchMap = employeeBranchRows
+            .GroupBy(row => row.EmployeeRoleId)
+            .ToDictionary(
+                group => group.Key,
+                group => new
+                {
+                    BranchIds = group.Select(item => item.BranchId).Distinct().ToList(),
+                    BranchLegalNames = group
+                        .Select(item => item.BranchLegalName)
+                        .Where(name => !string.IsNullOrWhiteSpace(name))
+                        .Distinct()
+                        .OrderBy(name => name)
+                        .ToList()
+                });
+
         var result = employmentRows
             .Select(row =>
             {
@@ -564,6 +600,9 @@ public class EnterprisesController : ControllerBase
                     : string.Join(" ",
                         new[] { personName.FirstName, personName.MiddleName, personName.LastName }
                             .Where(part => !string.IsNullOrWhiteSpace(part)));
+                var branchInfo = row.EmployeeRole.Id.HasValue && employeeBranchMap.TryGetValue(row.EmployeeRole.Id.Value, out var info)
+                    ? info
+                    : null;
 
                 return new EmploymentDto
                 {
@@ -572,6 +611,8 @@ public class EnterprisesController : ControllerBase
                     EmployerId = row.Employment.EnterpriseId!.Value,
                     EmployeePartyRoleId = row.EmployeeRole.Id!.Value,
                     EmployeePartyId = row.PersonId!.Value,
+                    BranchIds = branchInfo?.BranchIds ?? [],
+                    BranchLegalNames = branchInfo?.BranchLegalNames ?? [],
                     FirstName = personName?.FirstName ?? string.Empty,
                     MiddleName = personName?.MiddleName,
                     LastName = personName?.LastName ?? string.Empty,
@@ -635,6 +676,9 @@ public class EnterprisesController : ControllerBase
         var selectedRoleTypeIds = createDto.PartyRoleTypeIds
             .Distinct()
             .ToList();
+        var selectedBranchRoleIds = createDto.BranchIds
+            .Distinct()
+            .ToList();
         if (selectedRoleTypeIds.Count == 0)
         {
             return BadRequest("At least one PartyRoleType is required.");
@@ -646,6 +690,38 @@ public class EnterprisesController : ControllerBase
         if (partyRoleTypes.Count != selectedRoleTypeIds.Count)
         {
             return BadRequest("One or more PartyRoleTypes were not found.");
+        }
+
+        var selectedBranches = await (
+            from relation in context.PartyRelationships.OfType<EnterpriseBranch>()
+            join branchRole in context.PartyRoles.OfType<Branch>() on relation.BranchId equals branchRole.Id
+            join branchParty in context.Parties.OfType<Organization>() on branchRole.PartyId equals branchParty.Id
+            where relation.EnterpriseId == enterprise_role_id
+                  && relation.BranchId.HasValue
+                  && selectedBranchRoleIds.Contains(relation.BranchId.Value)
+            select new
+            {
+                BranchRoleId = relation.BranchId!.Value,
+                BranchLegalName = branchParty.Name ?? string.Empty
+            })
+        .ToListAsync(cancellationToken);
+        if (selectedBranches.Count != selectedBranchRoleIds.Count)
+        {
+            return BadRequest("One or more Branches were not found in this enterprise.");
+        }
+
+        var branchEmploymentRelationshipType = default(PartyRelationshipType);
+        if (selectedBranchRoleIds.Count > 0)
+        {
+            branchEmploymentRelationshipType = await context.PartyRelationshipTypes
+                .SingleOrDefaultAsync(type => type.Code == PartyRelationshipType.BranchEmployment, cancellationToken);
+            if (branchEmploymentRelationshipType == null)
+            {
+                return Problem(
+                    statusCode: StatusCodes.Status500InternalServerError,
+                    title: "Missing master data",
+                    detail: $"PartyRelationshipType '{PartyRelationshipType.BranchEmployment}' not found. Run database migration/seeding.");
+            }
         }
 
         var language = createDto.LanguageId.HasValue
@@ -708,6 +784,21 @@ public class EnterprisesController : ControllerBase
 
             await context.AddRangeAsync(employeeRole, employment);
 
+            foreach (var selectedBranch in selectedBranches)
+            {
+                var branchEmployment = new BranchEmployment(
+                    selectedBranch.BranchRoleId,
+                    employeeRole.Id!.Value,
+                    branchEmploymentRelationshipType!.Id!.Value)
+                {
+                    Id = Guid.NewGuid(),
+                    PartyRelationshipTypeId = branchEmploymentRelationshipType.Id,
+                    BranchId = selectedBranch.BranchRoleId,
+                    EmployeeId = employeeRole.Id
+                };
+                await context.AddAsync(branchEmployment, cancellationToken);
+            }
+
             if (firstEmployeeRole == null && firstEmployment == null && firstPartyRoleType.Id == partyRoleType.Id)
             {
                 firstEmployeeRole = employeeRole;
@@ -733,6 +824,8 @@ public class EnterprisesController : ControllerBase
             EmployerId = firstEmployment.EnterpriseId!.Value,
             EmployeePartyRoleId = firstEmployeeRole!.Id!.Value,
             EmployeePartyId = person.Id!.Value,
+            BranchIds = selectedBranches.Select(item => item.BranchRoleId).ToList(),
+            BranchLegalNames = selectedBranches.Select(item => item.BranchLegalName).Distinct().OrderBy(item => item).ToList(),
             FirstName = personName.FirstName ?? string.Empty,
             MiddleName = personName.MiddleName,
             LastName = personName.LastName ?? string.Empty,
@@ -795,6 +888,9 @@ public class EnterprisesController : ControllerBase
             .Distinct()
             .ToList();
         var employmentNumber = updateDto.EmploymentNumber.Trim();
+        var selectedBranchRoleIds = updateDto.BranchIds
+            .Distinct()
+            .ToList();
         if (selectedRoleTypeIds.Count == 0)
         {
             return BadRequest("At least one PartyRoleType is required.");
@@ -806,6 +902,24 @@ public class EnterprisesController : ControllerBase
         if (selectedPartyRoleTypes.Count != selectedRoleTypeIds.Count)
         {
             return BadRequest("One or more PartyRoleTypes were not found.");
+        }
+
+        var selectedBranches = await (
+            from relation in context.PartyRelationships.OfType<EnterpriseBranch>()
+            join branchRole in context.PartyRoles.OfType<Branch>() on relation.BranchId equals branchRole.Id
+            join branchParty in context.Parties.OfType<Organization>() on branchRole.PartyId equals branchParty.Id
+            where relation.EnterpriseId == enterprise_role_id
+                  && relation.BranchId.HasValue
+                  && selectedBranchRoleIds.Contains(relation.BranchId.Value)
+            select new
+            {
+                BranchRoleId = relation.BranchId!.Value,
+                BranchLegalName = branchParty.Name ?? string.Empty
+            })
+        .ToListAsync(cancellationToken);
+        if (selectedBranches.Count != selectedBranchRoleIds.Count)
+        {
+            return BadRequest("One or more Branches were not found in this enterprise.");
         }
 
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
@@ -863,12 +977,23 @@ public class EnterprisesController : ControllerBase
             })
             .ToListAsync(cancellationToken);
 
+        var relatedEmployeeRoleIds = relatedEmployments
+            .Where(item => item.EmployeeRole.Id.HasValue)
+            .Select(item => item.EmployeeRole.Id!.Value)
+            .ToList();
+
+        var existingBranchEmployments = await context.PartyRelationships
+            .OfType<BranchEmployment>()
+            .Where(item => item.EmployeeId.HasValue && relatedEmployeeRoleIds.Contains(item.EmployeeId.Value))
+            .ToListAsync(cancellationToken);
+
         var existingByRoleTypeId = relatedEmployments
             .Where(item => item.EmployeeRole.TypeId.HasValue)
             .GroupBy(item => item.EmployeeRole.TypeId!.Value)
             .ToDictionary(group => group.Key, group => group.First());
 
         var selectedRoleTypeSet = selectedRoleTypeIds.ToHashSet();
+        var selectedBranchRoleIdSet = selectedBranchRoleIds.ToHashSet();
         var selectedPartyRoleTypeMap = selectedPartyRoleTypes
             .Where(item => item.Id.HasValue)
             .ToDictionary(item => item.Id!.Value, item => item);
@@ -879,11 +1004,95 @@ public class EnterprisesController : ControllerBase
             if (!typeId.HasValue || selectedRoleTypeSet.Contains(typeId.Value))
             {
                 relatedEmployment.Employment.Number = employmentNumber;
+
+                if (relatedEmployment.EmployeeRole.Id.HasValue)
+                {
+                    var employeeRoleId = relatedEmployment.EmployeeRole.Id.Value;
+                    var currentBranchEmployments = existingBranchEmployments
+                        .Where(item => item.EmployeeId == employeeRoleId)
+                        .ToList();
+
+                    foreach (var currentBranchEmployment in currentBranchEmployments)
+                    {
+                        if (!currentBranchEmployment.BranchId.HasValue || selectedBranchRoleIdSet.Contains(currentBranchEmployment.BranchId.Value))
+                        {
+                            continue;
+                        }
+
+                        context.PartyRelationships.Remove(currentBranchEmployment);
+                    }
+                }
                 continue;
+            }
+
+            if (relatedEmployment.EmployeeRole.Id.HasValue)
+            {
+                var employeeRoleId = relatedEmployment.EmployeeRole.Id.Value;
+                var branchEmploymentsToRemove = existingBranchEmployments
+                    .Where(item => item.EmployeeId == employeeRoleId)
+                    .ToList();
+                if (branchEmploymentsToRemove.Count > 0)
+                {
+                    context.PartyRelationships.RemoveRange(branchEmploymentsToRemove);
+                }
             }
 
             context.PartyRelationships.Remove(relatedEmployment.Employment);
             context.PartyRoles.Remove(relatedEmployment.EmployeeRole);
+        }
+
+        var branchEmploymentRelationshipType = default(PartyRelationshipType);
+        if (selectedBranchRoleIds.Count > 0)
+        {
+            branchEmploymentRelationshipType = await context.PartyRelationshipTypes
+                .SingleOrDefaultAsync(type => type.Code == PartyRelationshipType.BranchEmployment, cancellationToken);
+            if (branchEmploymentRelationshipType == null)
+            {
+                return Problem(
+                    statusCode: StatusCodes.Status500InternalServerError,
+                    title: "Missing master data",
+                    detail: $"PartyRelationshipType '{PartyRelationshipType.BranchEmployment}' not found. Run database migration/seeding.");
+            }
+        }
+
+        foreach (var relatedEmployment in relatedEmployments)
+        {
+            if (!relatedEmployment.EmployeeRole.Id.HasValue)
+            {
+                continue;
+            }
+
+            var employeeRoleId = relatedEmployment.EmployeeRole.Id.Value;
+            var roleTypeId = relatedEmployment.EmployeeRole.TypeId;
+            if (!roleTypeId.HasValue || !selectedRoleTypeSet.Contains(roleTypeId.Value))
+            {
+                continue;
+            }
+
+            var currentBranchIds = existingBranchEmployments
+                .Where(item => item.EmployeeId == employeeRoleId && item.BranchId.HasValue)
+                .Select(item => item.BranchId!.Value)
+                .ToHashSet();
+
+            foreach (var selectedBranch in selectedBranches)
+            {
+                if (currentBranchIds.Contains(selectedBranch.BranchRoleId))
+                {
+                    continue;
+                }
+
+                var branchEmploymentToAdd = new BranchEmployment(
+                    selectedBranch.BranchRoleId,
+                    employeeRoleId,
+                    branchEmploymentRelationshipType!.Id!.Value)
+                {
+                    Id = Guid.NewGuid(),
+                    PartyRelationshipTypeId = branchEmploymentRelationshipType.Id,
+                    BranchId = selectedBranch.BranchRoleId,
+                    EmployeeId = employeeRoleId
+                };
+                await context.AddAsync(branchEmploymentToAdd, cancellationToken);
+            }
         }
 
         var employmentRelationshipType = await context.PartyRelationshipTypes
@@ -921,6 +1130,21 @@ public class EnterprisesController : ControllerBase
             };
 
             await context.AddRangeAsync(employeeRoleToAdd, employmentToAdd);
+
+            foreach (var selectedBranch in selectedBranches)
+            {
+                var branchEmploymentToAdd = new BranchEmployment(
+                    selectedBranch.BranchRoleId,
+                    employeeRoleToAdd.Id!.Value,
+                    branchEmploymentRelationshipType!.Id!.Value)
+                {
+                    Id = Guid.NewGuid(),
+                    PartyRelationshipTypeId = branchEmploymentRelationshipType.Id,
+                    BranchId = selectedBranch.BranchRoleId,
+                    EmployeeId = employeeRoleToAdd.Id
+                };
+                await context.AddAsync(branchEmploymentToAdd, cancellationToken);
+            }
             createdEmployments[selectedRoleTypeId] = (employmentToAdd, employeeRoleToAdd);
         }
 
@@ -949,6 +1173,8 @@ public class EnterprisesController : ControllerBase
             EmployerId = responseEmployment.EnterpriseId.Value,
             EmployeePartyRoleId = responseEmployeeRoleId!.Value,
             EmployeePartyId = person.Id!.Value,
+            BranchIds = selectedBranches.Select(item => item.BranchRoleId).ToList(),
+            BranchLegalNames = selectedBranches.Select(item => item.BranchLegalName).Distinct().OrderBy(item => item).ToList(),
             FirstName = personName.FirstName ?? string.Empty,
             MiddleName = personName.MiddleName,
             LastName = personName.LastName ?? string.Empty,
@@ -1015,6 +1241,18 @@ public class EnterprisesController : ControllerBase
             : string.Join(" ", new[] { personName.FirstName, personName.MiddleName, personName.LastName }
                 .Where(part => !string.IsNullOrWhiteSpace(part)));
 
+        var branchRows = await (
+            from relation in context.PartyRelationships.OfType<BranchEmployment>()
+            join branchRole in context.PartyRoles.OfType<Branch>() on relation.BranchId equals branchRole.Id
+            join branchParty in context.Parties.OfType<Organization>() on branchRole.PartyId equals branchParty.Id
+            where relation.EmployeeId == employmentRow.EmployeeRole.Id
+            select new
+            {
+                BranchId = relation.BranchId!.Value,
+                BranchLegalName = branchParty.Name ?? string.Empty
+            })
+            .ToListAsync(cancellationToken);
+
         return Ok(new EmploymentDto
         {
             EmploymentId = employmentRow.Employment.Id!.Value,
@@ -1022,6 +1260,8 @@ public class EnterprisesController : ControllerBase
             EmployerId = employmentRow.Employment.EnterpriseId!.Value,
             EmployeePartyRoleId = employmentRow.EmployeeRole.Id!.Value,
             EmployeePartyId = employmentRow.EmployeeRole.PartyId!.Value,
+            BranchIds = branchRows.Select(item => item.BranchId).Distinct().ToList(),
+            BranchLegalNames = branchRows.Select(item => item.BranchLegalName).Where(item => !string.IsNullOrWhiteSpace(item)).Distinct().OrderBy(item => item).ToList(),
             FirstName = personName?.FirstName ?? string.Empty,
             MiddleName = personName?.MiddleName,
             LastName = personName?.LastName ?? string.Empty,
@@ -1345,6 +1585,30 @@ public class EnterprisesController : ControllerBase
 
         var branchRoleId = relation.BranchId;
 
+        if (branchRoleId.HasValue)
+        {
+            var enterpriseEmployeeRoleIds = await context.PartyRelationships
+                .OfType<Employment>()
+                .Where(item => item.EnterpriseId == enterprise_role_id && item.EmployeeId.HasValue)
+                .Select(item => item.EmployeeId!.Value)
+                .Distinct()
+                .ToListAsync(cancellationToken);
+
+            if (enterpriseEmployeeRoleIds.Count > 0)
+            {
+                var branchEmployments = await context.PartyRelationships
+                    .OfType<BranchEmployment>()
+                    .Where(item => item.BranchId == branchRoleId
+                                   && item.EmployeeId.HasValue
+                                   && enterpriseEmployeeRoleIds.Contains(item.EmployeeId.Value))
+                    .ToListAsync(cancellationToken);
+                if (branchEmployments.Count > 0)
+                {
+                    context.PartyRelationships.RemoveRange(branchEmployments);
+                }
+            }
+        }
+
         context.PartyRelationships.Remove(relation);
         await context.SaveChangesAsync(cancellationToken);
 
@@ -1353,7 +1617,10 @@ public class EnterprisesController : ControllerBase
             var hasOtherReference = await context.PartyRelationships
                 .OfType<EnterpriseBranch>()
                 .AnyAsync(item => item.BranchId == branchRoleId, cancellationToken);
-            if (!hasOtherReference)
+            var hasBranchEmploymentReference = await context.PartyRelationships
+                .OfType<BranchEmployment>()
+                .AnyAsync(item => item.BranchId == branchRoleId, cancellationToken);
+            if (!hasOtherReference && !hasBranchEmploymentReference)
             {
                 var branchRole = await context.PartyRoles
                     .OfType<Branch>()
@@ -1391,6 +1658,18 @@ public class EnterprisesController : ControllerBase
             .FirstOrDefaultAsync(item => item.Id == employment.EmployeeId, cancellationToken);
         if (employeeRole?.PartyId == null)
         {
+            if (employment.EmployeeId.HasValue)
+            {
+                var orphanBranchEmployments = await context.PartyRelationships
+                    .OfType<BranchEmployment>()
+                    .Where(item => item.EmployeeId == employment.EmployeeId)
+                    .ToListAsync(cancellationToken);
+                if (orphanBranchEmployments.Count > 0)
+                {
+                    context.PartyRelationships.RemoveRange(orphanBranchEmployments);
+                }
+            }
+
             context.PartyRelationships.Remove(employment);
             await context.SaveChangesAsync(cancellationToken);
             return NoContent();
@@ -1419,6 +1698,18 @@ public class EnterprisesController : ControllerBase
             .Where(item => item.EmployeeRole.Id.HasValue)
             .Select(item => item.EmployeeRole.Id!.Value)
             .ToList();
+
+        if (removedRoleIds.Count > 0)
+        {
+            var relatedBranchEmployments = await context.PartyRelationships
+                .OfType<BranchEmployment>()
+                .Where(item => item.EmployeeId.HasValue && removedRoleIds.Contains(item.EmployeeId.Value))
+                .ToListAsync(cancellationToken);
+            if (relatedBranchEmployments.Count > 0)
+            {
+                context.PartyRelationships.RemoveRange(relatedBranchEmployments);
+            }
+        }
 
         var hasRemainingPartyRoles = await context.PartyRoles
             .AnyAsync(item => item.PartyId == partyId

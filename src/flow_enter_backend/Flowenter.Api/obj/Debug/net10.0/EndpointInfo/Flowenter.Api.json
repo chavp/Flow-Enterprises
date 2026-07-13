@@ -6425,6 +6425,13 @@
               "format": "uuid"
             }
           },
+          "branchIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
           "languageId": {
             "type": "string",
             "format": "uuid",
@@ -6817,6 +6824,19 @@
           "employeePartyId": {
             "type": "string",
             "format": "uuid"
+          },
+          "branchIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "branchLegalNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "firstName": {
             "type": "string"
@@ -8222,6 +8242,13 @@
           },
           "partyRoleTypeIds": {
             "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "branchIds": {
             "type": "array",
             "items": {
               "type": "string",
