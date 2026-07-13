@@ -284,8 +284,8 @@ public class EnterprisesController : ControllerBase
             .ToListAsync(cancellationToken);
 
         var affectedFacilityIds = enterpriseFacilityRoles
-            .Where(item => item.Id.HasValue)
-            .Select(item => item.Id!.Value)
+            .Where(item => item.FacilityId.HasValue)
+            .Select(item => item.FacilityId!.Value)
             .Distinct()
             .ToList();
 
@@ -302,7 +302,7 @@ public class EnterprisesController : ControllerBase
         {
             var hasOtherFacilityRoleReferences = await context.FacilityRoles
                 .AnyAsync(item =>
-                    item.Id == facilityId
+                    item.FacilityId == facilityId
                     && (item.PartyId != enterprisePartyId || item.PartyRoleTypeId != enterprisePartyRoleTypeId), cancellationToken);
 
             if (hasOtherFacilityRoleReferences)
@@ -1935,10 +1935,10 @@ public class EnterprisesController : ControllerBase
 
         var facilityIds = await context.FacilityRoles
             .Where(role =>
-                role.Id.HasValue
+                role.FacilityId.HasValue
                 && role.PartyId == enterprise.PartyId
                 && role.PartyRoleTypeId == enterprise.TypeId)
-            .Select(role => role.Id!.Value)
+            .Select(role => role.FacilityId!.Value)
             .Distinct()
             .ToListAsync(cancellationToken);
 
@@ -2130,6 +2130,7 @@ public class EnterprisesController : ControllerBase
         var facilityRole = new FacilityRole
         {
             Id = building.Id,
+            FacilityId = building.Id,
             FacilityRoleTypeId = ownFacilityRoleType.Id,
             PartyId = enterprise.PartyId,
             PartyRoleTypeId = enterprise.TypeId
@@ -2175,7 +2176,7 @@ public class EnterprisesController : ControllerBase
             .FirstOrDefaultAsync(item =>
                     item.Id == building_id
                     && context.FacilityRoles.Any(role =>
-                        role.Id == item.Id
+                        role.FacilityId == item.Id
                         && role.PartyId == enterprise.PartyId
                         && role.PartyRoleTypeId == enterprise.TypeId),
                 cancellationToken);
@@ -2220,7 +2221,7 @@ public class EnterprisesController : ControllerBase
         }
 
         var enterpriseBuildingRoles = await context.FacilityRoles
-            .Where(role => role.Id == building_id
+            .Where(role => role.FacilityId == building_id
                            && role.PartyId == enterprise.PartyId
                            && role.PartyRoleTypeId == enterprise.TypeId)
             .ToListAsync(cancellationToken);
@@ -2232,7 +2233,7 @@ public class EnterprisesController : ControllerBase
         context.FacilityRoles.RemoveRange(enterpriseBuildingRoles);
 
         var hasOtherFacilityRoleReferences = await context.FacilityRoles
-            .AnyAsync(role => role.Id == building_id
+            .AnyAsync(role => role.FacilityId == building_id
                               && (role.PartyId != enterprise.PartyId || role.PartyRoleTypeId != enterprise.TypeId),
                 cancellationToken);
         if (!hasOtherFacilityRoleReferences)
@@ -2282,7 +2283,7 @@ public class EnterprisesController : ControllerBase
             .FirstOrDefaultAsync(item =>
                     item.Id == createDto.BuildingId
                     && context.FacilityRoles.Any(role =>
-                        role.Id == item.Id
+                        role.FacilityId == item.Id
                         && role.PartyId == enterprise.PartyId
                         && role.PartyRoleTypeId == enterprise.TypeId),
                 cancellationToken);
@@ -2324,6 +2325,7 @@ public class EnterprisesController : ControllerBase
         var facilityRole = new FacilityRole
         {
             Id = floor.Id,
+            FacilityId = floor.Id,
             FacilityRoleTypeId = ownFacilityRoleType.Id,
             PartyId = enterprise.PartyId,
             PartyRoleTypeId = enterprise.TypeId
@@ -2371,7 +2373,7 @@ public class EnterprisesController : ControllerBase
             .FirstOrDefaultAsync(item =>
                     item.Id == floor_id
                     && context.FacilityRoles.Any(role =>
-                        role.Id == item.Id
+                        role.FacilityId == item.Id
                         && role.PartyId == enterprise.PartyId
                         && role.PartyRoleTypeId == enterprise.TypeId),
                 cancellationToken);
@@ -2385,7 +2387,7 @@ public class EnterprisesController : ControllerBase
             .FirstOrDefaultAsync(item =>
                     item.Id == updateDto.BuildingId
                     && context.FacilityRoles.Any(role =>
-                        role.Id == item.Id
+                        role.FacilityId == item.Id
                         && role.PartyId == enterprise.PartyId
                         && role.PartyRoleTypeId == enterprise.TypeId),
                 cancellationToken);
@@ -2435,7 +2437,7 @@ public class EnterprisesController : ControllerBase
         }
 
         var enterpriseFloorRoles = await context.FacilityRoles
-            .Where(role => role.Id == floor_id
+            .Where(role => role.FacilityId == floor_id
                            && role.PartyId == enterprise.PartyId
                            && role.PartyRoleTypeId == enterprise.TypeId)
             .ToListAsync(cancellationToken);
@@ -2447,7 +2449,7 @@ public class EnterprisesController : ControllerBase
         context.FacilityRoles.RemoveRange(enterpriseFloorRoles);
 
         var hasOtherFacilityRoleReferences = await context.FacilityRoles
-            .AnyAsync(role => role.Id == floor_id
+            .AnyAsync(role => role.FacilityId == floor_id
                               && (role.PartyId != enterprise.PartyId || role.PartyRoleTypeId != enterprise.TypeId),
                 cancellationToken);
         if (!hasOtherFacilityRoleReferences)
@@ -2497,7 +2499,7 @@ public class EnterprisesController : ControllerBase
             .Include(room => room.Floor)
             .ThenInclude(floor => floor!.Building)
             .Where(room => context.FacilityRoles.Any(role =>
-                role.Id == room.Id
+                role.FacilityId == room.Id
                 && role.PartyId == enterprise.PartyId
                 && role.PartyRoleTypeId == enterprise.TypeId))
             .AsQueryable();
@@ -2527,7 +2529,7 @@ public class EnterprisesController : ControllerBase
                     .Count(bed =>
                         bed.RoomId == room.Id
                         && context.FacilityRoles.Any(role =>
-                            role.Id == bed.Id
+                            role.FacilityId == bed.Id
                             && role.PartyId == enterprise.PartyId
                             && role.PartyRoleTypeId == enterprise.TypeId)),
                 CreatedAtUtc = room.CreatedAtUtc,
@@ -2565,7 +2567,7 @@ public class EnterprisesController : ControllerBase
             .FirstOrDefaultAsync(item =>
                     item.Id == createDto.FloorId
                     && context.FacilityRoles.Any(role =>
-                        role.Id == item.Id
+                        role.FacilityId == item.Id
                         && role.PartyId == enterprise.PartyId
                         && role.PartyRoleTypeId == enterprise.TypeId),
                 cancellationToken);
@@ -2607,6 +2609,7 @@ public class EnterprisesController : ControllerBase
         var facilityRole = new FacilityRole
         {
             Id = room.Id,
+            FacilityId = room.Id,
             FacilityRoleTypeId = ownFacilityRoleType.Id,
             PartyId = enterprise.PartyId,
             PartyRoleTypeId = enterprise.TypeId
@@ -2660,7 +2663,7 @@ public class EnterprisesController : ControllerBase
             .FirstOrDefaultAsync(item =>
                     item.Id == room_id
                     && context.FacilityRoles.Any(role =>
-                        role.Id == item.Id
+                        role.FacilityId == item.Id
                         && role.PartyId == enterprise.PartyId
                         && role.PartyRoleTypeId == enterprise.TypeId),
                 cancellationToken);
@@ -2675,7 +2678,7 @@ public class EnterprisesController : ControllerBase
             .FirstOrDefaultAsync(item =>
                     item.Id == updateDto.FloorId
                     && context.FacilityRoles.Any(role =>
-                        role.Id == item.Id
+                        role.FacilityId == item.Id
                         && role.PartyId == enterprise.PartyId
                         && role.PartyRoleTypeId == enterprise.TypeId),
                 cancellationToken);
@@ -2695,7 +2698,7 @@ public class EnterprisesController : ControllerBase
             .CountAsync(bed =>
                     bed.RoomId == room.Id
                     && context.FacilityRoles.Any(role =>
-                        role.Id == bed.Id
+                        role.FacilityId == bed.Id
                         && role.PartyId == enterprise.PartyId
                         && role.PartyRoleTypeId == enterprise.TypeId),
                 cancellationToken);
@@ -2737,7 +2740,7 @@ public class EnterprisesController : ControllerBase
         }
 
         var enterpriseRoomRoles = await context.FacilityRoles
-            .Where(role => role.Id == room_id
+            .Where(role => role.FacilityId == room_id
                            && role.PartyId == enterprise.PartyId
                            && role.PartyRoleTypeId == enterprise.TypeId)
             .ToListAsync(cancellationToken);
@@ -2749,7 +2752,7 @@ public class EnterprisesController : ControllerBase
         context.FacilityRoles.RemoveRange(enterpriseRoomRoles);
 
         var hasOtherFacilityRoleReferences = await context.FacilityRoles
-            .AnyAsync(role => role.Id == room_id
+            .AnyAsync(role => role.FacilityId == room_id
                               && (role.PartyId != enterprise.PartyId || role.PartyRoleTypeId != enterprise.TypeId),
                 cancellationToken);
         if (!hasOtherFacilityRoleReferences)
@@ -2800,7 +2803,7 @@ public class EnterprisesController : ControllerBase
             .ThenInclude(room => room!.Floor)
             .ThenInclude(floor => floor!.Building)
             .Where(bed => context.FacilityRoles.Any(role =>
-                role.Id == bed.Id
+                role.FacilityId == bed.Id
                 && role.PartyId == enterprise.PartyId
                 && role.PartyRoleTypeId == enterprise.TypeId));
 
@@ -2862,7 +2865,7 @@ public class EnterprisesController : ControllerBase
             .FirstOrDefaultAsync(item =>
                     item.Id == createDto.RoomId
                     && context.FacilityRoles.Any(role =>
-                        role.Id == item.Id
+                        role.FacilityId == item.Id
                         && role.PartyId == enterprise.PartyId
                         && role.PartyRoleTypeId == enterprise.TypeId),
                 cancellationToken);
@@ -2904,6 +2907,7 @@ public class EnterprisesController : ControllerBase
         var facilityRole = new FacilityRole
         {
             Id = bed.Id,
+            FacilityId = bed.Id,
             FacilityRoleTypeId = ownFacilityRoleType.Id,
             PartyId = enterprise.PartyId,
             PartyRoleTypeId = enterprise.TypeId
@@ -2959,7 +2963,7 @@ public class EnterprisesController : ControllerBase
             .FirstOrDefaultAsync(item =>
                     item.Id == bed_id
                     && context.FacilityRoles.Any(role =>
-                        role.Id == item.Id
+                        role.FacilityId == item.Id
                         && role.PartyId == enterprise.PartyId
                         && role.PartyRoleTypeId == enterprise.TypeId),
                 cancellationToken);
@@ -2975,7 +2979,7 @@ public class EnterprisesController : ControllerBase
             .FirstOrDefaultAsync(item =>
                     item.Id == updateDto.RoomId
                     && context.FacilityRoles.Any(role =>
-                        role.Id == item.Id
+                        role.FacilityId == item.Id
                         && role.PartyId == enterprise.PartyId
                         && role.PartyRoleTypeId == enterprise.TypeId),
                 cancellationToken);
@@ -3028,7 +3032,7 @@ public class EnterprisesController : ControllerBase
         }
 
         var enterpriseBedRoles = await context.FacilityRoles
-            .Where(role => role.Id == bed_id
+            .Where(role => role.FacilityId == bed_id
                            && role.PartyId == enterprise.PartyId
                            && role.PartyRoleTypeId == enterprise.TypeId)
             .ToListAsync(cancellationToken);
@@ -3040,7 +3044,7 @@ public class EnterprisesController : ControllerBase
         context.FacilityRoles.RemoveRange(enterpriseBedRoles);
 
         var hasOtherFacilityRoleReferences = await context.FacilityRoles
-            .AnyAsync(role => role.Id == bed_id
+            .AnyAsync(role => role.FacilityId == bed_id
                               && (role.PartyId != enterprise.PartyId || role.PartyRoleTypeId != enterprise.TypeId),
                 cancellationToken);
         if (!hasOtherFacilityRoleReferences)

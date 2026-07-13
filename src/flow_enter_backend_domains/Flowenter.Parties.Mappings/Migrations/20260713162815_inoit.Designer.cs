@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Flowenter.Parties.Mappings.Migrations
 {
     [DbContext(typeof(PartiesContext))]
-    [Migration("20260713151004_init")]
-    partial class init
+    [Migration("20260713162815_inoit")]
+    partial class inoit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -175,6 +175,9 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<Guid>("FacilityId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("FacilityRoleTypeId")
                         .HasColumnType("uniqueidentifier");
 
@@ -184,7 +187,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.Property<Guid>("PartyId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("PartyRoleTypeId")
+                    b.Property<Guid?>("PartyRoleTypeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Revision")
@@ -201,6 +204,8 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FacilityId");
 
                     b.HasIndex("FacilityRoleTypeId");
 
@@ -1786,9 +1791,11 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.Property<Guid>("EmployeeId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasIndex("BranchId");
-
                     b.HasIndex("EmployeeId");
+
+                    b.HasIndex("BranchId", "EmployeeId")
+                        .IsUnique()
+                        .HasFilter("[BranchId] IS NOT NULL AND [EmployeeId] IS NOT NULL");
 
                     b.ToTable("BranchEmployments", "parties");
                 });
@@ -1810,7 +1817,9 @@ namespace Flowenter.Parties.Mappings.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.HasIndex("EnterpriseId");
+                    b.HasIndex("EnterpriseId", "EmployeeId", "Number")
+                        .IsUnique()
+                        .HasFilter("[EnterpriseId] IS NOT NULL AND [EmployeeId] IS NOT NULL AND [Number] IS NOT NULL");
 
                     b.ToTable("Employments", "parties");
                 });
@@ -1930,6 +1939,12 @@ namespace Flowenter.Parties.Mappings.Migrations
 
             modelBuilder.Entity("Flowenter.Parties.Models.FacilityModels.FacilityRole", b =>
                 {
+                    b.HasOne("Flowenter.Parties.Models.FacilityModels.Facility", "Facility")
+                        .WithMany()
+                        .HasForeignKey("FacilityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Flowenter.Parties.Models.FacilityModels.FacilityRoleType", "FacilityRoleType")
                         .WithMany()
                         .HasForeignKey("FacilityRoleTypeId")
@@ -1944,9 +1959,9 @@ namespace Flowenter.Parties.Mappings.Migrations
 
                     b.HasOne("Flowenter.Parties.Models.PartyModels.PartyRoleType", "PartyRoleType")
                         .WithMany()
-                        .HasForeignKey("PartyRoleTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PartyRoleTypeId");
+
+                    b.Navigation("Facility");
 
                     b.Navigation("FacilityRoleType");
 

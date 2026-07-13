@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Flowenter.Parties.Mappings.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class inoit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -450,7 +450,8 @@ namespace Flowenter.Parties.Mappings.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FacilityRoleTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PartyRoleTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PartyRoleTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    FacilityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PartyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -464,6 +465,13 @@ namespace Flowenter.Parties.Mappings.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_FacilityRoles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FacilityRoles_Facilities_FacilityId",
+                        column: x => x.FacilityId,
+                        principalSchema: "parties",
+                        principalTable: "Facilities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_FacilityRoles_FacilityRoleTypes_FacilityRoleTypeId",
                         column: x => x.FacilityRoleTypeId,
@@ -483,8 +491,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                         column: x => x.PartyRoleTypeId,
                         principalSchema: "parties",
                         principalTable: "PartyRoleTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -1266,10 +1273,12 @@ namespace Flowenter.Parties.Mappings.Migrations
                 column: "RoomId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BranchEmployments_BranchId",
+                name: "IX_BranchEmployments_BranchId_EmployeeId",
                 schema: "parties",
                 table: "BranchEmployments",
-                column: "BranchId");
+                columns: new[] { "BranchId", "EmployeeId" },
+                unique: true,
+                filter: "[BranchId] IS NOT NULL AND [EmployeeId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_BranchEmployments_EmployeeId",
@@ -1325,10 +1334,12 @@ namespace Flowenter.Parties.Mappings.Migrations
                 column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Employments_EnterpriseId",
+                name: "IX_Employments_EnterpriseId_EmployeeId_Number",
                 schema: "parties",
                 table: "Employments",
-                column: "EnterpriseId");
+                columns: new[] { "EnterpriseId", "EmployeeId", "Number" },
+                unique: true,
+                filter: "[EnterpriseId] IS NOT NULL AND [EmployeeId] IS NOT NULL AND [Number] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_EnterpriseBranchs_BranchId",
@@ -1367,6 +1378,12 @@ namespace Flowenter.Parties.Mappings.Migrations
                 schema: "parties",
                 table: "Facilities",
                 column: "PartOfId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FacilityRoles_FacilityId",
+                schema: "parties",
+                table: "FacilityRoles",
+                column: "FacilityId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FacilityRoles_FacilityRoleTypeId",

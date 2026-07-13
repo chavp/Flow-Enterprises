@@ -172,6 +172,9 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<Guid>("FacilityId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("FacilityRoleTypeId")
                         .HasColumnType("uniqueidentifier");
 
@@ -181,7 +184,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.Property<Guid>("PartyId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("PartyRoleTypeId")
+                    b.Property<Guid?>("PartyRoleTypeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Revision")
@@ -198,6 +201,8 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FacilityId");
 
                     b.HasIndex("FacilityRoleTypeId");
 
@@ -1931,6 +1936,12 @@ namespace Flowenter.Parties.Mappings.Migrations
 
             modelBuilder.Entity("Flowenter.Parties.Models.FacilityModels.FacilityRole", b =>
                 {
+                    b.HasOne("Flowenter.Parties.Models.FacilityModels.Facility", "Facility")
+                        .WithMany()
+                        .HasForeignKey("FacilityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Flowenter.Parties.Models.FacilityModels.FacilityRoleType", "FacilityRoleType")
                         .WithMany()
                         .HasForeignKey("FacilityRoleTypeId")
@@ -1945,9 +1956,9 @@ namespace Flowenter.Parties.Mappings.Migrations
 
                     b.HasOne("Flowenter.Parties.Models.PartyModels.PartyRoleType", "PartyRoleType")
                         .WithMany()
-                        .HasForeignKey("PartyRoleTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PartyRoleTypeId");
+
+                    b.Navigation("Facility");
 
                     b.Navigation("FacilityRoleType");
 

@@ -1,5 +1,6 @@
 ﻿using Flowenter.Domain.Models;
 using Flowenter.Parties.Models.PartyModels;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -13,9 +14,12 @@ public class FacilityRole : EffectiveEntity
     public Guid? FacilityRoleTypeId { get; set; }
     public FacilityRoleType? FacilityRoleType { get; set; }
 
-    [Required]
     public Guid? PartyRoleTypeId { get; set; }
     public PartyRoleType? PartyRoleType { get; set; }
+
+    [Required]
+    public Guid? FacilityId { get; set; }
+    public Facility? Facility { get; set; }
 
     [Required]
     public Guid? PartyId { get; set; }
