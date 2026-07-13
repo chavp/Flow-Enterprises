@@ -569,7 +569,9 @@ public class EnterprisesController : ControllerBase
             {
                 EmployeeRoleId = relation.EmployeeId!.Value,
                 BranchId = relation.BranchId!.Value,
-                BranchLegalName = branchParty.Name ?? string.Empty
+                BranchLegalName = branchParty.Name ?? string.Empty,
+                FromDate = relation.FromDateUtc,
+                ThruDate = relation.ThruDateUtc
             })
             .ToListAsync(cancellationToken);
 
@@ -585,6 +587,18 @@ public class EnterprisesController : ControllerBase
                         .Where(name => !string.IsNullOrWhiteSpace(name))
                         .Distinct()
                         .OrderBy(name => name)
+                        .ToList(),
+                    BranchEmployments = group
+                        .GroupBy(item => item.BranchId)
+                        .Select(item => item.First())
+                        .OrderBy(item => item.BranchLegalName)
+                        .Select(item => new EmploymentBranchDto
+                        {
+                            BranchId = item.BranchId,
+                            BranchLegalName = item.BranchLegalName,
+                            FromDate = item.FromDate,
+                            ThruDate = item.ThruDate
+                        })
                         .ToList()
                 });
 
@@ -613,6 +627,7 @@ public class EnterprisesController : ControllerBase
                     EmployeePartyId = row.PersonId!.Value,
                     BranchIds = branchInfo?.BranchIds ?? [],
                     BranchLegalNames = branchInfo?.BranchLegalNames ?? [],
+                    BranchEmployments = branchInfo?.BranchEmployments ?? [],
                     FirstName = personName?.FirstName ?? string.Empty,
                     MiddleName = personName?.MiddleName,
                     LastName = personName?.LastName ?? string.Empty,
@@ -817,6 +832,23 @@ public class EnterprisesController : ControllerBase
             new[] { personName.FirstName, personName.MiddleName, personName.LastName }
                 .Where(part => !string.IsNullOrWhiteSpace(part)));
 
+        var createdBranchRows = firstEmployeeRole?.Id.HasValue == true
+            ? await (
+                from relation in context.PartyRelationships.OfType<BranchEmployment>()
+                join branchRole in context.PartyRoles.OfType<Branch>() on relation.BranchId equals branchRole.Id
+                join branchParty in context.Parties.OfType<Organization>() on branchRole.PartyId equals branchParty.Id
+                where relation.EmployeeId == firstEmployeeRole.Id
+                select new EmploymentBranchDto
+                {
+                    BranchId = relation.BranchId!.Value,
+                    BranchLegalName = branchParty.Name ?? string.Empty,
+                    FromDate = relation.FromDateUtc,
+                    ThruDate = relation.ThruDateUtc
+                })
+            .OrderBy(item => item.BranchLegalName)
+            .ToListAsync(cancellationToken)
+            : [];
+
         var response = new EmploymentDto
         {
             EmploymentId = firstEmployment!.Id!.Value,
@@ -826,6 +858,7 @@ public class EnterprisesController : ControllerBase
             EmployeePartyId = person.Id!.Value,
             BranchIds = selectedBranches.Select(item => item.BranchRoleId).ToList(),
             BranchLegalNames = selectedBranches.Select(item => item.BranchLegalName).Distinct().OrderBy(item => item).ToList(),
+            BranchEmployments = createdBranchRows,
             FirstName = personName.FirstName ?? string.Empty,
             MiddleName = personName.MiddleName,
             LastName = personName.LastName ?? string.Empty,
@@ -1165,6 +1198,22 @@ public class EnterprisesController : ControllerBase
 
         var responseEmployment = selectedExisting?.Employment ?? selectedCreated.Employment;
         var responseEmployeeRoleId = selectedExisting?.EmployeeRole.Id ?? selectedCreated.EmployeeRole.Id;
+        var updatedBranchRows = responseEmployeeRoleId.HasValue
+            ? await (
+                from relation in context.PartyRelationships.OfType<BranchEmployment>()
+                join branchRole in context.PartyRoles.OfType<Branch>() on relation.BranchId equals branchRole.Id
+                join branchParty in context.Parties.OfType<Organization>() on branchRole.PartyId equals branchParty.Id
+                where relation.EmployeeId == responseEmployeeRoleId
+                select new EmploymentBranchDto
+                {
+                    BranchId = relation.BranchId!.Value,
+                    BranchLegalName = branchParty.Name ?? string.Empty,
+                    FromDate = relation.FromDateUtc,
+                    ThruDate = relation.ThruDateUtc
+                })
+            .OrderBy(item => item.BranchLegalName)
+            .ToListAsync(cancellationToken)
+            : [];
 
         return Ok(new EmploymentDto
         {
@@ -1175,6 +1224,7 @@ public class EnterprisesController : ControllerBase
             EmployeePartyId = person.Id!.Value,
             BranchIds = selectedBranches.Select(item => item.BranchRoleId).ToList(),
             BranchLegalNames = selectedBranches.Select(item => item.BranchLegalName).Distinct().OrderBy(item => item).ToList(),
+            BranchEmployments = updatedBranchRows,
             FirstName = personName.FirstName ?? string.Empty,
             MiddleName = personName.MiddleName,
             LastName = personName.LastName ?? string.Empty,
@@ -1246,11 +1296,14 @@ public class EnterprisesController : ControllerBase
             join branchRole in context.PartyRoles.OfType<Branch>() on relation.BranchId equals branchRole.Id
             join branchParty in context.Parties.OfType<Organization>() on branchRole.PartyId equals branchParty.Id
             where relation.EmployeeId == employmentRow.EmployeeRole.Id
-            select new
+            select new EmploymentBranchDto
             {
                 BranchId = relation.BranchId!.Value,
-                BranchLegalName = branchParty.Name ?? string.Empty
+                BranchLegalName = branchParty.Name ?? string.Empty,
+                FromDate = relation.FromDateUtc,
+                ThruDate = relation.ThruDateUtc
             })
+            .OrderBy(item => item.BranchLegalName)
             .ToListAsync(cancellationToken);
 
         return Ok(new EmploymentDto
@@ -1262,6 +1315,128 @@ public class EnterprisesController : ControllerBase
             EmployeePartyId = employmentRow.EmployeeRole.PartyId!.Value,
             BranchIds = branchRows.Select(item => item.BranchId).Distinct().ToList(),
             BranchLegalNames = branchRows.Select(item => item.BranchLegalName).Where(item => !string.IsNullOrWhiteSpace(item)).Distinct().OrderBy(item => item).ToList(),
+            BranchEmployments = branchRows,
+            FirstName = personName?.FirstName ?? string.Empty,
+            MiddleName = personName?.MiddleName,
+            LastName = personName?.LastName ?? string.Empty,
+            EmployeeFullName = fullName,
+            PartyRoleTypeId = employmentRow.RoleType.Id!.Value,
+            PartyRoleTypeCode = employmentRow.RoleType.Code ?? string.Empty,
+            PartyRoleTypeName = employmentRow.RoleType.Name ?? string.Empty,
+            FromDate = employmentRow.Employment.FromDateUtc,
+            ThruDate = employmentRow.Employment.ThruDateUtc,
+            CreatedAtUtc = employmentRow.Employment.CreatedAtUtc,
+            UpdatedAtUtc = employmentRow.Employment.UpdatedAtUtc,
+            Revision = employmentRow.Employment.Revision
+        });
+    }
+
+    [HttpPatch("{enterprise_role_id:guid}/employments/{employment_id:guid}/branches/{branch_id:guid}/effective-date")]
+    [ProducesResponseType(typeof(EmploymentDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateEnterpriseEmploymentBranchEffectiveDate(
+        [FromRoute] Guid enterprise_role_id,
+        [FromRoute] Guid employment_id,
+        [FromRoute] Guid branch_id,
+        [FromBody] UpdateEmploymentEffectiveDateDto updateDto,
+        CancellationToken cancellationToken)
+    {
+        if (updateDto.FromDate > updateDto.ThruDate)
+        {
+            return BadRequest("FromDate must be earlier than or equal to ThruDate.");
+        }
+
+        using var context = _factory.CreateDbContext();
+
+        var employmentRow = await (
+            from employment in context.PartyRelationships.OfType<Employment>()
+            join employeeRole in context.PartyRoles on employment.EmployeeId equals employeeRole.Id
+            join roleType in context.PartyRoleTypes on employeeRole.TypeId equals roleType.Id
+            where employment.Id == employment_id && employment.EnterpriseId == enterprise_role_id
+            select new
+            {
+                Employment = employment,
+                EmployeeRole = employeeRole,
+                RoleType = roleType
+            })
+            .FirstOrDefaultAsync(cancellationToken);
+        if (employmentRow == null || employmentRow.EmployeeRole.PartyId == null)
+        {
+            return NotFound();
+        }
+
+        var relatedEmployeeRoleIds = await (
+            from employment in context.PartyRelationships.OfType<Employment>()
+            join employeeRole in context.PartyRoles on employment.EmployeeId equals employeeRole.Id
+            where employment.EnterpriseId == enterprise_role_id
+                  && employeeRole.PartyId == employmentRow.EmployeeRole.PartyId
+                  && employeeRole.Id.HasValue
+            select employeeRole.Id!.Value)
+            .Distinct()
+            .ToListAsync(cancellationToken);
+        if (relatedEmployeeRoleIds.Count == 0)
+        {
+            return NotFound();
+        }
+
+        var branchEmployments = await context.PartyRelationships
+            .OfType<BranchEmployment>()
+            .Where(item => item.EmployeeId.HasValue
+                           && relatedEmployeeRoleIds.Contains(item.EmployeeId.Value)
+                           && item.BranchId == branch_id)
+            .ToListAsync(cancellationToken);
+        if (branchEmployments.Count == 0)
+        {
+            return NotFound();
+        }
+
+        foreach (var branchEmployment in branchEmployments)
+        {
+            branchEmployment.FromDateUtc = updateDto.FromDate;
+            branchEmployment.ThruDateUtc = updateDto.ThruDate;
+        }
+
+        await context.SaveChangesAsync(cancellationToken);
+
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var personName = await context.PersonNames
+            .Where(item => item.PersonId == employmentRow.EmployeeRole.PartyId
+                           && item.FromDateUtc <= today
+                           && today <= item.ThruDateUtc)
+            .OrderByDescending(item => item.FromDateUtc)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        var fullName = personName == null
+            ? "-"
+            : string.Join(" ", new[] { personName.FirstName, personName.MiddleName, personName.LastName }
+                .Where(part => !string.IsNullOrWhiteSpace(part)));
+
+        var branchRows = await (
+            from relation in context.PartyRelationships.OfType<BranchEmployment>()
+            join branchRole in context.PartyRoles.OfType<Branch>() on relation.BranchId equals branchRole.Id
+            join branchParty in context.Parties.OfType<Organization>() on branchRole.PartyId equals branchParty.Id
+            where relation.EmployeeId == employmentRow.EmployeeRole.Id
+            select new EmploymentBranchDto
+            {
+                BranchId = relation.BranchId!.Value,
+                BranchLegalName = branchParty.Name ?? string.Empty,
+                FromDate = relation.FromDateUtc,
+                ThruDate = relation.ThruDateUtc
+            })
+            .OrderBy(item => item.BranchLegalName)
+            .ToListAsync(cancellationToken);
+
+        return Ok(new EmploymentDto
+        {
+            EmploymentId = employmentRow.Employment.Id!.Value,
+            EmploymentNumber = employmentRow.Employment.Number ?? string.Empty,
+            EmployerId = employmentRow.Employment.EnterpriseId!.Value,
+            EmployeePartyRoleId = employmentRow.EmployeeRole.Id!.Value,
+            EmployeePartyId = employmentRow.EmployeeRole.PartyId!.Value,
+            BranchIds = branchRows.Select(item => item.BranchId).Distinct().ToList(),
+            BranchLegalNames = branchRows.Select(item => item.BranchLegalName).Where(item => !string.IsNullOrWhiteSpace(item)).Distinct().OrderBy(item => item).ToList(),
+            BranchEmployments = branchRows,
             FirstName = personName?.FirstName ?? string.Empty,
             MiddleName = personName?.MiddleName,
             LastName = personName?.LastName ?? string.Empty,

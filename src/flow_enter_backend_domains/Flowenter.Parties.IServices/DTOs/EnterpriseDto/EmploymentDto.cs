@@ -9,6 +9,7 @@ public record EmploymentDto
     public Guid EmployeePartyId { get; init; }
     public List<Guid> BranchIds { get; init; } = [];
     public List<string> BranchLegalNames { get; init; } = [];
+    public List<EmploymentBranchDto> BranchEmployments { get; init; } = [];
     public string FirstName { get; init; } = string.Empty;
     public string? MiddleName { get; init; }
     public string LastName { get; init; } = string.Empty;

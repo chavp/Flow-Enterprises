@@ -52,6 +52,7 @@ import {
   updateEnterpriseBed,
   updateEnterpriseBranch,
   updateEnterpriseBuilding,
+  updateEnterpriseEmploymentBranchEffectiveDate,
   updateEnterpriseEmploymentEffectiveDate,
   updateEnterpriseEmployment,
   updateEnterpriseFloor,
@@ -94,6 +95,7 @@ type EmploymentGroup = {
   employmentNumber: string;
   branchIds: string[];
   branchLegalNames: string[];
+  branchEmployments: Employment["branchEmployments"];
   employeeFullName: string;
   firstName: string;
   middleName?: string;
@@ -139,6 +141,9 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
   const [activeRoomIdForBedCreate, setActiveRoomIdForBedCreate] = useState<string | null>(null);
   const [editingBed, setEditingBed] = useState<Bed | null>(null);
   const [effectiveDateDrafts, setEffectiveDateDrafts] = useState<
+    Record<string, { fromDate: string; thruDate: string }>
+  >({});
+  const [branchEffectiveDateDrafts, setBranchEffectiveDateDrafts] = useState<
     Record<string, { fromDate: string; thruDate: string }>
   >({});
   const [peopleTabKey, setPeopleTabKey] = useState("people");
@@ -304,6 +309,38 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
     },
     onError: (error) => {
       messageApi.error(error instanceof Error ? error.message : "Update effective date failed");
+    }
+  });
+
+  const updateEmploymentBranchEffectiveDateMutation = useMutation({
+    mutationFn: async (payload: { employmentId: string; branchId: string; fromDate: string; thruDate: string }) => {
+      if (!peopleEnterprise) {
+        return;
+      }
+
+      await updateEnterpriseEmploymentBranchEffectiveDate(
+        peopleEnterprise.enterpriseId,
+        payload.employmentId,
+        payload.branchId,
+        {
+          fromDate: payload.fromDate,
+          thruDate: payload.thruDate
+        },
+        apiBaseUrl
+      );
+    },
+    onSuccess: async () => {
+      if (!peopleEnterprise) {
+        return;
+      }
+
+      await queryClient.invalidateQueries({
+        queryKey: ["enterprise-employments", peopleEnterprise.enterpriseId, apiBaseUrl]
+      });
+      messageApi.success("Branch effective date updated");
+    },
+    onError: (error) => {
+      messageApi.error(error instanceof Error ? error.message : "Update branch effective date failed");
     }
   });
 
@@ -1081,6 +1118,15 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
         existing.employments.push(employment);
         existing.branchIds = Array.from(new Set([...existing.branchIds, ...(employment.branchIds ?? [])]));
         existing.branchLegalNames = Array.from(new Set([...existing.branchLegalNames, ...(employment.branchLegalNames ?? [])]));
+        const branchMap = new Map(existing.branchEmployments.map((item) => [item.branchId, item] as const));
+        for (const branchEmployment of employment.branchEmployments ?? []) {
+          if (!branchMap.has(branchEmployment.branchId)) {
+            branchMap.set(branchEmployment.branchId, branchEmployment);
+          }
+        }
+        existing.branchEmployments = Array.from(branchMap.values()).sort((left, right) =>
+          left.branchLegalName.localeCompare(right.branchLegalName)
+        );
         continue;
       }
 
@@ -1089,6 +1135,9 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
         employmentNumber: employment.employmentNumber,
         branchIds: employment.branchIds ?? [],
         branchLegalNames: employment.branchLegalNames ?? [],
+        branchEmployments: [...(employment.branchEmployments ?? [])].sort((left, right) =>
+          left.branchLegalName.localeCompare(right.branchLegalName)
+        ),
         employeeFullName: employment.employeeFullName,
         firstName: employment.firstName,
         middleName: employment.middleName,
@@ -1105,6 +1154,17 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
       fromDate: toLocalDateApiValue(employment.fromDate),
       thruDate: toLocalDateApiValue(employment.thruDate)
     };
+
+  const getBranchEffectiveDateDraft = (employmentGroup: EmploymentGroup, branchId: string) => {
+    const key = `${employmentGroup.employeePartyId}:${branchId}`;
+    const current = employmentGroup.branchEmployments.find((item) => item.branchId === branchId);
+    return (
+      branchEffectiveDateDrafts[key] ?? {
+        fromDate: current ? toLocalDateApiValue(current.fromDate) : toLocalDateApiValue(new Date().toISOString()),
+        thruDate: current ? toLocalDateApiValue(current.thruDate) : toLocalDateApiValue(new Date().toISOString())
+      }
+    );
+  };
 
   if (peopleEnterprise) {
     return (
@@ -1140,6 +1200,7 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                   setActiveFloorIdForRoomCreate(null);
                   setActiveRoomIdForBedCreate(null);
                   setEffectiveDateDrafts({});
+                  setBranchEffectiveDateDrafts({});
                   setPeopleTabKey("people");
                   employmentForm.resetFields();
                   editEmploymentForm.resetFields();
@@ -1206,7 +1267,101 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                                 <tr key={employmentGroup.employeePartyId}>
                                   <td>{employmentGroup.employeeFullName}</td>
                                   <td>{employmentGroup.employmentNumber}</td>
-                                  <td>{employmentGroup.branchLegalNames.join(", ") || "-"}</td>
+                                  <td>
+                                    <Popover
+                                      trigger="click"
+                                      content={
+                                        <div style={{ width: 560 }}>
+                                          <table className="tanstack-table">
+                                            <thead>
+                                              <tr>
+                                                <th>Branch</th>
+                                                <th>From Date</th>
+                                                <th>Thru Date</th>
+                                                <th>Action</th>
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                              {employmentGroup.branchEmployments.map((item) => {
+                                                const primaryEmployment = employmentGroup.employments[0];
+                                                const key = `${employmentGroup.employeePartyId}:${item.branchId}`;
+                                                const draft = getBranchEffectiveDateDraft(employmentGroup, item.branchId);
+                                                return (
+                                                  <tr key={item.branchId}>
+                                                    <td>{item.branchLegalName}</td>
+                                                    <td>
+                                                      <DatePicker
+                                                        format="DD/MM/YYYY"
+                                                        style={{ width: 150 }}
+                                                        value={toLocalDatePickerValue(draft.fromDate)}
+                                                        onChange={(value) => {
+                                                          if (!value) {
+                                                            return;
+                                                          }
+                                                          setBranchEffectiveDateDrafts((current) => ({
+                                                            ...current,
+                                                            [key]: {
+                                                              ...getBranchEffectiveDateDraft(employmentGroup, item.branchId),
+                                                              fromDate: value.format("YYYY-MM-DD")
+                                                            }
+                                                          }));
+                                                        }}
+                                                      />
+                                                    </td>
+                                                    <td>
+                                                      <DatePicker
+                                                        format="DD/MM/YYYY"
+                                                        style={{ width: 150 }}
+                                                        value={toLocalDatePickerValue(draft.thruDate)}
+                                                        onChange={(value) => {
+                                                          if (!value) {
+                                                            return;
+                                                          }
+                                                          setBranchEffectiveDateDrafts((current) => ({
+                                                            ...current,
+                                                            [key]: {
+                                                              ...getBranchEffectiveDateDraft(employmentGroup, item.branchId),
+                                                              thruDate: value.format("YYYY-MM-DD")
+                                                            }
+                                                          }));
+                                                        }}
+                                                      />
+                                                    </td>
+                                                    <td>
+                                                      <Button
+                                                        size="small"
+                                                        onClick={() =>
+                                                          updateEmploymentBranchEffectiveDateMutation.mutate({
+                                                            employmentId: primaryEmployment.employmentId,
+                                                            branchId: item.branchId,
+                                                            fromDate: getBranchEffectiveDateDraft(
+                                                              employmentGroup,
+                                                              item.branchId
+                                                            ).fromDate,
+                                                            thruDate: getBranchEffectiveDateDraft(
+                                                              employmentGroup,
+                                                              item.branchId
+                                                            ).thruDate
+                                                          })
+                                                        }
+                                                        loading={updateEmploymentBranchEffectiveDateMutation.isPending}
+                                                      >
+                                                        Save
+                                                      </Button>
+                                                    </td>
+                                                  </tr>
+                                                );
+                                              })}
+                                            </tbody>
+                                          </table>
+                                        </div>
+                                      }
+                                    >
+                                      <Button size="small">
+                                        Branches ({employmentGroup.branchEmployments.length})
+                                      </Button>
+                                    </Popover>
+                                  </td>
                                   <td>
                                     <Popover
                                       trigger="click"

@@ -63,6 +63,7 @@ export type Employment = {
   employeePartyId: string;
   branchIds: string[];
   branchLegalNames: string[];
+  branchEmployments: EmploymentBranch[];
   firstName: string;
   middleName?: string;
   lastName: string;
@@ -89,6 +90,13 @@ export type CreateEmploymentRequest = {
 export type UpdateEmploymentRequest = CreateEmploymentRequest;
 
 export type UpdateEmploymentEffectiveDateRequest = {
+  fromDate: string;
+  thruDate: string;
+};
+
+export type EmploymentBranch = {
+  branchId: string;
+  branchLegalName: string;
   fromDate: string;
   thruDate: string;
 };

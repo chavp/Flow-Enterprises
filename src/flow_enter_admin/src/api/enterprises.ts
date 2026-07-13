@@ -148,6 +148,20 @@ export async function updateEnterpriseEmploymentEffectiveDate(
   );
 }
 
+export async function updateEnterpriseEmploymentBranchEffectiveDate(
+  enterpriseId: string,
+  employmentId: string,
+  branchId: string,
+  payload: UpdateEmploymentEffectiveDateRequest,
+  apiBaseUrl?: string
+): Promise<void> {
+  await requestJson(
+    `/api/parties/enterprises/${enterpriseId}/employments/${employmentId}/branches/${branchId}/effective-date`,
+    { method: "PATCH", body: JSON.stringify(payload) },
+    apiBaseUrl
+  );
+}
+
 export async function fetchEnterpriseBranchs(enterpriseId: string, apiBaseUrl?: string): Promise<EnterpriseBranch[]> {
   return requestJson<EnterpriseBranch[]>(`/api/parties/enterprises/${enterpriseId}/branchs`, { method: "GET" }, apiBaseUrl);
 }
