@@ -6128,6 +6128,19 @@
             "type": "string",
             "nullable": true
           },
+          "branchIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "branchLegalNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "createdAtUtc": {
             "type": "string",
             "format": "date-time"
@@ -6430,6 +6443,13 @@
             "minLength": 0,
             "type": "string",
             "nullable": true
+          },
+          "branchIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         }
       },
@@ -8356,6 +8376,13 @@
             "minLength": 0,
             "type": "string",
             "nullable": true
+          },
+          "branchIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         }
       },

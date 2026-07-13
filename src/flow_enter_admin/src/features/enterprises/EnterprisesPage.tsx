@@ -907,6 +907,9 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
             <span>
               <strong>{buildingNode.building.name}</strong>
               {buildingNode.building.description ? ` - ${buildingNode.building.description}` : ""}
+              {buildingNode.building.branchLegalNames.length > 0
+                ? ` [${buildingNode.building.branchLegalNames.join(", ")}]`
+                : ""}
             </span>
             <Space>
               <Button
@@ -916,7 +919,8 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                   setEditingBuilding(buildingNode.building);
                   editBuildingForm.setFieldsValue({
                     name: buildingNode.building.name,
-                    description: buildingNode.building.description
+                    description: buildingNode.building.description,
+                    branchIds: buildingNode.building.branchIds
                   });
                 }}
               >
@@ -1814,6 +1818,7 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                 form={createBuildingForm}
                 layout="vertical"
                 onFinish={(values) => createBuildingMutation.mutate(values)}
+                initialValues={{ branchIds: [] }}
               >
                 <Form.Item
                   name="name"
@@ -1824,6 +1829,16 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                 </Form.Item>
                 <Form.Item name="description" label="Description">
                   <Input.TextArea rows={3} maxLength={500} />
+                </Form.Item>
+                <Form.Item name="branchIds" label="Branches">
+                  <Select
+                    mode="multiple"
+                    showSearch
+                    options={enterpriseBranchOptions}
+                    loading={enterpriseBranchsQuery.isLoading}
+                    placeholder="Select branchs"
+                    optionFilterProp="label"
+                  />
                 </Form.Item>
               </Form>
             </TopDrawerForm>
@@ -1843,6 +1858,7 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                 form={editBuildingForm}
                 layout="vertical"
                 onFinish={(values) => updateBuildingMutation.mutate(values)}
+                initialValues={{ branchIds: [] }}
               >
                 <Form.Item
                   name="name"
@@ -1853,6 +1869,16 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                 </Form.Item>
                 <Form.Item name="description" label="Description">
                   <Input.TextArea rows={3} maxLength={500} />
+                </Form.Item>
+                <Form.Item name="branchIds" label="Branches">
+                  <Select
+                    mode="multiple"
+                    showSearch
+                    options={enterpriseBranchOptions}
+                    loading={enterpriseBranchsQuery.isLoading}
+                    placeholder="Select branchs"
+                    optionFilterProp="label"
+                  />
                 </Form.Item>
               </Form>
             </TopDrawerForm>

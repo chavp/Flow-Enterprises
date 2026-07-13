@@ -143,6 +143,8 @@ export type Building = {
   buildingId: string;
   name: string;
   description?: string;
+  branchIds: string[];
+  branchLegalNames: string[];
   createdAtUtc: string;
   updatedAtUtc?: string;
   revision: number;
@@ -185,6 +187,7 @@ export type UpdateBedRequest = CreateBedRequest;
 export type CreateBuildingRequest = {
   name: string;
   description?: string;
+  branchIds: string[];
 };
 
 export type UpdateBuildingRequest = CreateBuildingRequest;

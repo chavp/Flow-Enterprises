@@ -9,4 +9,6 @@ public record CreateBuildingDto
 
     [StringLength(500)]
     public string? Description { get; init; }
+
+    public List<Guid> BranchIds { get; init; } = [];
 }

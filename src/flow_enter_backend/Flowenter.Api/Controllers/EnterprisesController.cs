@@ -1953,6 +1953,48 @@ public class EnterprisesController : ControllerBase
             .OrderBy(item => item.Name)
             .ToListAsync(cancellationToken);
 
+        var buildingIds = buildings
+            .Where(item => item.Id.HasValue)
+            .Select(item => item.Id!.Value)
+            .ToList();
+
+        var buildingUseBranchRows = await (
+            from facilityRole in context.FacilityRoles
+            join branchRole in context.PartyRoles.OfType<Branch>() on new
+            {
+                PartyId = facilityRole.PartyId,
+                PartyRoleTypeId = facilityRole.PartyRoleTypeId
+            }
+            equals new
+            {
+                PartyId = branchRole.PartyId,
+                PartyRoleTypeId = branchRole.TypeId
+            }
+            join branchParty in context.Parties.OfType<Organization>() on branchRole.PartyId equals branchParty.Id
+            where facilityRole.FacilityId.HasValue
+                  && buildingIds.Contains(facilityRole.FacilityId.Value)
+                  && facilityRole.FacilityRoleType != null
+                  && facilityRole.FacilityRoleType.Code != null
+                  && facilityRole.FacilityRoleType.Code.ToUpper() == FacilityRoleType.Use.ToUpper()
+                  && branchRole.Id.HasValue
+            select new
+            {
+                BuildingId = facilityRole.FacilityId!.Value,
+                BranchRoleId = branchRole.Id!.Value,
+                BranchLegalName = branchParty.Name ?? string.Empty
+            })
+            .ToListAsync(cancellationToken);
+
+        var buildingBranchesByBuildingId = buildingUseBranchRows
+            .GroupBy(item => item.BuildingId)
+            .ToDictionary(
+                group => group.Key,
+                group => group
+                    .GroupBy(item => item.BranchRoleId)
+                    .Select(item => item.First())
+                    .OrderBy(item => item.BranchLegalName)
+                    .ToList());
+
         var floors = await context.Facilities
             .OfType<Floor>()
             .Include(item => item.Building)
@@ -1997,6 +2039,9 @@ public class EnterprisesController : ControllerBase
             Buildings = buildings.Select(building =>
             {
                 var buildingId = building.Id!.Value;
+                var buildingBranches = buildingBranchesByBuildingId.TryGetValue(buildingId, out var selectedBuildingBranches)
+                    ? selectedBuildingBranches
+                    : [];
                 var floorNodes = floorsByBuildingId.TryGetValue(buildingId, out var relatedFloors)
                     ? relatedFloors.Select(floor =>
                     {
@@ -2068,6 +2113,8 @@ public class EnterprisesController : ControllerBase
                         BuildingId = buildingId,
                         Name = building.Name ?? string.Empty,
                         Description = building.Description,
+                        BranchIds = buildingBranches.Select(item => item.BranchRoleId).ToList(),
+                        BranchLegalNames = buildingBranches.Select(item => item.BranchLegalName).Where(item => !string.IsNullOrWhiteSpace(item)).Distinct().ToList(),
                         CreatedAtUtc = building.CreatedAtUtc,
                         UpdatedAtUtc = building.UpdatedAtUtc,
                         Revision = building.Revision
@@ -2099,6 +2146,18 @@ public class EnterprisesController : ControllerBase
             return NotFound();
         }
 
+        var selectedBranchRoleIds = createDto.BranchIds
+            .Distinct()
+            .ToList();
+        var enterpriseBranches = await GetEnterpriseBranchesAsync(context, enterprise_role_id, cancellationToken);
+        var selectedBranches = enterpriseBranches
+            .Where(item => selectedBranchRoleIds.Contains(item.BranchRoleId))
+            .ToList();
+        if (selectedBranches.Count != selectedBranchRoleIds.Count)
+        {
+            return BadRequest("One or more Branches were not found in this enterprise.");
+        }
+
         var buildingFacilityType = await context.FacilityTypes
             .SingleOrDefaultAsync(item => item.Code == FacilityType.Building, cancellationToken);
         if (buildingFacilityType == null)
@@ -2119,6 +2178,20 @@ public class EnterprisesController : ControllerBase
                 detail: $"FacilityRoleType '{FacilityRoleType.Own}' not found. Run database migration/seeding.");
         }
 
+        var useFacilityRoleType = default(FacilityRoleType);
+        if (selectedBranchRoleIds.Count > 0)
+        {
+            useFacilityRoleType = await context.FacilityRoleTypes
+                .SingleOrDefaultAsync(item => item.Code != null && item.Code.ToUpper() == FacilityRoleType.Use.ToUpper(), cancellationToken);
+            if (useFacilityRoleType == null)
+            {
+                return Problem(
+                    statusCode: StatusCodes.Status500InternalServerError,
+                    title: "Missing master data",
+                    detail: $"FacilityRoleType '{FacilityRoleType.Use}' not found. Run database migration/seeding.");
+            }
+        }
+
         var building = new Building
         {
             Id = Guid.NewGuid(),
@@ -2136,8 +2209,21 @@ public class EnterprisesController : ControllerBase
             PartyRoleTypeId = enterprise.TypeId
         };
 
+        var branchFacilityRoles = selectedBranches.Select(item => new FacilityRole
+        {
+            Id = Guid.NewGuid(),
+            FacilityId = building.Id,
+            FacilityRoleTypeId = useFacilityRoleType!.Id,
+            PartyId = item.BranchPartyId,
+            PartyRoleTypeId = item.BranchPartyRoleTypeId
+        }).ToList();
+
         await context.AddAsync(building, cancellationToken);
         await context.AddAsync(facilityRole, cancellationToken);
+        if (branchFacilityRoles.Count > 0)
+        {
+            await context.AddRangeAsync(branchFacilityRoles, cancellationToken);
+        }
         await context.SaveChangesAsync(cancellationToken);
 
         return Created($"/api/parties/enterprises/{enterprise_role_id}/facilities/buildings/{building.Id}", new BuildingDto
@@ -2145,6 +2231,8 @@ public class EnterprisesController : ControllerBase
             BuildingId = building.Id!.Value,
             Name = building.Name ?? string.Empty,
             Description = building.Description,
+            BranchIds = selectedBranches.Select(item => item.BranchRoleId).ToList(),
+            BranchLegalNames = selectedBranches.Select(item => item.BranchLegalName).Where(item => !string.IsNullOrWhiteSpace(item)).Distinct().OrderBy(item => item).ToList(),
             CreatedAtUtc = building.CreatedAtUtc,
             UpdatedAtUtc = building.UpdatedAtUtc,
             Revision = building.Revision
@@ -2171,6 +2259,18 @@ public class EnterprisesController : ControllerBase
             return NotFound();
         }
 
+        var selectedBranchRoleIds = updateDto.BranchIds
+            .Distinct()
+            .ToList();
+        var enterpriseBranches = await GetEnterpriseBranchesAsync(context, enterprise_role_id, cancellationToken);
+        var selectedBranches = enterpriseBranches
+            .Where(item => selectedBranchRoleIds.Contains(item.BranchRoleId))
+            .ToList();
+        if (selectedBranches.Count != selectedBranchRoleIds.Count)
+        {
+            return BadRequest("One or more Branches were not found in this enterprise.");
+        }
+
         var building = await context.Facilities
             .OfType<Building>()
             .FirstOrDefaultAsync(item =>
@@ -2185,6 +2285,64 @@ public class EnterprisesController : ControllerBase
             return NotFound();
         }
 
+        var useFacilityRoleType = await context.FacilityRoleTypes
+            .SingleOrDefaultAsync(item => item.Code != null && item.Code.ToUpper() == FacilityRoleType.Use.ToUpper(), cancellationToken);
+        if (useFacilityRoleType == null)
+        {
+            return Problem(
+                statusCode: StatusCodes.Status500InternalServerError,
+                title: "Missing master data",
+                detail: $"FacilityRoleType '{FacilityRoleType.Use}' not found. Run database migration/seeding.");
+        }
+
+        var selectedBranchRoleKeys = selectedBranches
+            .Select(item => (item.BranchPartyId, item.BranchPartyRoleTypeId))
+            .ToHashSet();
+        var enterpriseBranchRoleKeys = enterpriseBranches
+            .Select(item => (item.BranchPartyId, item.BranchPartyRoleTypeId))
+            .ToHashSet();
+        var existingUseRoles = await context.FacilityRoles
+            .Where(item => item.FacilityId == building_id
+                           && item.FacilityRoleTypeId == useFacilityRoleType.Id)
+            .ToListAsync(cancellationToken);
+
+        foreach (var existingUseRole in existingUseRoles)
+        {
+            if (!existingUseRole.PartyId.HasValue || !existingUseRole.PartyRoleTypeId.HasValue)
+            {
+                continue;
+            }
+
+            var existingKey = (existingUseRole.PartyId.Value, existingUseRole.PartyRoleTypeId.Value);
+            if (enterpriseBranchRoleKeys.Contains(existingKey) && !selectedBranchRoleKeys.Contains(existingKey))
+            {
+                context.FacilityRoles.Remove(existingUseRole);
+            }
+        }
+
+        var existingUseRoleKeys = existingUseRoles
+            .Where(item => item.PartyId.HasValue && item.PartyRoleTypeId.HasValue)
+            .Select(item => (item.PartyId!.Value, item.PartyRoleTypeId!.Value))
+            .ToHashSet();
+
+        foreach (var selectedBranch in selectedBranches)
+        {
+            var selectedKey = (selectedBranch.BranchPartyId, selectedBranch.BranchPartyRoleTypeId);
+            if (existingUseRoleKeys.Contains(selectedKey))
+            {
+                continue;
+            }
+
+            await context.AddAsync(new FacilityRole
+            {
+                Id = Guid.NewGuid(),
+                FacilityId = building.Id,
+                FacilityRoleTypeId = useFacilityRoleType.Id,
+                PartyId = selectedBranch.BranchPartyId,
+                PartyRoleTypeId = selectedBranch.BranchPartyRoleTypeId
+            }, cancellationToken);
+        }
+
         building.Name = updateDto.Name.Trim();
         building.Description = string.IsNullOrWhiteSpace(updateDto.Description) ? null : updateDto.Description.Trim();
         await context.SaveChangesAsync(cancellationToken);
@@ -2194,6 +2352,8 @@ public class EnterprisesController : ControllerBase
             BuildingId = building.Id!.Value,
             Name = building.Name ?? string.Empty,
             Description = building.Description,
+            BranchIds = selectedBranches.Select(item => item.BranchRoleId).ToList(),
+            BranchLegalNames = selectedBranches.Select(item => item.BranchLegalName).Where(item => !string.IsNullOrWhiteSpace(item)).Distinct().OrderBy(item => item).ToList(),
             CreatedAtUtc = building.CreatedAtUtc,
             UpdatedAtUtc = building.UpdatedAtUtc,
             Revision = building.Revision
@@ -3060,6 +3220,33 @@ public class EnterprisesController : ControllerBase
 
         await context.SaveChangesAsync(cancellationToken);
         return NoContent();
+    }
+
+    private sealed record EnterpriseBranchSelection(
+        Guid BranchRoleId,
+        Guid BranchPartyId,
+        Guid BranchPartyRoleTypeId,
+        string BranchLegalName);
+
+    private static async Task<List<EnterpriseBranchSelection>> GetEnterpriseBranchesAsync(
+        PartiesContext context,
+        Guid enterpriseRoleId,
+        CancellationToken cancellationToken)
+    {
+        return await (
+            from relation in context.PartyRelationships.OfType<EnterpriseBranch>()
+            join branchRole in context.PartyRoles.OfType<Branch>() on relation.BranchId equals branchRole.Id
+            join branchParty in context.Parties.OfType<Organization>() on branchRole.PartyId equals branchParty.Id
+            where relation.EnterpriseId == enterpriseRoleId
+                  && relation.BranchId.HasValue
+                  && branchRole.PartyId.HasValue
+                  && branchRole.TypeId.HasValue
+            select new EnterpriseBranchSelection(
+                relation.BranchId!.Value,
+                branchRole.PartyId!.Value,
+                branchRole.TypeId!.Value,
+                branchParty.Name ?? string.Empty))
+            .ToListAsync(cancellationToken);
     }
 
     [HttpGet("legal-structures")]
