@@ -14,6 +14,8 @@ import {
   Form,
   Input,
   InputNumber,
+  Layout,
+  Menu,
   Popover,
   Select,
   Space,
@@ -2135,38 +2137,42 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                 Back to Enterprises
               </Button>
             </Space>
-            <Tabs
-              activeKey={productsTabKey}
-              onChange={setProductsTabKey}
-              items={[
-                {
-                  key: "manage-products",
-                  label: "Manage Products",
-                  children: (
-                    <Tabs
-                      activeKey={productManagementTabKey}
-                      onChange={setProductManagementTabKey}
-                      items={[
-                        {
-                          key: "services",
-                          label: "Services",
-                          children: (
-                            <Empty description="Service products management UI for this enterprise will be added here." />
-                          )
-                        },
-                        {
-                          key: "goods",
-                          label: "Goods",
-                          children: (
-                            <Empty description="Goods products management UI for this enterprise will be added here." />
-                          )
-                        }
-                      ]}
-                    />
-                  )
-                }
-              ]}
-            />
+            <Layout style={{ background: "#fff", border: "1px solid #f0f0f0", borderRadius: 8 }}>
+              <Layout.Sider width={220} theme="light" style={{ borderRight: "1px solid #f0f0f0" }}>
+                <Menu
+                  mode="inline"
+                  selectedKeys={[productsTabKey]}
+                  items={[{ key: "manage-products", label: "Manage Products" }]}
+                  onClick={(info) => setProductsTabKey(String(info.key))}
+                />
+              </Layout.Sider>
+              <Layout>
+                <Layout.Header style={{ background: "#fff", padding: "0 16px" }}>
+                  <Tabs
+                    activeKey={productManagementTabKey}
+                    onChange={setProductManagementTabKey}
+                    tabBarStyle={{ marginBottom: 0 }}
+                    items={[
+                      {
+                        key: "services",
+                        label: "Services"
+                      },
+                      {
+                        key: "goods",
+                        label: "Goods"
+                      }
+                    ]}
+                  />
+                </Layout.Header>
+                <Layout.Content style={{ padding: 16 }}>
+                  {productManagementTabKey === "services" ? (
+                    <Empty description="Service products management UI for this enterprise will be added here." />
+                  ) : (
+                    <Empty description="Goods products management UI for this enterprise will be added here." />
+                  )}
+                </Layout.Content>
+              </Layout>
+            </Layout>
           </Space>
         </Card>
       </div>
