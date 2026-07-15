@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Flowenter.Products.IServices\Flowenter.Products.IServices.csproj" />
+    <ProjectReference Include="..\Flowenter.Products.Mappings\Flowenter.Products.Mappings.csproj" />
     <ProjectReference Include="..\Flowenter.Products.Models\Flowenter.Products.Models.csproj" />
   </ItemGroup>
 

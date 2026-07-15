@@ -5,6 +5,8 @@ using Flowenter.Domain.Models;
 using Flowenter.Parties.IServices;
 using Flowenter.Parties.Mappings;
 using Flowenter.Parties.Services;
+using Flowenter.Products.IServices;
+using Flowenter.Products.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
 using Scalar.AspNetCore;
@@ -33,6 +35,8 @@ builder.AddDatabase();
 // Add Domain Services
 builder.Services.AddScoped<IPartiesServices, PartiesServices>();
 builder.Services.AddScoped<IContactMechanismServices, ContactMechanismServices>();
+
+builder.Services.AddScoped<IProductsServices, ProductsServices>();
 
 builder.Services.AddControllers()
     .AddNewtonsoftJson();

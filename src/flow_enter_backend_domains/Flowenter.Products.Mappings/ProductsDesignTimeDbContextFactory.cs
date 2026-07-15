@@ -12,7 +12,7 @@ public class ProductsDesignTimeDbContextFactory : IDesignTimeDbContextFactory<Pr
     public ProductsContext CreateDbContext(string[] args)
     {
         var optionsBuilder = new DbContextOptionsBuilder<ProductsContext>();
-        optionsBuilder.UseSqlServer("Server=localhost;TrustServerCertificate=True;Database=flow-enter-products;User Id=sa;Password=Admin@1234");
+        optionsBuilder.UseSqlServer("Server=localhost,1434;TrustServerCertificate=True;Database=flow-enter-products;User Id=sa;Password=Admin@1234");
         return new ProductsContext(optionsBuilder.Options, new DevTenantProvider());
     }
 }

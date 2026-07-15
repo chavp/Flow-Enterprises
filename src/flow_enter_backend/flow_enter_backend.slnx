@@ -3,4 +3,5 @@
     <Project Path="Flowenter.Api/Flowenter.Api.csproj" Id="a66b1c02-a35a-490b-a6fd-05116c2ddf7c" />
   </Folder>
   <Project Path="../flow_enter_backend_domains/Flowenter.Parties.Services/Flowenter.Parties.Services.csproj" />
+  <Project Path="../flow_enter_backend_domains/Flowenter.Products.Services/Flowenter.Products.Services.csproj" />
 </Solution>
