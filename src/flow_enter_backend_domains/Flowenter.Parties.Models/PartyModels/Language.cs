@@ -19,4 +19,5 @@ public sealed class Language : BaseEntity
     
     [Required, StringLength(5)]
     public string? Code { get; set; }
+
 }

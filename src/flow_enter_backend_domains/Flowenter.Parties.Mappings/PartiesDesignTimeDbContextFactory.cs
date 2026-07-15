@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Flowenter.Domain.Mappings;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ public class PartiesDesignTimeDbContextFactory : IDesignTimeDbContextFactory<Par
     public PartiesContext CreateDbContext(string[] args)
     {
         var optionsBuilder = new DbContextOptionsBuilder<PartiesContext>();
-        optionsBuilder.UseSqlServer("Server=localhost;TrustServerCertificate=True;Database=flow-enter;User Id=sa;Password=Admin@1234");
+        optionsBuilder.UseSqlServer("Server=localhost;TrustServerCertificate=True;Database=flow-enter-parties;User Id=sa;Password=Admin@1234");
         return new PartiesContext(optionsBuilder.Options, new DevTenantProvider());
     }
 }

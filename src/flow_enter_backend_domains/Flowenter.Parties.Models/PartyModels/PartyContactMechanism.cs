@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Flowenter.Parties.Models.PartyModels;
 
 [Index(nameof(PartyId), nameof(PartyRoleTypeId), nameof(ContactMechanismId)
-    , nameof(FromDateUtc)
+    , nameof(FromDate)
     , IsUnique = true)]
 public sealed class PartyContactMechanism : EffectiveEntity
 {

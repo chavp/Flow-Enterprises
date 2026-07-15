@@ -25,4 +25,8 @@
     <ProjectReference Include="..\..\flow_enter_backend_domains\Flowenter.Parties.Services\Flowenter.Parties.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\Products\" />
+  </ItemGroup>
+
 </Project>

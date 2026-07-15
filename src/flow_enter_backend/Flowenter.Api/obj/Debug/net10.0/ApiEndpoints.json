@@ -1,6 +1,6 @@
 [
   {
-    "ContainingType": "Flowenter.Api.Controllers.ContactMechanismsController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.ContactMechanismsController",
     "Method": "GetContactMechanismTypes",
     "RelativePath": "api/contact-mechanisms/types",
     "HttpMethod": "GET",
@@ -20,7 +20,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.ContactMechanismsController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.ContactMechanismsController",
     "Method": "CreateContactMechanismType",
     "RelativePath": "api/contact-mechanisms/types",
     "HttpMethod": "POST",
@@ -55,7 +55,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.ContactMechanismsController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.ContactMechanismsController",
     "Method": "GetContactMechanismType",
     "RelativePath": "api/contact-mechanisms/types/{contact_mechanism_type_id}",
     "HttpMethod": "GET",
@@ -90,7 +90,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.ContactMechanismsController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.ContactMechanismsController",
     "Method": "PatchContactMechanismType",
     "RelativePath": "api/contact-mechanisms/types/{contact_mechanism_type_id}",
     "HttpMethod": "PATCH",
@@ -130,7 +130,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.ContactMechanismsController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.ContactMechanismsController",
     "Method": "DeleteContactMechanismType",
     "RelativePath": "api/contact-mechanisms/types/{contact_mechanism_type_id}",
     "HttpMethod": "DELETE",
@@ -161,7 +161,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.GeographicBoundariesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.GeographicBoundariesController",
     "Method": "GetCountries",
     "RelativePath": "api/geographic-boundaries/countries",
     "HttpMethod": "GET",
@@ -192,7 +192,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.GeographicBoundariesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.GeographicBoundariesController",
     "Method": "CreateCountry",
     "RelativePath": "api/geographic-boundaries/countries",
     "HttpMethod": "POST",
@@ -227,7 +227,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.GeographicBoundariesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.GeographicBoundariesController",
     "Method": "GetCountry",
     "RelativePath": "api/geographic-boundaries/countries/{country_id}",
     "HttpMethod": "GET",
@@ -262,7 +262,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.GeographicBoundariesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.GeographicBoundariesController",
     "Method": "PatchCountry",
     "RelativePath": "api/geographic-boundaries/countries/{country_id}",
     "HttpMethod": "PATCH",
@@ -311,7 +311,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.GeographicBoundariesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.GeographicBoundariesController",
     "Method": "DeleteCountry",
     "RelativePath": "api/geographic-boundaries/countries/{country_id}",
     "HttpMethod": "DELETE",
@@ -342,7 +342,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.GeographicBoundariesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.GeographicBoundariesController",
     "Method": "GetCountryProvinces",
     "RelativePath": "api/geographic-boundaries/countries/{country_id}/provinces",
     "HttpMethod": "GET",
@@ -377,7 +377,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.GeographicBoundariesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.GeographicBoundariesController",
     "Method": "CreateProvince",
     "RelativePath": "api/geographic-boundaries/countries/{country_id}/provinces",
     "HttpMethod": "POST",
@@ -426,7 +426,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.GeographicBoundariesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.GeographicBoundariesController",
     "Method": "GetCountriesTree",
     "RelativePath": "api/geographic-boundaries/countries/tree",
     "HttpMethod": "GET",
@@ -442,7 +442,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.GeographicBoundariesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.GeographicBoundariesController",
     "Method": "PatchDistrict",
     "RelativePath": "api/geographic-boundaries/districts/{district_id}",
     "HttpMethod": "PATCH",
@@ -491,7 +491,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.GeographicBoundariesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.GeographicBoundariesController",
     "Method": "DeleteDistrict",
     "RelativePath": "api/geographic-boundaries/districts/{district_id}",
     "HttpMethod": "DELETE",
@@ -522,7 +522,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.GeographicBoundariesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.GeographicBoundariesController",
     "Method": "CreateSubdistrict",
     "RelativePath": "api/geographic-boundaries/districts/{district_id}/subdistricts",
     "HttpMethod": "POST",
@@ -571,7 +571,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.GeographicBoundariesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.GeographicBoundariesController",
     "Method": "PatchProvince",
     "RelativePath": "api/geographic-boundaries/provinces/{province_id}",
     "HttpMethod": "PATCH",
@@ -620,7 +620,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.GeographicBoundariesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.GeographicBoundariesController",
     "Method": "DeleteProvince",
     "RelativePath": "api/geographic-boundaries/provinces/{province_id}",
     "HttpMethod": "DELETE",
@@ -651,7 +651,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.GeographicBoundariesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.GeographicBoundariesController",
     "Method": "CreateDistrict",
     "RelativePath": "api/geographic-boundaries/provinces/{province_id}/districts",
     "HttpMethod": "POST",
@@ -700,7 +700,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.GeographicBoundariesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.GeographicBoundariesController",
     "Method": "PatchSubdistrict",
     "RelativePath": "api/geographic-boundaries/subdistricts/{subdistrict_id}",
     "HttpMethod": "PATCH",
@@ -749,7 +749,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.GeographicBoundariesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.GeographicBoundariesController",
     "Method": "DeleteSubdistrict",
     "RelativePath": "api/geographic-boundaries/subdistricts/{subdistrict_id}",
     "HttpMethod": "DELETE",
@@ -780,7 +780,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.GeographicBoundariesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.GeographicBoundariesController",
     "Method": "GetGeographicBoundaryTypes",
     "RelativePath": "api/geographic-boundaries/types",
     "HttpMethod": "GET",
@@ -800,7 +800,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.GeographicBoundariesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.GeographicBoundariesController",
     "Method": "CreateGeographicBoundaryType",
     "RelativePath": "api/geographic-boundaries/types",
     "HttpMethod": "POST",
@@ -835,7 +835,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.GeographicBoundariesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.GeographicBoundariesController",
     "Method": "GetGeographicBoundaryType",
     "RelativePath": "api/geographic-boundaries/types/{geographic_boundary_type_id}",
     "HttpMethod": "GET",
@@ -870,7 +870,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.GeographicBoundariesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.GeographicBoundariesController",
     "Method": "PatchGeographicBoundaryType",
     "RelativePath": "api/geographic-boundaries/types/{geographic_boundary_type_id}",
     "HttpMethod": "PATCH",
@@ -919,7 +919,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.GeographicBoundariesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.GeographicBoundariesController",
     "Method": "DeleteGeographicBoundaryType",
     "RelativePath": "api/geographic-boundaries/types/{geographic_boundary_type_id}",
     "HttpMethod": "DELETE",
@@ -950,7 +950,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.PartiesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.PartiesController",
     "Method": "GetPartyCategories",
     "RelativePath": "api/parties/categories",
     "HttpMethod": "GET",
@@ -970,7 +970,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.PartiesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.PartiesController",
     "Method": "CreatePartyCategory",
     "RelativePath": "api/parties/categories",
     "HttpMethod": "POST",
@@ -1005,7 +1005,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.PartiesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.PartiesController",
     "Method": "GetPartyCategory",
     "RelativePath": "api/parties/categories/{party_category_id}",
     "HttpMethod": "GET",
@@ -1040,7 +1040,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.PartiesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.PartiesController",
     "Method": "PatchPartyCategory",
     "RelativePath": "api/parties/categories/{party_category_id}",
     "HttpMethod": "PATCH",
@@ -1089,7 +1089,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.PartiesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.PartiesController",
     "Method": "DeletePartyCategory",
     "RelativePath": "api/parties/categories/{party_category_id}",
     "HttpMethod": "DELETE",
@@ -1120,7 +1120,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.PartiesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.PartiesController",
     "Method": "GetPartyClassifications",
     "RelativePath": "api/parties/classifications",
     "HttpMethod": "GET",
@@ -1140,7 +1140,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.PartiesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.PartiesController",
     "Method": "CreatePartyClassification",
     "RelativePath": "api/parties/classifications",
     "HttpMethod": "POST",
@@ -1175,7 +1175,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.PartiesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.PartiesController",
     "Method": "GetPartyClassification",
     "RelativePath": "api/parties/classifications/{party_classification_id}",
     "HttpMethod": "GET",
@@ -1210,7 +1210,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.PartiesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.PartiesController",
     "Method": "PatchPartyClassification",
     "RelativePath": "api/parties/classifications/{party_classification_id}",
     "HttpMethod": "PATCH",
@@ -1259,7 +1259,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.PartiesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.PartiesController",
     "Method": "DeletePartyClassification",
     "RelativePath": "api/parties/classifications/{party_classification_id}",
     "HttpMethod": "DELETE",
@@ -1290,7 +1290,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.EnterprisesController",
     "Method": "GetEnterprises",
     "RelativePath": "api/parties/enterprises",
     "HttpMethod": "GET",
@@ -1321,7 +1321,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.EnterprisesController",
     "Method": "CreateEnterprise",
     "RelativePath": "api/parties/enterprises",
     "HttpMethod": "POST",
@@ -1356,7 +1356,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.EnterprisesController",
     "Method": "GetEnterpriseBranchs",
     "RelativePath": "api/parties/enterprises/{enterprise_role_id}/branchs",
     "HttpMethod": "GET",
@@ -1391,7 +1391,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.EnterprisesController",
     "Method": "CreateEnterpriseBranch",
     "RelativePath": "api/parties/enterprises/{enterprise_role_id}/branchs",
     "HttpMethod": "POST",
@@ -1440,7 +1440,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.EnterprisesController",
     "Method": "UpdateEnterpriseBranch",
     "RelativePath": "api/parties/enterprises/{enterprise_role_id}/branchs/{enterprise_branch_id}",
     "HttpMethod": "PUT",
@@ -1494,7 +1494,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.EnterprisesController",
     "Method": "DeleteEnterpriseBranch",
     "RelativePath": "api/parties/enterprises/{enterprise_role_id}/branchs/{enterprise_branch_id}",
     "HttpMethod": "DELETE",
@@ -1530,7 +1530,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.EnterprisesController",
     "Method": "GetEnterpriseEmployments",
     "RelativePath": "api/parties/enterprises/{enterprise_role_id}/employments",
     "HttpMethod": "GET",
@@ -1565,7 +1565,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.EnterprisesController",
     "Method": "CreateEnterpriseEmployment",
     "RelativePath": "api/parties/enterprises/{enterprise_role_id}/employments",
     "HttpMethod": "POST",
@@ -1614,7 +1614,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.EnterprisesController",
     "Method": "UpdateEnterpriseEmployment",
     "RelativePath": "api/parties/enterprises/{enterprise_role_id}/employments/{employment_id}",
     "HttpMethod": "PUT",
@@ -1668,7 +1668,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.EnterprisesController",
     "Method": "DeleteEnterpriseEmployment",
     "RelativePath": "api/parties/enterprises/{enterprise_role_id}/employments/{employment_id}",
     "HttpMethod": "DELETE",
@@ -1704,7 +1704,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.EnterprisesController",
     "Method": "UpdateEnterpriseEmploymentBranchEffectiveDate",
     "RelativePath": "api/parties/enterprises/{enterprise_role_id}/employments/{employment_id}/branches/{branch_id}/effective-date",
     "HttpMethod": "PATCH",
@@ -1763,7 +1763,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.EnterprisesController",
     "Method": "UpdateEnterpriseEmploymentEffectiveDate",
     "RelativePath": "api/parties/enterprises/{enterprise_role_id}/employments/{employment_id}/effective-date",
     "HttpMethod": "PATCH",
@@ -1817,7 +1817,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.EnterprisesController",
     "Method": "GetEnterpriseBeds",
     "RelativePath": "api/parties/enterprises/{enterprise_role_id}/facilities/beds",
     "HttpMethod": "GET",
@@ -1857,7 +1857,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.EnterprisesController",
     "Method": "CreateEnterpriseBed",
     "RelativePath": "api/parties/enterprises/{enterprise_role_id}/facilities/beds",
     "HttpMethod": "POST",
@@ -1906,7 +1906,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.EnterprisesController",
     "Method": "UpdateEnterpriseBed",
     "RelativePath": "api/parties/enterprises/{enterprise_role_id}/facilities/beds/{bed_id}",
     "HttpMethod": "PUT",
@@ -1960,7 +1960,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.EnterprisesController",
     "Method": "DeleteEnterpriseBed",
     "RelativePath": "api/parties/enterprises/{enterprise_role_id}/facilities/beds/{bed_id}",
     "HttpMethod": "DELETE",
@@ -1996,7 +1996,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.EnterprisesController",
     "Method": "CreateEnterpriseBuilding",
     "RelativePath": "api/parties/enterprises/{enterprise_role_id}/facilities/buildings",
     "HttpMethod": "POST",
@@ -2036,7 +2036,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.EnterprisesController",
     "Method": "UpdateEnterpriseBuilding",
     "RelativePath": "api/parties/enterprises/{enterprise_role_id}/facilities/buildings/{building_id}",
     "HttpMethod": "PUT",
@@ -2081,7 +2081,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.EnterprisesController",
     "Method": "DeleteEnterpriseBuilding",
     "RelativePath": "api/parties/enterprises/{enterprise_role_id}/facilities/buildings/{building_id}",
     "HttpMethod": "DELETE",
@@ -2126,7 +2126,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.EnterprisesController",
     "Method": "CreateEnterpriseFloor",
     "RelativePath": "api/parties/enterprises/{enterprise_role_id}/facilities/floors",
     "HttpMethod": "POST",
@@ -2166,7 +2166,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.EnterprisesController",
     "Method": "UpdateEnterpriseFloor",
     "RelativePath": "api/parties/enterprises/{enterprise_role_id}/facilities/floors/{floor_id}",
     "HttpMethod": "PUT",
@@ -2211,7 +2211,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.EnterprisesController",
     "Method": "DeleteEnterpriseFloor",
     "RelativePath": "api/parties/enterprises/{enterprise_role_id}/facilities/floors/{floor_id}",
     "HttpMethod": "DELETE",
@@ -2256,7 +2256,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.EnterprisesController",
     "Method": "GetEnterpriseRooms",
     "RelativePath": "api/parties/enterprises/{enterprise_role_id}/facilities/rooms",
     "HttpMethod": "GET",
@@ -2296,7 +2296,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.EnterprisesController",
     "Method": "CreateEnterpriseRoom",
     "RelativePath": "api/parties/enterprises/{enterprise_role_id}/facilities/rooms",
     "HttpMethod": "POST",
@@ -2345,7 +2345,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.EnterprisesController",
     "Method": "UpdateEnterpriseRoom",
     "RelativePath": "api/parties/enterprises/{enterprise_role_id}/facilities/rooms/{room_id}",
     "HttpMethod": "PUT",
@@ -2399,7 +2399,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.EnterprisesController",
     "Method": "DeleteEnterpriseRoom",
     "RelativePath": "api/parties/enterprises/{enterprise_role_id}/facilities/rooms/{room_id}",
     "HttpMethod": "DELETE",
@@ -2444,7 +2444,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.EnterprisesController",
     "Method": "GetEnterpriseFacilitiesTree",
     "RelativePath": "api/parties/enterprises/{enterprise_role_id}/facilities/tree",
     "HttpMethod": "GET",
@@ -2479,7 +2479,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.EnterprisesController",
     "Method": "GetLegalStructures",
     "RelativePath": "api/parties/enterprises/legal-structures",
     "HttpMethod": "GET",
@@ -2499,7 +2499,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.EnterprisesController",
     "Method": "CreateLegalStructure",
     "RelativePath": "api/parties/enterprises/legal-structures",
     "HttpMethod": "POST",
@@ -2534,7 +2534,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.EnterprisesController",
     "Method": "GetLegalStructure",
     "RelativePath": "api/parties/enterprises/legal-structures/{legal_structure_id}",
     "HttpMethod": "GET",
@@ -2569,7 +2569,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.EnterprisesController",
     "Method": "PatchLegalStructure",
     "RelativePath": "api/parties/enterprises/legal-structures/{legal_structure_id}",
     "HttpMethod": "PATCH",
@@ -2618,7 +2618,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.EnterprisesController",
     "Method": "DeleteLegalStructure",
     "RelativePath": "api/parties/enterprises/legal-structures/{legal_structure_id}",
     "HttpMethod": "DELETE",
@@ -2649,7 +2649,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.EnterprisesController",
     "Method": "GetEnterprise",
     "RelativePath": "api/parties/enterprises/{organization_id}",
     "HttpMethod": "GET",
@@ -2684,7 +2684,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.EnterprisesController",
     "Method": "PatchEnterprise",
     "RelativePath": "api/parties/enterprises/{organization_id}",
     "HttpMethod": "PATCH",
@@ -2733,7 +2733,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.EnterprisesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.EnterprisesController",
     "Method": "DeleteEnterprise",
     "RelativePath": "api/parties/enterprises/{organization_id}",
     "HttpMethod": "DELETE",
@@ -2764,7 +2764,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.PartiesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.PartiesController",
     "Method": "GetPartyRole",
     "RelativePath": "api/parties/roles/{party_role_id}",
     "HttpMethod": "POST",
@@ -2799,7 +2799,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.PartiesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.PartiesController",
     "Method": "GetPartyRoleTypes",
     "RelativePath": "api/parties/role-types",
     "HttpMethod": "GET",
@@ -2819,7 +2819,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.PartiesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.PartiesController",
     "Method": "CreatePartyRoleType",
     "RelativePath": "api/parties/role-types",
     "HttpMethod": "POST",
@@ -2854,7 +2854,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.PartiesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.PartiesController",
     "Method": "GetPartyRoleType",
     "RelativePath": "api/parties/role-types/{party_role_type_id}",
     "HttpMethod": "GET",
@@ -2889,7 +2889,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.PartiesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.PartiesController",
     "Method": "PatchPartyRoleType",
     "RelativePath": "api/parties/role-types/{party_role_type_id}",
     "HttpMethod": "PATCH",
@@ -2938,7 +2938,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.PartiesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.PartiesController",
     "Method": "DeletePartyRoleType",
     "RelativePath": "api/parties/role-types/{party_role_type_id}",
     "HttpMethod": "DELETE",
@@ -2969,7 +2969,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.PartiesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.PartiesController",
     "Method": "GetPartyTypes",
     "RelativePath": "api/parties/types",
     "HttpMethod": "GET",
@@ -2989,7 +2989,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.PartiesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.PartiesController",
     "Method": "CreatePartyType",
     "RelativePath": "api/parties/types",
     "HttpMethod": "POST",
@@ -3024,7 +3024,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.PartiesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.PartiesController",
     "Method": "GetPartyType",
     "RelativePath": "api/parties/types/{party_type_id}",
     "HttpMethod": "GET",
@@ -3059,7 +3059,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.PartiesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.PartiesController",
     "Method": "PatchPartyType",
     "RelativePath": "api/parties/types/{party_type_id}",
     "HttpMethod": "PATCH",
@@ -3108,7 +3108,7 @@
     ]
   },
   {
-    "ContainingType": "Flowenter.Api.Controllers.PartiesController",
+    "ContainingType": "Flowenter.Api.Controllers.Parties.PartiesController",
     "Method": "DeletePartyType",
     "RelativePath": "api/parties/types/{party_type_id}",
     "HttpMethod": "DELETE",
@@ -3137,5 +3137,15 @@
         "StatusCode": 404
       }
     ]
+  },
+  {
+    "ContainingType": "Flowenter.Api.Controllers.HealthController",
+    "Method": "Get",
+    "RelativePath": "health",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
   }
 ]

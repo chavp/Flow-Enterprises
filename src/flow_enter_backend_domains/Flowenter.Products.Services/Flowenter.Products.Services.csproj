@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Flowenter.Products.IServices\Flowenter.Products.IServices.csproj" />
+    <ProjectReference Include="..\Flowenter.Products.Models\Flowenter.Products.Models.csproj" />
+  </ItemGroup>
+
+</Project>

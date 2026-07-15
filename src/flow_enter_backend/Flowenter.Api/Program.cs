@@ -1,9 +1,11 @@
-using Flowenter.Api.Extensions;
+﻿using Flowenter.Api.Extensions;
 using Flowenter.Api.Middleware;
 using Flowenter.Api.Services;
 using Flowenter.Domain.Models;
 using Flowenter.Parties.IServices;
+using Flowenter.Parties.Mappings;
 using Flowenter.Parties.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
 using Scalar.AspNetCore;
 using Serilog;
@@ -19,6 +21,10 @@ builder.Services.AddScoped<ITenantProvider, TenantProvider>();
 
 builder.Services.Configure<TenantPartiesConnectionStrings>(options =>
     builder.Configuration.GetSection(nameof(TenantPartiesConnectionStrings)).Bind(options)
+);
+
+builder.Services.Configure<TenantProductsConnectionStrings>(options =>
+    builder.Configuration.GetSection(nameof(TenantProductsConnectionStrings)).Bind(options)
 );
 
 // Add database

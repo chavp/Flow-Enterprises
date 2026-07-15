@@ -1,12 +1,20 @@
 <Solution>
+  <Folder Name="/Parties/">
+    <Project Path="Flowenter.Parties.IServices/Flowenter.Parties.IServices.csproj" />
+    <Project Path="Flowenter.Parties.Mappings/Flowenter.Parties.Mappings.csproj" />
+    <Project Path="Flowenter.Parties.Models/Flowenter.Parties.Models.csproj" />
+    <Project Path="Flowenter.Parties.Services/Flowenter.Parties.Services.csproj" />
+  </Folder>
+  <Folder Name="/Products/">
+    <Project Path="Flowenter.Products.IServices/Flowenter.Products.IServices.csproj" Id="647774c7-6daa-43bd-bc24-1044725ee5ee" />
+    <Project Path="Flowenter.Products.Mappings/Flowenter.Products.Mappings.csproj" Id="a89f5ff7-438e-4d61-ba42-f8f280ff1edd" />
+    <Project Path="Flowenter.Products.Models/Flowenter.Products.Models.csproj" Id="1ff74aff-f74c-4ea1-9749-f7cb4bb66adb" />
+    <Project Path="Flowenter.Products.Services/Flowenter.Products.Services.csproj" Id="cd11b8c6-35ab-452d-8330-c2324449cb2a" />
+  </Folder>
   <Folder Name="/share/">
     <Project Path="Flowenter.Domain.Models/Flowenter.Domain.Models.csproj" />
   </Folder>
   <Folder Name="/test/">
     <Project Path="../../test/Parties.Tests/Parties.Tests.csproj" />
   </Folder>
-  <Project Path="Flowenter.Parties.IServices/Flowenter.Parties.IServices.csproj" />
-  <Project Path="Flowenter.Parties.Mappings/Flowenter.Parties.Mappings.csproj" />
-  <Project Path="Flowenter.Parties.Models/Flowenter.Parties.Models.csproj" />
-  <Project Path="Flowenter.Parties.Services/Flowenter.Parties.Services.csproj" />
 </Solution>

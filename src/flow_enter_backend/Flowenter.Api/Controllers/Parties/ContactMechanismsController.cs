@@ -3,7 +3,7 @@ using Flowenter.Parties.Mappings;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Flowenter.Api.Controllers
+namespace Flowenter.Api.Controllers.Parties
 {
     [ApiController]
     [Route("api/contact-mechanisms")]
@@ -15,7 +15,7 @@ namespace Flowenter.Api.Controllers
 
         public ContactMechanismsController(ILogger<ContactMechanismsController> logger,
             IDbContextFactory<PartiesContext> factory, 
-            IContactMechanismServices contactMechanismServices)
+            IContactMechanismServices contactMechanismServices) 
         {
             _logger = logger;
             _factory = factory;

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Flowenter.Api.Controllers;
+namespace Flowenter.Api.Controllers.Parties;
 
 public partial class PartiesController
 {
@@ -57,7 +57,7 @@ public partial class PartiesController
 
         var partyCategory = await context.PartyCategories
             .Include(pc => pc.GroupBy)
-            .FirstOrDefaultAsync(pc => pc.Id == party_category_id, cancellationToken);
+            .SingleOrDefaultAsync(x => x.Id == party_category_id, cancellationToken);
 
         if (partyCategory == null)
         {
@@ -82,7 +82,8 @@ public partial class PartiesController
 
         using var context = _factory.CreateDbContext();
 
-        var partyCategory = await context.PartyCategories.FindAsync(party_category_id);
+        var partyCategory = await context.PartyCategories
+            .FindAsync(party_category_id, cancellationToken);
         if (partyCategory == null)
         {
             return NotFound();
@@ -103,7 +104,9 @@ public partial class PartiesController
     {
         using var context = _factory.CreateDbContext();
 
-        var partyCategory = await context.PartyCategories.FindAsync(party_category_id, cancellationToken);
+        var partyCategory = await context
+            .PartyCategories
+            .FindAsync(party_category_id, cancellationToken);
         if (partyCategory == null)
         {
             return NotFound();

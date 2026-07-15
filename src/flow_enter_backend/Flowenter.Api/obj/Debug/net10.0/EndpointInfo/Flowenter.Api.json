@@ -10,6 +10,18 @@
     }
   ],
   "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/contact-mechanisms/types": {
       "get": {
         "tags": [
@@ -6218,12 +6230,6 @@
             "type": "string",
             "nullable": true
           },
-          "description": {
-            "maxLength": 500,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
           "updatedBy": {
             "maxLength": 200,
             "minLength": 0,
@@ -6233,6 +6239,12 @@
           "revision": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
             "format": "uint64"
+          },
+          "description": {
+            "maxLength": 300,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -6276,12 +6288,6 @@
             "type": "string",
             "nullable": true
           },
-          "description": {
-            "maxLength": 500,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
           "updatedBy": {
             "maxLength": 200,
             "minLength": 0,
@@ -6291,6 +6297,12 @@
           "revision": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
             "format": "uint64"
+          },
+          "description": {
+            "maxLength": 300,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -6385,12 +6397,6 @@
             "type": "string",
             "nullable": true
           },
-          "description": {
-            "maxLength": 500,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
           "updatedBy": {
             "maxLength": 200,
             "minLength": 0,
@@ -6400,6 +6406,12 @@
           "revision": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
             "format": "uint64"
+          },
+          "description": {
+            "maxLength": 300,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -6928,12 +6940,6 @@
             "type": "string",
             "nullable": true
           },
-          "description": {
-            "maxLength": 500,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
           "updatedBy": {
             "maxLength": 200,
             "minLength": 0,
@@ -6943,6 +6949,12 @@
           "revision": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
             "format": "uint64"
+          },
+          "description": {
+            "maxLength": 300,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -7153,11 +7165,11 @@
               }
             ]
           },
-          "fromDateUtc": {
+          "fromDate": {
             "type": "string",
             "format": "date"
           },
-          "thruDateUtc": {
+          "thruDate": {
             "type": "string",
             "format": "date"
           },
@@ -7181,12 +7193,6 @@
             "type": "string",
             "nullable": true
           },
-          "description": {
-            "maxLength": 500,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
           "updatedBy": {
             "maxLength": 200,
             "minLength": 0,
@@ -7196,6 +7202,12 @@
           "revision": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
             "format": "uint64"
+          },
+          "description": {
+            "maxLength": 300,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -7425,12 +7437,6 @@
             "type": "string",
             "nullable": true
           },
-          "description": {
-            "maxLength": 500,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
           "updatedBy": {
             "maxLength": 200,
             "minLength": 0,
@@ -7440,6 +7446,12 @@
           "revision": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
             "format": "uint64"
+          },
+          "description": {
+            "maxLength": 300,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -7534,12 +7546,6 @@
             "type": "string",
             "nullable": true
           },
-          "description": {
-            "maxLength": 500,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
           "updatedBy": {
             "maxLength": 200,
             "minLength": 0,
@@ -7549,6 +7555,12 @@
           "revision": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
             "format": "uint64"
+          },
+          "description": {
+            "maxLength": 300,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -7592,12 +7604,6 @@
             "type": "string",
             "nullable": true
           },
-          "description": {
-            "maxLength": 500,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
           "updatedBy": {
             "maxLength": 200,
             "minLength": 0,
@@ -7607,6 +7613,12 @@
           "revision": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
             "format": "uint64"
+          },
+          "description": {
+            "maxLength": 300,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -7688,12 +7700,6 @@
             "type": "string",
             "nullable": true
           },
-          "description": {
-            "maxLength": 500,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
           "updatedBy": {
             "maxLength": 200,
             "minLength": 0,
@@ -7703,6 +7709,12 @@
           "revision": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
             "format": "uint64"
+          },
+          "description": {
+            "maxLength": 300,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -7754,12 +7766,6 @@
             "type": "string",
             "nullable": true
           },
-          "description": {
-            "maxLength": 500,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
           "updatedBy": {
             "maxLength": 200,
             "minLength": 0,
@@ -7769,6 +7775,12 @@
           "revision": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
             "format": "uint64"
+          },
+          "description": {
+            "maxLength": 300,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -7830,12 +7842,6 @@
             "type": "string",
             "nullable": true
           },
-          "description": {
-            "maxLength": 500,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
           "updatedBy": {
             "maxLength": 200,
             "minLength": 0,
@@ -7845,6 +7851,12 @@
           "revision": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
             "format": "uint64"
+          },
+          "description": {
+            "maxLength": 300,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -7886,11 +7898,11 @@
               }
             ]
           },
-          "fromDateUtc": {
+          "fromDate": {
             "type": "string",
             "format": "date"
           },
-          "thruDateUtc": {
+          "thruDate": {
             "type": "string",
             "format": "date"
           },
@@ -7914,12 +7926,6 @@
             "type": "string",
             "nullable": true
           },
-          "description": {
-            "maxLength": 500,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
           "updatedBy": {
             "maxLength": 200,
             "minLength": 0,
@@ -7929,6 +7935,12 @@
           "revision": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
             "format": "uint64"
+          },
+          "description": {
+            "maxLength": 300,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -7972,12 +7984,6 @@
             "type": "string",
             "nullable": true
           },
-          "description": {
-            "maxLength": 500,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
           "updatedBy": {
             "maxLength": 200,
             "minLength": 0,
@@ -7987,6 +7993,12 @@
           "revision": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
             "format": "uint64"
+          },
+          "description": {
+            "maxLength": 300,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -8030,12 +8042,6 @@
             "type": "string",
             "nullable": true
           },
-          "description": {
-            "maxLength": 500,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
           "updatedBy": {
             "maxLength": 200,
             "minLength": 0,
@@ -8045,6 +8051,12 @@
           "revision": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
             "format": "uint64"
+          },
+          "description": {
+            "maxLength": 300,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -8156,12 +8168,6 @@
             "type": "string",
             "nullable": true
           },
-          "description": {
-            "maxLength": 500,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
           "updatedBy": {
             "maxLength": 200,
             "minLength": 0,
@@ -8171,6 +8177,12 @@
           "revision": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
             "format": "uint64"
+          },
+          "description": {
+            "maxLength": 300,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -8318,12 +8330,6 @@
             "type": "string",
             "nullable": true
           },
-          "description": {
-            "maxLength": 500,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
           "updatedBy": {
             "maxLength": 200,
             "minLength": 0,
@@ -8333,6 +8339,12 @@
           "revision": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
             "format": "uint64"
+          },
+          "description": {
+            "maxLength": 300,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -8513,6 +8525,9 @@
     }
   },
   "tags": [
+    {
+      "name": "Health"
+    },
     {
       "name": "ContactMechanisms"
     },

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Flowenter.Api.Controllers;
+namespace Flowenter.Api.Controllers.Parties;
 
 public partial class ContactMechanismsController
 {

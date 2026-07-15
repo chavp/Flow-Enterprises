@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Flowenter.Api.Controllers
+namespace Flowenter.Api.Controllers.Parties
 {
     [ApiController]
     [Route("api/geographic-boundaries")]

@@ -18,7 +18,7 @@ public static class QueryableExtensions
         where T : EffectiveEntity
     {
         var toDay = DateOnly.FromDateTime(DateTime.UtcNow);
-        return dbSet.Where(e => e.FromDateUtc <= toDay && toDay <= e.ThruDateUtc);
+        return dbSet.Where(e => e.FromDate <= toDay && toDay <= e.ThruDate);
     }
 
 }

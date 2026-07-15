@@ -8,4 +8,5 @@ public interface ITenantProvider
 {
     Guid? GetPartiesTenantId();
     string GetPartiesTenantConnectionString();
+    string GetProductsTenantConnectionString();
 }

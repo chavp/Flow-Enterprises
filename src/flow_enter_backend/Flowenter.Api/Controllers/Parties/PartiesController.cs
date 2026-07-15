@@ -3,7 +3,7 @@ using Flowenter.Parties.Models.PartyModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Flowenter.Api.Controllers
+namespace Flowenter.Api.Controllers.Parties
 {
     [ApiController]
     [Route("api/parties")]
@@ -30,7 +30,7 @@ namespace Flowenter.Api.Controllers
             var partyRole = await context.PartyRoles
                 .Include(pr => pr.Party)
                 .Include(pr => pr.Type)
-                .FirstOrDefaultAsync(pr => pr.Id == party_role_id, cancellationToken);
+                .SingleOrDefaultAsync(pr => pr.Id == party_role_id, cancellationToken);
             if (partyRole == null)
             {
                 return NotFound();

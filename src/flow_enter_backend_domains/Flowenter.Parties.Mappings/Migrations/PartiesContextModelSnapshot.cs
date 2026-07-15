@@ -38,8 +38,8 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<decimal>("Revision")
                         .HasColumnType("decimal(20,0)");
@@ -83,8 +83,8 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -124,8 +124,8 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<Guid>("FacilityTypeId")
                         .HasColumnType("uniqueidentifier");
@@ -169,8 +169,8 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<Guid>("FacilityId")
                         .HasColumnType("uniqueidentifier");
@@ -178,7 +178,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.Property<Guid>("FacilityRoleTypeId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateOnly>("FromDateUtc")
+                    b.Property<DateOnly>("FromDate")
                         .HasColumnType("date");
 
                     b.Property<Guid>("PartyId")
@@ -190,7 +190,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.Property<decimal>("Revision")
                         .HasColumnType("decimal(20,0)");
 
-                    b.Property<DateOnly>("ThruDateUtc")
+                    b.Property<DateOnly>("ThruDate")
                         .HasColumnType("date");
 
                     b.Property<DateTime?>("UpdatedAtUtc")
@@ -233,8 +233,8 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -317,8 +317,8 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -396,8 +396,8 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<decimal>("Revision")
                         .HasColumnType("decimal(20,0)");
@@ -441,8 +441,8 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -528,8 +528,8 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasColumnType("nvarchar(5)");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -587,8 +587,8 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -633,8 +633,8 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<decimal>("Revision")
                         .HasColumnType("decimal(20,0)");
@@ -692,8 +692,8 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -771,8 +771,8 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<decimal>("Revision")
                         .HasColumnType("decimal(20,0)");
@@ -811,8 +811,8 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<Guid?>("GroupById")
                         .HasColumnType("uniqueidentifier");
@@ -860,8 +860,8 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<Guid>("PartyId")
                         .HasColumnType("uniqueidentifier");
@@ -903,10 +903,10 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
-                    b.Property<DateOnly>("FromDateUtc")
+                    b.Property<DateOnly>("FromDate")
                         .HasColumnType("date");
 
                     b.Property<Guid>("PartyId")
@@ -918,7 +918,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.Property<decimal>("Revision")
                         .HasColumnType("decimal(20,0)");
 
-                    b.Property<DateOnly>("ThruDateUtc")
+                    b.Property<DateOnly>("ThruDate")
                         .HasColumnType("date");
 
                     b.Property<DateTime?>("UpdatedAtUtc")
@@ -934,7 +934,7 @@ namespace Flowenter.Parties.Mappings.Migrations
 
                     b.HasIndex("PartyRoleTypeId");
 
-                    b.HasIndex("PartyId", "PartyRoleTypeId", "ContactMechanismId", "FromDateUtc")
+                    b.HasIndex("PartyId", "PartyRoleTypeId", "ContactMechanismId", "FromDate")
                         .IsUnique();
 
                     b.ToTable("PartyContactMechanisms", "parties");
@@ -955,10 +955,10 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
-                    b.Property<DateOnly>("FromDateUtc")
+                    b.Property<DateOnly>("FromDate")
                         .HasColumnType("date");
 
                     b.Property<Guid>("PartyRelationshipTypeId")
@@ -967,7 +967,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.Property<decimal>("Revision")
                         .HasColumnType("decimal(20,0)");
 
-                    b.Property<DateOnly>("ThruDateUtc")
+                    b.Property<DateOnly>("ThruDate")
                         .HasColumnType("date");
 
                     b.Property<DateTime?>("UpdatedAtUtc")
@@ -1006,8 +1006,8 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -1076,10 +1076,10 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
-                    b.Property<DateOnly>("FromDateUtc")
+                    b.Property<DateOnly>("FromDate")
                         .HasColumnType("date");
 
                     b.Property<Guid>("PartyId")
@@ -1088,7 +1088,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.Property<decimal>("Revision")
                         .HasColumnType("decimal(20,0)");
 
-                    b.Property<DateOnly>("ThruDateUtc")
+                    b.Property<DateOnly>("ThruDate")
                         .HasColumnType("date");
 
                     b.Property<Guid>("TypeId")
@@ -1105,7 +1105,7 @@ namespace Flowenter.Parties.Mappings.Migrations
 
                     b.HasIndex("PartyId");
 
-                    b.HasIndex("TypeId", "PartyId", "FromDateUtc")
+                    b.HasIndex("TypeId", "PartyId", "FromDate")
                         .IsUnique();
 
                     b.ToTable("PartyRoles", "parties");
@@ -1133,8 +1133,8 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -1343,8 +1343,8 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -1404,15 +1404,15 @@ namespace Flowenter.Parties.Mappings.Migrations
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
-                    b.Property<DateOnly>("FromDateUtc")
+                    b.Property<DateOnly>("FromDate")
                         .HasColumnType("date");
 
                     b.Property<Guid>("LanguageId")
@@ -1433,7 +1433,7 @@ namespace Flowenter.Parties.Mappings.Migrations
                     b.Property<decimal>("Revision")
                         .HasColumnType("decimal(20,0)");
 
-                    b.Property<DateOnly>("ThruDateUtc")
+                    b.Property<DateOnly>("ThruDate")
                         .HasColumnType("date");
 
                     b.Property<DateTime?>("UpdatedAtUtc")

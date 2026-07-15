@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Flowenter.Api.Controllers;
+namespace Flowenter.Api.Controllers.Parties;
 
 [ApiController]
 [Route("api/parties/enterprises")]
@@ -539,13 +539,13 @@ public class EnterprisesController : ControllerBase
             .Distinct()
             .ToList();
 
-        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var today = DateOnly.FromDateTime(DateTime.Today);
         var personNames = await context.PersonNames
             .Where(personName => personName.PersonId.HasValue
                                  && personIds.Contains(personName.PersonId.Value)
-                                 && personName.FromDateUtc <= today
-                                 && today <= personName.ThruDateUtc)
-            .OrderByDescending(personName => personName.FromDateUtc)
+                                 && personName.FromDate <= today
+                                 && today <= personName.ThruDate)
+            .OrderByDescending(personName => personName.FromDate)
             .ToListAsync(cancellationToken);
 
         var personNameMap = personNames
@@ -570,8 +570,8 @@ public class EnterprisesController : ControllerBase
                 EmployeeRoleId = relation.EmployeeId!.Value,
                 BranchId = relation.BranchId!.Value,
                 BranchLegalName = branchParty.Name ?? string.Empty,
-                FromDate = relation.FromDateUtc,
-                ThruDate = relation.ThruDateUtc
+                FromDate = relation.FromDate,
+                ThruDate = relation.ThruDate
             })
             .ToListAsync(cancellationToken);
 
@@ -635,8 +635,8 @@ public class EnterprisesController : ControllerBase
                     PartyRoleTypeId = row.RoleType.Id!.Value,
                     PartyRoleTypeCode = row.RoleType.Code ?? string.Empty,
                     PartyRoleTypeName = row.RoleType.Name ?? string.Empty,
-                    FromDate = row.Employment.FromDateUtc,
-                    ThruDate = row.Employment.ThruDateUtc,
+                    FromDate = row.Employment.FromDate,
+                    ThruDate = row.Employment.ThruDate,
                     CreatedAtUtc = row.Employment.CreatedAtUtc,
                     UpdatedAtUtc = row.Employment.UpdatedAtUtc,
                     Revision = row.Employment.Revision
@@ -842,8 +842,8 @@ public class EnterprisesController : ControllerBase
                 {
                     BranchId = relation.BranchId!.Value,
                     BranchLegalName = branchParty.Name ?? string.Empty,
-                    FromDate = relation.FromDateUtc,
-                    ThruDate = relation.ThruDateUtc
+                    FromDate = relation.FromDate,
+                    ThruDate = relation.ThruDate
                 })
             .OrderBy(item => item.BranchLegalName)
             .ToListAsync(cancellationToken)
@@ -866,8 +866,8 @@ public class EnterprisesController : ControllerBase
             PartyRoleTypeId = firstPartyRoleType.Id!.Value,
             PartyRoleTypeCode = firstPartyRoleType.Code ?? string.Empty,
             PartyRoleTypeName = firstPartyRoleType.Name ?? string.Empty,
-            FromDate = firstEmployment.FromDateUtc,
-            ThruDate = firstEmployment.ThruDateUtc,
+            FromDate = firstEmployment.FromDate,
+            ThruDate = firstEmployment.ThruDate,
             CreatedAtUtc = firstEmployment.CreatedAtUtc,
             UpdatedAtUtc = firstEmployment.UpdatedAtUtc,
             Revision = firstEmployment.Revision
@@ -958,9 +958,9 @@ public class EnterprisesController : ControllerBase
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
         var personName = await context.PersonNames
             .Where(item => item.PersonId == person.Id
-                           && item.FromDateUtc <= today
-                           && today <= item.ThruDateUtc)
-            .OrderByDescending(item => item.FromDateUtc)
+                           && item.FromDate <= today
+                           && today <= item.ThruDate)
+            .OrderByDescending(item => item.FromDate)
             .FirstOrDefaultAsync(cancellationToken);
 
         if (personName == null)
@@ -1208,8 +1208,8 @@ public class EnterprisesController : ControllerBase
                 {
                     BranchId = relation.BranchId!.Value,
                     BranchLegalName = branchParty.Name ?? string.Empty,
-                    FromDate = relation.FromDateUtc,
-                    ThruDate = relation.ThruDateUtc
+                    FromDate = relation.FromDate,
+                    ThruDate = relation.ThruDate
                 })
             .OrderBy(item => item.BranchLegalName)
             .ToListAsync(cancellationToken)
@@ -1232,8 +1232,8 @@ public class EnterprisesController : ControllerBase
             PartyRoleTypeId = primaryRoleType.Id!.Value,
             PartyRoleTypeCode = primaryRoleType.Code ?? string.Empty,
             PartyRoleTypeName = primaryRoleType.Name ?? string.Empty,
-            FromDate = responseEmployment.FromDateUtc,
-            ThruDate = responseEmployment.ThruDateUtc,
+            FromDate = responseEmployment.FromDate,
+            ThruDate = responseEmployment.ThruDate,
             CreatedAtUtc = responseEmployment.CreatedAtUtc,
             UpdatedAtUtc = responseEmployment.UpdatedAtUtc,
             Revision = responseEmployment.Revision
@@ -1274,16 +1274,16 @@ public class EnterprisesController : ControllerBase
             return NotFound();
         }
 
-        employmentRow.Employment.FromDateUtc = updateDto.FromDate;
-        employmentRow.Employment.ThruDateUtc = updateDto.ThruDate;
+        employmentRow.Employment.FromDate = updateDto.FromDate;
+        employmentRow.Employment.ThruDate = updateDto.ThruDate;
         await context.SaveChangesAsync(cancellationToken);
 
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
         var personName = await context.PersonNames
             .Where(item => item.PersonId == employmentRow.EmployeeRole.PartyId
-                           && item.FromDateUtc <= today
-                           && today <= item.ThruDateUtc)
-            .OrderByDescending(item => item.FromDateUtc)
+                           && item.FromDate <= today
+                           && today <= item.ThruDate)
+            .OrderByDescending(item => item.FromDate)
             .FirstOrDefaultAsync(cancellationToken);
 
         var fullName = personName == null
@@ -1300,8 +1300,8 @@ public class EnterprisesController : ControllerBase
             {
                 BranchId = relation.BranchId!.Value,
                 BranchLegalName = branchParty.Name ?? string.Empty,
-                FromDate = relation.FromDateUtc,
-                ThruDate = relation.ThruDateUtc
+                FromDate = relation.FromDate,
+                ThruDate = relation.ThruDate
             })
             .OrderBy(item => item.BranchLegalName)
             .ToListAsync(cancellationToken);
@@ -1323,8 +1323,8 @@ public class EnterprisesController : ControllerBase
             PartyRoleTypeId = employmentRow.RoleType.Id!.Value,
             PartyRoleTypeCode = employmentRow.RoleType.Code ?? string.Empty,
             PartyRoleTypeName = employmentRow.RoleType.Name ?? string.Empty,
-            FromDate = employmentRow.Employment.FromDateUtc,
-            ThruDate = employmentRow.Employment.ThruDateUtc,
+            FromDate = employmentRow.Employment.FromDate,
+            ThruDate = employmentRow.Employment.ThruDate,
             CreatedAtUtc = employmentRow.Employment.CreatedAtUtc,
             UpdatedAtUtc = employmentRow.Employment.UpdatedAtUtc,
             Revision = employmentRow.Employment.Revision
@@ -1393,8 +1393,8 @@ public class EnterprisesController : ControllerBase
 
         foreach (var branchEmployment in branchEmployments)
         {
-            branchEmployment.FromDateUtc = updateDto.FromDate;
-            branchEmployment.ThruDateUtc = updateDto.ThruDate;
+            branchEmployment.FromDate = updateDto.FromDate;
+            branchEmployment.ThruDate = updateDto.ThruDate;
         }
 
         await context.SaveChangesAsync(cancellationToken);
@@ -1402,9 +1402,9 @@ public class EnterprisesController : ControllerBase
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
         var personName = await context.PersonNames
             .Where(item => item.PersonId == employmentRow.EmployeeRole.PartyId
-                           && item.FromDateUtc <= today
-                           && today <= item.ThruDateUtc)
-            .OrderByDescending(item => item.FromDateUtc)
+                           && item.FromDate <= today
+                           && today <= item.ThruDate)
+            .OrderByDescending(item => item.FromDate)
             .FirstOrDefaultAsync(cancellationToken);
 
         var fullName = personName == null
@@ -1421,8 +1421,8 @@ public class EnterprisesController : ControllerBase
             {
                 BranchId = relation.BranchId!.Value,
                 BranchLegalName = branchParty.Name ?? string.Empty,
-                FromDate = relation.FromDateUtc,
-                ThruDate = relation.ThruDateUtc
+                FromDate = relation.FromDate,
+                ThruDate = relation.ThruDate
             })
             .OrderBy(item => item.BranchLegalName)
             .ToListAsync(cancellationToken);
@@ -1444,8 +1444,8 @@ public class EnterprisesController : ControllerBase
             PartyRoleTypeId = employmentRow.RoleType.Id!.Value,
             PartyRoleTypeCode = employmentRow.RoleType.Code ?? string.Empty,
             PartyRoleTypeName = employmentRow.RoleType.Name ?? string.Empty,
-            FromDate = employmentRow.Employment.FromDateUtc,
-            ThruDate = employmentRow.Employment.ThruDateUtc,
+            FromDate = employmentRow.Employment.FromDate,
+            ThruDate = employmentRow.Employment.ThruDate,
             CreatedAtUtc = employmentRow.Employment.CreatedAtUtc,
             UpdatedAtUtc = employmentRow.Employment.UpdatedAtUtc,
             Revision = employmentRow.Employment.Revision

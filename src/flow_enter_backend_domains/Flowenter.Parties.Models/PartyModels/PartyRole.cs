@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Flowenter.Parties.Models.PartyModels;
 
-[Index(nameof(TypeId), nameof(PartyId), nameof(FromDateUtc), IsUnique = true)]
+[Index(nameof(TypeId), nameof(PartyId), nameof(FromDate), IsUnique = true)]
 public abstract class PartyRole : EffectiveEntity
 {
     [Required]

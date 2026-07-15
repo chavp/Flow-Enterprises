@@ -1,4 +1,5 @@
-﻿using Flowenter.Parties.Mappings;
+﻿using Flowenter.Domain.Mappings;
+using Flowenter.Parties.Mappings;
 using Flowenter.Parties.Models.GeographicBoundaryModels;
 using Flowenter.Parties.Models.PartyModels;
 using Microsoft.EntityFrameworkCore;

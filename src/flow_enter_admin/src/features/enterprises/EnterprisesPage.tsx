@@ -831,7 +831,7 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
               Edit
             </Button>
             <Button size="small" onClick={() => setPeopleEnterprise(row.original)}>
-              Manage People
+              People & Organization
             </Button>
             <Popconfirm
               title="Delete enterprise?"
@@ -1179,10 +1179,10 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
             <Space style={{ width: "100%", justifyContent: "space-between" }}>
               <div>
                 <Title level={3} style={{ margin: 0 }}>
-                  Enterprise People
+                  Enterprise People & Organization
                 </Title>
                 <Text type="secondary">
-                  Manage people under enterprise: <strong>{peopleEnterprise.legalName}</strong>
+                  Manage people and organization under enterprise: <strong>{peopleEnterprise.legalName}</strong>
                 </Text>
               </div>
               <Button
