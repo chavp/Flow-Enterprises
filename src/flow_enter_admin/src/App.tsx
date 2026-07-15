@@ -1,18 +1,19 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConfigProvider, Layout, Menu, Tabs } from "antd";
-import { useEffect, useMemo, useState } from "react";
+import { ApartmentOutlined, GlobalOutlined, BankOutlined, EnvironmentOutlined } from "@ant-design/icons";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { EnterprisesPage } from "./features/enterprises/EnterprisesPage";
 import { CountriesPage } from "./features/countries/CountriesPage";
 import "./styles.css";
 import "antd/dist/reset.css";
 
 const MAIN_MENU_ITEMS = [
-  { key: "enterprises", label: "Enterprises" },
-  { key: "world", label: "World" }
+  { key: "enterprises", label: "Enterprises", icon: <ApartmentOutlined /> },
+  { key: "world", label: "World", icon: <GlobalOutlined /> }
 ];
-const SUB_MENU_ITEMS: Record<string, { key: string; label: string }[]> = {
-  enterprises: [{ key: "enterpeise", label: "Enterpeise" }],
-  world: [{ key: "geographic-boundaries", label: "Geographic Boundaries" }]
+const SUB_MENU_ITEMS: Record<string, { key: string; label: string; icon: ReactNode }[]> = {
+  enterprises: [{ key: "enterpeise", label: "Enterpeise", icon: <BankOutlined /> }],
+  world: [{ key: "geographic-boundaries", label: "Geographic Boundaries", icon: <EnvironmentOutlined /> }]
 };
 const DEFAULT_DOMAIN_KEY = "enterprises";
 const DEFAULT_SUBDOMAIN_KEY = "enterpeise";
@@ -46,7 +47,15 @@ export function App({ apiBaseUrl }: AppProps) {
   const [domainKey, setDomainKey] = useState(initialNavigationState.domainKey);
   const [subdomainKey, setSubdomainKey] = useState(initialNavigationState.subdomainKey);
 
-  const subdomainItems = SUB_MENU_ITEMS[domainKey] ?? [];
+  const subdomainItems = (SUB_MENU_ITEMS[domainKey] ?? []).map((item) => ({
+    key: item.key,
+    label: (
+      <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+        {item.icon}
+        {item.label}
+      </span>
+    )
+  }));
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);

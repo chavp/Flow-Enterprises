@@ -26,6 +26,7 @@ import {
   Tree,
   message
 } from "antd";
+import { AppstoreOutlined, ToolOutlined, GiftOutlined } from "@ant-design/icons";
 import type { TreeDataNode } from "antd";
 import dayjs from "dayjs";
 import { useMemo, useState } from "react";
@@ -2137,13 +2138,18 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                 Back to Enterprises
               </Button>
             </Space>
-            <Layout style={{ background: "#fff", border: "1px solid #f0f0f0", borderRadius: 8 }}>
-              <Layout.Sider width={220} theme="light" style={{ borderRight: "1px solid #f0f0f0" }}>
+            <Layout style={{ background: "#fff", border: "1px solid #f0f0f0", borderRadius: 8, minHeight: "100%" }}>
+              <Layout.Sider
+                width={220}
+                theme="light"
+                style={{ borderRight: "1px solid #f0f0f0", display: "flex", flexDirection: "column" }}
+              >
                 <Menu
                   mode="inline"
                   selectedKeys={[productsTabKey]}
-                  items={[{ key: "manage-products", label: "Manage Products" }]}
+                  items={[{ key: "manage-products", label: "Manage Products", icon: <AppstoreOutlined /> }]}
                   onClick={(info) => setProductsTabKey(String(info.key))}
+                  style={{ height: "100%", borderInlineEnd: "none" }}
                 />
               </Layout.Sider>
               <Layout>
@@ -2155,11 +2161,21 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                     items={[
                       {
                         key: "services",
-                        label: "Services"
+                        label: (
+                          <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                            <ToolOutlined />
+                            Services
+                          </span>
+                        )
                       },
                       {
                         key: "goods",
-                        label: "Goods"
+                        label: (
+                          <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                            <GiftOutlined />
+                            Goods
+                          </span>
+                        )
                       }
                     ]}
                   />
