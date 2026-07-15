@@ -12,11 +12,12 @@ const MAIN_MENU_ITEMS = [
   { key: "world", label: "World", icon: <GlobalOutlined /> }
 ];
 const SUB_MENU_ITEMS: Record<string, { key: string; label: string; icon: ReactNode }[]> = {
-  enterprises: [{ key: "enterpeise", label: "Enterpeise", icon: <BankOutlined /> }],
+  enterprises: [{ key: "enterpeise", label: "Enterprises", icon: <BankOutlined /> }],
   world: [{ key: "geographic-boundaries", label: "Geographic Boundaries", icon: <EnvironmentOutlined /> }]
 };
 const DEFAULT_DOMAIN_KEY = "enterprises";
 const DEFAULT_SUBDOMAIN_KEY = "enterpeise";
+const DOMAIN_MENU_COLLAPSED_STORAGE_KEY = "flow-enter-admin:domain-menu-collapsed";
 
 type AppProps = {
   apiBaseUrl?: string;
@@ -46,6 +47,13 @@ export function App({ apiBaseUrl }: AppProps) {
   const initialNavigationState = useMemo(() => getInitialNavigationState(), []);
   const [domainKey, setDomainKey] = useState(initialNavigationState.domainKey);
   const [subdomainKey, setSubdomainKey] = useState(initialNavigationState.subdomainKey);
+  const [isDomainMenuCollapsed, setDomainMenuCollapsed] = useState(() => {
+    if (typeof window === "undefined") {
+      return false;
+    }
+
+    return window.localStorage.getItem(DOMAIN_MENU_COLLAPSED_STORAGE_KEY) === "true";
+  });
 
   const subdomainItems = (SUB_MENU_ITEMS[domainKey] ?? []).map((item) => ({
     key: item.key,
@@ -67,11 +75,22 @@ export function App({ apiBaseUrl }: AppProps) {
     window.history.replaceState(window.history.state, "", nextUrl);
   }, [domainKey, subdomainKey]);
 
+  useEffect(() => {
+    window.localStorage.setItem(DOMAIN_MENU_COLLAPSED_STORAGE_KEY, String(isDomainMenuCollapsed));
+  }, [isDomainMenuCollapsed]);
+
   return (
     <ConfigProvider>
       <QueryClientProvider client={queryClient}>
         <Layout className="app-shell">
-          <Layout.Sider width={220} theme="light" className="app-shell-sider">
+          <Layout.Sider
+            width={220}
+            theme="light"
+            className="app-shell-sider"
+            collapsible
+            collapsed={isDomainMenuCollapsed}
+            onCollapse={setDomainMenuCollapsed}
+          >
             <div className="app-shell-sider-title">Domains</div>
             <Menu
               mode="inline"
