@@ -125,6 +125,7 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
   const [isCreateOpen, setCreateOpen] = useState(false);
   const [editingEnterprise, setEditingEnterprise] = useState<Enterprise | null>(null);
   const [peopleEnterprise, setPeopleEnterprise] = useState<Enterprise | null>(null);
+  const [productsEnterprise, setProductsEnterprise] = useState<Enterprise | null>(null);
   const [editingEmployment, setEditingEmployment] = useState<Employment | null>(null);
   const [isCreateEmploymentOpen, setCreateEmploymentOpen] = useState(false);
   const [isCreateEnterpriseBranchOpen, setCreateEnterpriseBranchOpen] = useState(false);
@@ -147,6 +148,8 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
     Record<string, { fromDate: string; thruDate: string }>
   >({});
   const [peopleTabKey, setPeopleTabKey] = useState("people");
+  const [productsTabKey, setProductsTabKey] = useState("manage-products");
+  const [productManagementTabKey, setProductManagementTabKey] = useState("services");
   const [createForm] = Form.useForm<FormValues>();
   const [editForm] = Form.useForm<FormValues>();
   const [employmentForm] = Form.useForm<EmploymentFormValues>();
@@ -830,8 +833,25 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
             >
               Edit
             </Button>
-            <Button size="small" onClick={() => setPeopleEnterprise(row.original)}>
+            <Button
+              size="small"
+              onClick={() => {
+                setProductsEnterprise(null);
+                setPeopleEnterprise(row.original);
+              }}
+            >
               People & Organization
+            </Button>
+            <Button
+              size="small"
+              onClick={() => {
+                setPeopleEnterprise(null);
+                setProductsEnterprise(row.original);
+                setProductsTabKey("manage-products");
+                setProductManagementTabKey("services");
+              }}
+            >
+              Products
             </Button>
             <Popconfirm
               title="Delete enterprise?"
@@ -2084,6 +2104,69 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                 </Form.Item>
               </Form>
             </TopDrawerForm>
+          </Space>
+        </Card>
+      </div>
+    );
+  }
+
+  if (productsEnterprise) {
+    return (
+      <div className="page-container">
+        {contextHolder}
+        <Card>
+          <Space direction="vertical" size="middle" style={{ width: "100%" }}>
+            <Space style={{ width: "100%", justifyContent: "space-between" }}>
+              <div>
+                <Title level={3} style={{ margin: 0 }}>
+                  Enterprise Products
+                </Title>
+                <Text type="secondary">
+                  Manage products under enterprise: <strong>{productsEnterprise.legalName}</strong>
+                </Text>
+              </div>
+              <Button
+                onClick={() => {
+                  setProductsEnterprise(null);
+                  setProductsTabKey("manage-products");
+                  setProductManagementTabKey("services");
+                }}
+              >
+                Back to Enterprises
+              </Button>
+            </Space>
+            <Tabs
+              activeKey={productsTabKey}
+              onChange={setProductsTabKey}
+              items={[
+                {
+                  key: "manage-products",
+                  label: "Manage Products",
+                  children: (
+                    <Tabs
+                      activeKey={productManagementTabKey}
+                      onChange={setProductManagementTabKey}
+                      items={[
+                        {
+                          key: "services",
+                          label: "Services",
+                          children: (
+                            <Empty description="Service products management UI for this enterprise will be added here." />
+                          )
+                        },
+                        {
+                          key: "goods",
+                          label: "Goods",
+                          children: (
+                            <Empty description="Goods products management UI for this enterprise will be added here." />
+                          )
+                        }
+                      ]}
+                    />
+                  )
+                }
+              ]}
+            />
           </Space>
         </Card>
       </div>
