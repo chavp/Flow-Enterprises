@@ -1198,7 +1198,7 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
       <div className="page-container">
         {contextHolder}
         <Card>
-          <Space direction="vertical" size="middle" style={{ width: "100%" }}>
+          <Space direction="vertical" size="middle" style={{ width: "100%", minHeight: "calc(100vh - 180px)" }}>
             <Space style={{ width: "100%", justifyContent: "space-between" }}>
               <div>
                 <Title level={3} style={{ margin: 0 }}>
@@ -2115,10 +2115,10 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
 
   if (productsEnterprise) {
     return (
-      <div className="page-container">
+      <div className="page-container" style={{ height: "calc(100vh - 112px)" }}>
         {contextHolder}
-        <Card>
-          <Space direction="vertical" size="middle" style={{ width: "100%" }}>
+        <Card style={{ height: "100%" }} styles={{ body: { height: "100%" } }}>
+          <Space direction="vertical" size="middle" style={{ width: "100%", height: "100%" }}>
             <Space style={{ width: "100%", justifyContent: "space-between" }}>
               <div>
                 <Title level={3} style={{ margin: 0 }}>
@@ -2138,7 +2138,9 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                 Back to Enterprises
               </Button>
             </Space>
-            <Layout style={{ background: "#fff", border: "1px solid #f0f0f0", borderRadius: 8, minHeight: "100%" }}>
+            <Layout
+              style={{ background: "#fff", border: "1px solid #f0f0f0", borderRadius: 8, flex: 1, minHeight: 0, height: "100%" }}
+            >
               <Layout.Sider
                 width={220}
                 theme="light"
@@ -2152,8 +2154,8 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                   style={{ height: "100%", borderInlineEnd: "none" }}
                 />
               </Layout.Sider>
-              <Layout>
-                <Layout.Header style={{ background: "#fff", padding: "0 16px" }}>
+              <Layout style={{ minHeight: 0, height: "100%" }}>
+                <Layout.Header style={{ background: "#fff", padding: "0 16px", flex: "0 0 auto" }}>
                   <Tabs
                     activeKey={productManagementTabKey}
                     onChange={setProductManagementTabKey}
@@ -2180,7 +2182,9 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                     ]}
                   />
                 </Layout.Header>
-                <Layout.Content style={{ padding: 16 }}>
+                <Layout.Content
+                  style={{ padding: 16, flex: 1, minHeight: 0, display: "flex", alignItems: "center", justifyContent: "center" }}
+                >
                   {productManagementTabKey === "services" ? (
                     <Empty description="Service products management UI for this enterprise will be added here." />
                   ) : (
