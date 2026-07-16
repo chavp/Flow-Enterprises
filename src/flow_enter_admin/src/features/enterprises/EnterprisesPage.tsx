@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ColumnDef,
-  flexRender,
   getCoreRowModel,
   useReactTable
 } from "@tanstack/react-table";
@@ -14,8 +13,6 @@ import {
   Form,
   Input,
   InputNumber,
-  Layout,
-  Menu,
   Popover,
   Select,
   Space,
@@ -26,7 +23,6 @@ import {
   Tree,
   message
 } from "antd";
-import { AppstoreOutlined, ToolOutlined, GiftOutlined } from "@ant-design/icons";
 import type { TreeDataNode } from "antd";
 import dayjs from "dayjs";
 import { useMemo, useState } from "react";
@@ -79,6 +75,8 @@ import {
   Floor,
   Room
 } from "./types";
+import { EnterprisesIndexPage } from "./components/EnterprisesIndexPage";
+import { EnterpriseProductsPage } from "./components/EnterpriseProductsPage";
 
 const { Title, Text } = Typography;
 
@@ -2115,189 +2113,40 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
 
   if (productsEnterprise) {
     return (
-      <div className="page-container" style={{ height: "calc(100vh - 112px)" }}>
+      <>
         {contextHolder}
-        <Card style={{ height: "100%" }} styles={{ body: { height: "100%" } }}>
-          <Space className="enterprise-products-space" direction="vertical" size="middle" style={{ width: "100%", height: "100%" }}>
-            <Space style={{ width: "100%", justifyContent: "space-between" }}>
-              <div>
-                <Title level={3} style={{ margin: 0 }}>
-                  Enterprise Products
-                </Title>
-                <Text type="secondary">
-                  Manage products under enterprise: <strong>{productsEnterprise.legalName}</strong>
-                </Text>
-              </div>
-              <Button
-                onClick={() => {
-                  setProductsEnterprise(null);
-                  setProductsTabKey("manage-products");
-                  setProductManagementTabKey("services");
-                }}
-              >
-                Back to Enterprises
-              </Button>
-            </Space>
-            <Layout
-              style={{ background: "#fff", border: "1px solid #f0f0f0", borderRadius: 8, flex: 1, minHeight: 0, height: "100%" }}
-            >
-              <Layout.Sider
-                width={220}
-                theme="light"
-                style={{ borderRight: "1px solid #f0f0f0", display: "flex", flexDirection: "column" }}
-              >
-                <Menu
-                  mode="inline"
-                  selectedKeys={[productsTabKey]}
-                  items={[{ key: "manage-products", label: "Manage Products", icon: <AppstoreOutlined /> }]}
-                  onClick={(info) => setProductsTabKey(String(info.key))}
-                  style={{ height: "100%", borderInlineEnd: "none" }}
-                />
-              </Layout.Sider>
-              <Layout style={{ minHeight: 0, height: "100%" }}>
-                <Layout.Header style={{ background: "#fff", padding: "0 16px", flex: "0 0 auto" }}>
-                  <Tabs
-                    activeKey={productManagementTabKey}
-                    onChange={setProductManagementTabKey}
-                    tabBarStyle={{ marginBottom: 0 }}
-                    items={[
-                      {
-                        key: "services",
-                        label: (
-                          <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-                            <ToolOutlined />
-                            Services
-                          </span>
-                        )
-                      },
-                      {
-                        key: "goods",
-                        label: (
-                          <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-                            <GiftOutlined />
-                            Goods
-                          </span>
-                        )
-                      }
-                    ]}
-                  />
-                </Layout.Header>
-                <Layout.Content style={{ padding: 16, flex: 1, minHeight: 0 }}>
-                  <div
-                    style={{
-                      height: "100%",
-                      width: "100%",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      border: "1px dashed #f0f0f0",
-                      borderRadius: 8
-                    }}
-                  >
-                    {productManagementTabKey === "services" ? (
-                      <Empty description="Service products management UI for this enterprise will be added here." />
-                    ) : (
-                      <Empty description="Goods products management UI for this enterprise will be added here." />
-                    )}
-                  </div>
-                </Layout.Content>
-              </Layout>
-            </Layout>
-          </Space>
-        </Card>
-      </div>
+        <EnterpriseProductsPage
+          enterprise={productsEnterprise}
+          productsTabKey={productsTabKey}
+          onProductsTabChange={setProductsTabKey}
+          productManagementTabKey={productManagementTabKey}
+          onProductManagementTabChange={setProductManagementTabKey}
+          onBack={() => {
+            setProductsEnterprise(null);
+            setProductsTabKey("manage-products");
+            setProductManagementTabKey("services");
+          }}
+        />
+      </>
     );
   }
 
   return (
     <div className="page-container">
       {contextHolder}
-      <Card>
-        <Space direction="vertical" size="middle" style={{ width: "100%" }}>
-          <Space style={{ width: "100%", justifyContent: "space-between" }}>
-            <div>
-              <Title level={3} style={{ margin: 0 }}>
-                Enterprises
-              </Title>
-              <Text type="secondary">Manage enterprise enterprises from Flow Enter backend.</Text>
-            </div>
-            <Button type="primary" onClick={() => setCreateOpen(true)}>
-              New Enterprises
-            </Button>
-          </Space>
-
-          {enterprisesQuery.isError ? (
-            <Alert
-              type="error"
-              message="Failed to load enterprises"
-              description={enterprisesQuery.error instanceof Error ? enterprisesQuery.error.message : "Unknown error"}
-              showIcon
-            />
-          ) : (
-            <div className="tanstack-table-wrapper">
-              <table className="tanstack-table">
-                <thead>
-                  {table.getHeaderGroups().map((headerGroup) => (
-                    <tr key={headerGroup.id}>
-                      {headerGroup.headers.map((header) => (
-                        <th key={header.id}>
-                          {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                        </th>
-                      ))}
-                    </tr>
-                  ))}
-                </thead>
-                <tbody>
-                  {enterprisesQuery.isLoading ? (
-                    <tr>
-                      <td colSpan={columns.length}>
-                        <div className="table-loading">
-                          <Spin />
-                        </div>
-                      </td>
-                    </tr>
-                  ) : table.getRowModel().rows.length === 0 ? (
-                    <tr>
-                      <td colSpan={columns.length}>No enterprises found.</td>
-                    </tr>
-                  ) : (
-                    table.getRowModel().rows.map((row) => (
-                      <tr key={row.id}>
-                        {row.getVisibleCells().map((cell) => (
-                          <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
-                        ))}
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-          )}
-
-          <Space style={{ justifyContent: "space-between", width: "100%" }}>
-            <Text type="secondary">
-              Total {totalCount} enterprises • Page {pageIndex + 1} / {pageCount}
-            </Text>
-            <Space>
-              <Button onClick={() => setPageSize(10)} disabled={pageSize === 10}>
-                10 rows
-              </Button>
-              <Button onClick={() => setPageSize(25)} disabled={pageSize === 25}>
-                25 rows
-              </Button>
-              <Button onClick={() => setPageIndex((value) => Math.max(0, value - 1))} disabled={pageIndex <= 0}>
-                Prev
-              </Button>
-              <Button
-                onClick={() => setPageIndex((value) => Math.min(pageCount - 1, value + 1))}
-                disabled={pageIndex >= pageCount - 1}
-              >
-                Next
-              </Button>
-            </Space>
-          </Space>
-        </Space>
-      </Card>
+      <EnterprisesIndexPage
+        enterprisesQuery={enterprisesQuery}
+        table={table}
+        columnsLength={columns.length}
+        totalCount={totalCount}
+        pageIndex={pageIndex}
+        pageCount={pageCount}
+        pageSize={pageSize}
+        onCreate={() => setCreateOpen(true)}
+        onSetPageSize={(size) => setPageSize(size)}
+        onPrevPage={() => setPageIndex((value) => Math.max(0, value - 1))}
+        onNextPage={() => setPageIndex((value) => Math.min(pageCount - 1, value + 1))}
+      />
 
       <TopDrawerForm
         open={isCreateOpen}
