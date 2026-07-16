@@ -47,5 +47,10 @@ export async function requestJson<T>(
     return undefined as T;
   }
 
-  return (await response.json()) as T;
+  const responseText = await response.text();
+  if (!responseText || responseText.trim().length === 0) {
+    return undefined as T;
+  }
+
+  return JSON.parse(responseText) as T;
 }
