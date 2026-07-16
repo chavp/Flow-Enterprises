@@ -72,3 +72,23 @@ body {
   justify-content: center;
   padding: 20px;
 }
+
+.enterprise-products-space {
+  display: flex;
+  flex-direction: column;
+}
+
+.enterprise-products-space > .ant-space-item {
+  width: 100%;
+}
+
+.enterprise-products-space > .ant-space-item:last-child {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+.enterprise-products-space > .ant-space-item:last-child > .ant-layout {
+  flex: 1;
+  min-height: 0;
+}

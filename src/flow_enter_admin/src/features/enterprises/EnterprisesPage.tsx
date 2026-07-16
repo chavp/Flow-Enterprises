@@ -2118,7 +2118,7 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
       <div className="page-container" style={{ height: "calc(100vh - 112px)" }}>
         {contextHolder}
         <Card style={{ height: "100%" }} styles={{ body: { height: "100%" } }}>
-          <Space direction="vertical" size="middle" style={{ width: "100%", height: "100%" }}>
+          <Space className="enterprise-products-space" direction="vertical" size="middle" style={{ width: "100%", height: "100%" }}>
             <Space style={{ width: "100%", justifyContent: "space-between" }}>
               <div>
                 <Title level={3} style={{ margin: 0 }}>
@@ -2182,14 +2182,24 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
                     ]}
                   />
                 </Layout.Header>
-                <Layout.Content
-                  style={{ padding: 16, flex: 1, minHeight: 0, display: "flex", alignItems: "center", justifyContent: "center" }}
-                >
-                  {productManagementTabKey === "services" ? (
-                    <Empty description="Service products management UI for this enterprise will be added here." />
-                  ) : (
-                    <Empty description="Goods products management UI for this enterprise will be added here." />
-                  )}
+                <Layout.Content style={{ padding: 16, flex: 1, minHeight: 0 }}>
+                  <div
+                    style={{
+                      height: "100%",
+                      width: "100%",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      border: "1px dashed #f0f0f0",
+                      borderRadius: 8
+                    }}
+                  >
+                    {productManagementTabKey === "services" ? (
+                      <Empty description="Service products management UI for this enterprise will be added here." />
+                    ) : (
+                      <Empty description="Goods products management UI for this enterprise will be added here." />
+                    )}
+                  </div>
                 </Layout.Content>
               </Layout>
             </Layout>
