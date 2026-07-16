@@ -2,6 +2,7 @@ import { requestJson } from "./http";
 import {
   Bed,
   Building,
+  CreateEnterpriseServiceRequest,
   CreateBuildingRequest,
   CreateBedRequest,
   CreateEmploymentRequest,
@@ -14,11 +15,13 @@ import {
   Employment,
   Floor,
   LegalStructure,
+  EnterpriseService,
   EnterprisesResponse,
   PatchOperation,
   PartyRoleType,
   Room,
   UpdateBuildingRequest,
+  UpdateEnterpriseServiceRequest,
   UpdateEmploymentEffectiveDateRequest,
   UpdateEnterpriseBranchRequest,
   UpdateEmploymentRequest,
@@ -391,6 +394,54 @@ export async function deleteEnterpriseBed(
 ): Promise<void> {
   await requestJson(
     `/api/parties/enterprises/${enterpriseId}/facilities/beds/${bedId}`,
+    { method: "DELETE" },
+    apiBaseUrl
+  );
+}
+
+export async function fetchEnterpriseServices(
+  enterpriseId: string,
+  apiBaseUrl?: string
+): Promise<EnterpriseService[]> {
+  return requestJson<EnterpriseService[]>(
+    `/api/parties/enterprises/${enterpriseId}/products/services`,
+    { method: "GET" },
+    apiBaseUrl
+  );
+}
+
+export async function createEnterpriseService(
+  enterpriseId: string,
+  payload: CreateEnterpriseServiceRequest,
+  apiBaseUrl?: string
+): Promise<void> {
+  await requestJson(
+    `/api/parties/enterprises/${enterpriseId}/products/services`,
+    { method: "POST", body: JSON.stringify(payload) },
+    apiBaseUrl
+  );
+}
+
+export async function updateEnterpriseService(
+  enterpriseId: string,
+  serviceId: string,
+  payload: UpdateEnterpriseServiceRequest,
+  apiBaseUrl?: string
+): Promise<void> {
+  await requestJson(
+    `/api/parties/enterprises/${enterpriseId}/products/services/${serviceId}`,
+    { method: "PUT", body: JSON.stringify(payload) },
+    apiBaseUrl
+  );
+}
+
+export async function deleteEnterpriseService(
+  enterpriseId: string,
+  serviceId: string,
+  apiBaseUrl?: string
+): Promise<void> {
+  await requestJson(
+    `/api/parties/enterprises/${enterpriseId}/products/services/${serviceId}`,
     { method: "DELETE" },
     apiBaseUrl
   );

@@ -20,6 +20,23 @@ export type EnterprisesResponse = {
   pageSize: number;
 };
 
+export type EnterpriseService = {
+  serviceId: string;
+  enterpriseId: string;
+  name: string;
+  description?: string;
+  createdAtUtc: string;
+  updatedAtUtc?: string;
+  revision: number;
+};
+
+export type CreateEnterpriseServiceRequest = {
+  name: string;
+  description?: string;
+};
+
+export type UpdateEnterpriseServiceRequest = CreateEnterpriseServiceRequest;
+
 export type LegalStructure = {
   id: string;
   code?: string;

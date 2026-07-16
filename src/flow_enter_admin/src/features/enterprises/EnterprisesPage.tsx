@@ -2188,6 +2188,7 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
         {contextHolder}
         <EnterpriseProductsPage
           enterprise={productsEnterprise}
+          apiBaseUrl={apiBaseUrl}
           productsTabKey={productsTabKey}
           onProductsTabChange={setProductsTabKey}
           productManagementTabKey={productManagementTabKey}
