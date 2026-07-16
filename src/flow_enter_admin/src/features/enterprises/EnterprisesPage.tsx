@@ -25,7 +25,7 @@ import {
 } from "antd";
 import type { TreeDataNode } from "antd";
 import dayjs from "dayjs";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   createEnterpriseBed,
   createEnterpriseBranch,
@@ -117,6 +117,38 @@ function toLocalDateApiValue(value: string) {
 }
 
 const defaultPageSize = 10;
+const ENTERPRISES_PEOPLE_TAB_STORAGE_KEY = "flow-enter-admin:enterprises-people-tab";
+const ENTERPRISES_PRODUCTS_TAB_STORAGE_KEY = "flow-enter-admin:enterprises-products-tab";
+const ENTERPRISES_PRODUCT_MANAGEMENT_TAB_STORAGE_KEY = "flow-enter-admin:enterprises-product-management-tab";
+const ENTERPRISES_PEOPLE_ENTERPRISE_STORAGE_KEY = "flow-enter-admin:enterprises-people-enterprise";
+const ENTERPRISES_PRODUCTS_ENTERPRISE_STORAGE_KEY = "flow-enter-admin:enterprises-products-enterprise";
+
+function readStringStorage(key: string, fallback: string) {
+  if (typeof window === "undefined") {
+    return fallback;
+  }
+
+  return window.localStorage.getItem(key) ?? fallback;
+}
+
+function readEnterpriseStorage(key: string): Enterprise | null {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  const raw = window.localStorage.getItem(key);
+  if (!raw) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(raw) as Enterprise;
+  } catch (error) {
+    console.warn(`Invalid enterprise storage payload for key: ${key}`, error);
+    window.localStorage.removeItem(key);
+    return null;
+  }
+}
 
 export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
   const queryClient = useQueryClient();
@@ -125,8 +157,12 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
   const [pageSize, setPageSize] = useState(defaultPageSize);
   const [isCreateOpen, setCreateOpen] = useState(false);
   const [editingEnterprise, setEditingEnterprise] = useState<Enterprise | null>(null);
-  const [peopleEnterprise, setPeopleEnterprise] = useState<Enterprise | null>(null);
-  const [productsEnterprise, setProductsEnterprise] = useState<Enterprise | null>(null);
+  const [peopleEnterprise, setPeopleEnterprise] = useState<Enterprise | null>(() =>
+    readEnterpriseStorage(ENTERPRISES_PEOPLE_ENTERPRISE_STORAGE_KEY)
+  );
+  const [productsEnterprise, setProductsEnterprise] = useState<Enterprise | null>(() =>
+    readEnterpriseStorage(ENTERPRISES_PRODUCTS_ENTERPRISE_STORAGE_KEY)
+  );
   const [editingEmployment, setEditingEmployment] = useState<Employment | null>(null);
   const [isCreateEmploymentOpen, setCreateEmploymentOpen] = useState(false);
   const [isCreateEnterpriseBranchOpen, setCreateEnterpriseBranchOpen] = useState(false);
@@ -148,9 +184,13 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
   const [branchEffectiveDateDrafts, setBranchEffectiveDateDrafts] = useState<
     Record<string, { fromDate: string; thruDate: string }>
   >({});
-  const [peopleTabKey, setPeopleTabKey] = useState("people");
-  const [productsTabKey, setProductsTabKey] = useState("manage-products");
-  const [productManagementTabKey, setProductManagementTabKey] = useState("services");
+  const [peopleTabKey, setPeopleTabKey] = useState(() => readStringStorage(ENTERPRISES_PEOPLE_TAB_STORAGE_KEY, "people"));
+  const [productsTabKey, setProductsTabKey] = useState(() =>
+    readStringStorage(ENTERPRISES_PRODUCTS_TAB_STORAGE_KEY, "manage-products")
+  );
+  const [productManagementTabKey, setProductManagementTabKey] = useState(() =>
+    readStringStorage(ENTERPRISES_PRODUCT_MANAGEMENT_TAB_STORAGE_KEY, "services")
+  );
   const [createForm] = Form.useForm<FormValues>();
   const [editForm] = Form.useForm<FormValues>();
   const [employmentForm] = Form.useForm<EmploymentFormValues>();
@@ -919,6 +959,37 @@ export function EnterprisesPage({ apiBaseUrl }: EnterprisesPageProps) {
     value: item.roomId,
     label: `${item.buildingName} / Floor ${item.floorLevel} / Room ${item.number}`
   }));
+
+  useEffect(() => {
+    window.localStorage.setItem(ENTERPRISES_PEOPLE_TAB_STORAGE_KEY, peopleTabKey);
+  }, [peopleTabKey]);
+
+  useEffect(() => {
+    window.localStorage.setItem(ENTERPRISES_PRODUCTS_TAB_STORAGE_KEY, productsTabKey);
+  }, [productsTabKey]);
+
+  useEffect(() => {
+    window.localStorage.setItem(ENTERPRISES_PRODUCT_MANAGEMENT_TAB_STORAGE_KEY, productManagementTabKey);
+  }, [productManagementTabKey]);
+
+  useEffect(() => {
+    if (peopleEnterprise) {
+      window.localStorage.setItem(ENTERPRISES_PEOPLE_ENTERPRISE_STORAGE_KEY, JSON.stringify(peopleEnterprise));
+      return;
+    }
+
+    window.localStorage.removeItem(ENTERPRISES_PEOPLE_ENTERPRISE_STORAGE_KEY);
+  }, [peopleEnterprise]);
+
+  useEffect(() => {
+    if (productsEnterprise) {
+      window.localStorage.setItem(ENTERPRISES_PRODUCTS_ENTERPRISE_STORAGE_KEY, JSON.stringify(productsEnterprise));
+      return;
+    }
+
+    window.localStorage.removeItem(ENTERPRISES_PRODUCTS_ENTERPRISE_STORAGE_KEY);
+  }, [productsEnterprise]);
+
   const facilitiesTreeData = useMemo<TreeDataNode[]>(
     () =>
       facilitiesTree.map((buildingNode) => ({
