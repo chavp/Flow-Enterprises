@@ -2,7 +2,11 @@
 
 public interface IProductsServices
 {
+    Task<IReadOnlyList<string>> GetFeatureTypesAsync();
     Task<IReadOnlyList<ProductFeatureCategoryDto>> GetFeatureCategoriesAsync(Guid enterpriseId, CancellationToken cancellationToken = default);
+    Task CreateFeatureCategoryAsync(Guid enterpriseId, CreateProductFeatureCategoryDto payload, CancellationToken cancellationToken = default);
+    Task<bool> UpdateFeatureCategoryAsync(Guid enterpriseId, Guid categoryId, UpdateProductFeatureCategoryDto payload, CancellationToken cancellationToken = default);
+    Task<bool> DeleteFeatureCategoryAsync(Guid enterpriseId, Guid categoryId, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<EnterpriseProductFeatureDto>> GetFeaturesAsync(Guid enterpriseId, CancellationToken cancellationToken = default);
     Task CreateFeatureAsync(Guid enterpriseId, CreateEnterpriseProductFeatureDto payload, CancellationToken cancellationToken = default);
     Task<bool> UpdateFeatureAsync(Guid enterpriseId, Guid featureId, UpdateEnterpriseProductFeatureDto payload, CancellationToken cancellationToken = default);
@@ -17,6 +21,17 @@ public interface IProductsServices
 public sealed class ProductFeatureCategoryDto
 {
     public Guid ProductFeatureCategoryId { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public bool IsGlobal { get; set; }
+}
+
+public sealed class CreateProductFeatureCategoryDto
+{
+    public string Name { get; set; } = string.Empty;
+}
+
+public sealed class UpdateProductFeatureCategoryDto
+{
     public string Name { get; set; } = string.Empty;
 }
 
@@ -37,6 +52,7 @@ public sealed class EnterpriseProductFeatureDto
 
 public sealed class CreateEnterpriseProductFeatureDto
 {
+    public string ProductFeatureType { get; set; } = string.Empty;
     public Guid ProductFeatureCategoryId { get; set; }
     public string Code { get; set; } = string.Empty;
     public string Title { get; set; } = string.Empty;
@@ -45,6 +61,7 @@ public sealed class CreateEnterpriseProductFeatureDto
 
 public sealed class UpdateEnterpriseProductFeatureDto
 {
+    public string ProductFeatureType { get; set; } = string.Empty;
     public Guid ProductFeatureCategoryId { get; set; }
     public string Code { get; set; } = string.Empty;
     public string Title { get; set; } = string.Empty;

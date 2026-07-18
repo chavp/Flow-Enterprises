@@ -8,10 +8,25 @@ namespace Flowenter.Products.Services;
 public class ProductsServices : IProductsServices
 {
     private readonly IDbContextFactory<ProductsContext> _factory;
+    private static readonly Dictionary<string, Type> ProductFeatureTypes = typeof(ProductFeature)
+        .Assembly
+        .GetTypes()
+        .Where(type => type.IsClass && !type.IsAbstract && type.IsSubclassOf(typeof(ProductFeature)))
+        .ToDictionary(type => type.Name, type => type, StringComparer.OrdinalIgnoreCase);
 
     public ProductsServices(IDbContextFactory<ProductsContext> factory)
     {
         _factory = factory;
+    }
+
+    public Task<IReadOnlyList<string>> GetFeatureTypesAsync()
+    {
+        var types = ProductFeatureTypes
+            .Keys
+            .OrderBy(name => name)
+            .ToList()
+            .AsReadOnly();
+        return Task.FromResult<IReadOnlyList<string>>(types);
     }
 
     public async Task<IReadOnlyList<EnterpriseServiceDto>> GetServicesAsync(Guid enterpriseId, CancellationToken cancellationToken = default)
@@ -47,9 +62,79 @@ public class ProductsServices : IProductsServices
             .Select(item => new ProductFeatureCategoryDto
             {
                 ProductFeatureCategoryId = item.Id!.Value,
-                Name = item.Name!
+                Name = item.Name!,
+                IsGlobal = item.ProviderPartyId == null
             })
             .ToListAsync(cancellationToken);
+    }
+
+    public async Task CreateFeatureCategoryAsync(
+        Guid enterpriseId,
+        CreateProductFeatureCategoryDto payload,
+        CancellationToken cancellationToken = default)
+    {
+        var name = NormalizeFeatureCategoryName(payload.Name);
+
+        using var context = _factory.CreateDbContext();
+
+        var data = new ProductFeatureCategory
+        {
+            Id = Guid.NewGuid(),
+            ProviderPartyId = enterpriseId,
+            Name = name
+        };
+
+        await context.AddAsync(data, cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task<bool> UpdateFeatureCategoryAsync(
+        Guid enterpriseId,
+        Guid categoryId,
+        UpdateProductFeatureCategoryDto payload,
+        CancellationToken cancellationToken = default)
+    {
+        var name = NormalizeFeatureCategoryName(payload.Name);
+
+        using var context = _factory.CreateDbContext();
+
+        var category = await context.ProductFeatureCategories
+            .FirstOrDefaultAsync(item => item.Id == categoryId && item.ProviderPartyId == enterpriseId, cancellationToken);
+        if (category == null)
+        {
+            return false;
+        }
+
+        category.Name = name;
+        await context.SaveChangesAsync(cancellationToken);
+        return true;
+    }
+
+    public async Task<bool> DeleteFeatureCategoryAsync(
+        Guid enterpriseId,
+        Guid categoryId,
+        CancellationToken cancellationToken = default)
+    {
+        using var context = _factory.CreateDbContext();
+
+        var category = await context.ProductFeatureCategories
+            .FirstOrDefaultAsync(item => item.Id == categoryId && item.ProviderPartyId == enterpriseId, cancellationToken);
+        if (category == null)
+        {
+            return false;
+        }
+
+        var inUse = await context.ProductFeatures.AnyAsync(
+            item => item.ProductFeatureCategoryId == categoryId && item.ProviderPartyId == enterpriseId,
+            cancellationToken);
+        if (inUse)
+        {
+            throw new ArgumentException("Product feature category is being used by product features.");
+        }
+
+        context.Remove(category);
+        await context.SaveChangesAsync(cancellationToken);
+        return true;
     }
 
     public async Task<IReadOnlyList<EnterpriseProductFeatureDto>> GetFeaturesAsync(
@@ -59,7 +144,6 @@ public class ProductsServices : IProductsServices
         using var context = _factory.CreateDbContext();
 
         return await context.ProductFeatures
-            .OfType<ServiceFeature>()
             .Where(item => item.ProviderPartyId == enterpriseId)
             .OrderBy(item => item.Code)
             .ThenBy(item => item.Title)
@@ -103,6 +187,7 @@ public class ProductsServices : IProductsServices
         CreateEnterpriseProductFeatureDto payload,
         CancellationToken cancellationToken = default)
     {
+        var productFeatureType = NormalizeProductFeatureType(payload.ProductFeatureType);
         var code = NormalizeCode(payload.Code);
         var title = NormalizeTitle(payload.Title);
 
@@ -110,16 +195,14 @@ public class ProductsServices : IProductsServices
 
         await EnsureFeatureCategoryExistsAsync(context, enterpriseId, payload.ProductFeatureCategoryId, cancellationToken);
 
-        var data = new ServiceFeature
-        {
-            Id = Guid.NewGuid(),
-            ProviderPartyId = enterpriseId,
-            ProductFeatureType = nameof(ServiceFeature),
-            ProductFeatureCategoryId = payload.ProductFeatureCategoryId,
-            Code = code,
-            Title = title,
-            Description = NormalizeDescription(payload.Description)
-        };
+        var data = CreateProductFeature(productFeatureType);
+        data.Id = Guid.NewGuid();
+        data.ProviderPartyId = enterpriseId;
+        data.ProductFeatureType = productFeatureType;
+        data.ProductFeatureCategoryId = payload.ProductFeatureCategoryId;
+        data.Code = code;
+        data.Title = title;
+        data.Description = NormalizeDescription(payload.Description);
 
         await context.AddAsync(data, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
@@ -156,13 +239,13 @@ public class ProductsServices : IProductsServices
         UpdateEnterpriseProductFeatureDto payload,
         CancellationToken cancellationToken = default)
     {
+        var productFeatureType = NormalizeProductFeatureType(payload.ProductFeatureType);
         var code = NormalizeCode(payload.Code);
         var title = NormalizeTitle(payload.Title);
 
         using var context = _factory.CreateDbContext();
 
         var feature = await context.ProductFeatures
-            .OfType<ServiceFeature>()
             .FirstOrDefaultAsync(item => item.Id == featureId && item.ProviderPartyId == enterpriseId, cancellationToken);
         if (feature == null)
         {
@@ -172,6 +255,7 @@ public class ProductsServices : IProductsServices
         await EnsureFeatureCategoryExistsAsync(context, enterpriseId, payload.ProductFeatureCategoryId, cancellationToken);
 
         feature.ProductFeatureCategoryId = payload.ProductFeatureCategoryId;
+        feature.ProductFeatureType = productFeatureType;
         feature.Code = code;
         feature.Title = title;
         feature.Description = NormalizeDescription(payload.Description);
@@ -202,7 +286,6 @@ public class ProductsServices : IProductsServices
         using var context = _factory.CreateDbContext();
 
         var feature = await context.ProductFeatures
-            .OfType<ServiceFeature>()
             .FirstOrDefaultAsync(item => item.Id == featureId && item.ProviderPartyId == enterpriseId, cancellationToken);
         if (feature == null)
         {
@@ -231,6 +314,33 @@ public class ProductsServices : IProductsServices
         if (string.IsNullOrWhiteSpace(normalized))
         {
             throw new ArgumentException("Product feature code is required.");
+        }
+
+        return normalized;
+    }
+
+    private static string NormalizeProductFeatureType(string? productFeatureType)
+    {
+        var normalized = productFeatureType?.Trim();
+        if (string.IsNullOrWhiteSpace(normalized))
+        {
+            throw new ArgumentException("Product feature type is required.");
+        }
+
+        if (!ProductFeatureTypes.TryGetValue(normalized, out var resolvedType))
+        {
+            throw new ArgumentException("Product feature type is invalid.");
+        }
+
+        return resolvedType.Name;
+    }
+
+    private static string NormalizeFeatureCategoryName(string? name)
+    {
+        var normalized = name?.Trim();
+        if (string.IsNullOrWhiteSpace(normalized))
+        {
+            throw new ArgumentException("Product feature category name is required.");
         }
 
         return normalized;
@@ -265,5 +375,21 @@ public class ProductsServices : IProductsServices
         {
             throw new ArgumentException("Product feature category not found.");
         }
+    }
+
+    private static ProductFeature CreateProductFeature(string productFeatureType)
+    {
+        if (!ProductFeatureTypes.TryGetValue(productFeatureType, out var resolvedType))
+        {
+            throw new ArgumentException("Product feature type is invalid.");
+        }
+
+        var instance = Activator.CreateInstance(resolvedType) as ProductFeature;
+        if (instance == null)
+        {
+            throw new ArgumentException("Product feature type is invalid.");
+        }
+
+        return instance;
     }
 }

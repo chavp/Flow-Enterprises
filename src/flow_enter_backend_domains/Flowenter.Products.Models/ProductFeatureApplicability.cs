@@ -18,6 +18,8 @@ public abstract class ProductFeatureApplicability : EffectiveEntity
 
     [Required, StringLength(200)]
     public string? ProductFeatureApplicabilityType { get; set; }
+
+    public int Order { get; set; } = 0;
 }
 
 public class RequiredFeature : ProductFeatureApplicability;

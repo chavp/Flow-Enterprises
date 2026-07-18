@@ -4,6 +4,7 @@ import {
   Building,
   CreateEnterpriseServiceRequest,
   CreateEnterpriseProductFeatureRequest,
+  CreateProductFeatureCategoryRequest,
   CreateBuildingRequest,
   CreateBedRequest,
   CreateEmploymentRequest,
@@ -26,6 +27,7 @@ import {
   UpdateBuildingRequest,
   UpdateEnterpriseServiceRequest,
   UpdateEnterpriseProductFeatureRequest,
+  UpdateProductFeatureCategoryRequest,
   UpdateEmploymentEffectiveDateRequest,
   UpdateEnterpriseBranchRequest,
   UpdateEmploymentRequest,
@@ -457,6 +459,54 @@ export async function fetchEnterpriseProductFeatureCategories(
 ): Promise<ProductFeatureCategory[]> {
   return requestJson<ProductFeatureCategory[]>(
     `/api/parties/enterprises/${enterpriseId}/products/feature-categories`,
+    { method: "GET" },
+    apiBaseUrl
+  );
+}
+
+export async function createEnterpriseProductFeatureCategory(
+  enterpriseId: string,
+  payload: CreateProductFeatureCategoryRequest,
+  apiBaseUrl?: string
+): Promise<void> {
+  await requestJson(
+    `/api/parties/enterprises/${enterpriseId}/products/feature-categories`,
+    { method: "POST", body: JSON.stringify(payload) },
+    apiBaseUrl
+  );
+}
+
+export async function updateEnterpriseProductFeatureCategory(
+  enterpriseId: string,
+  productFeatureCategoryId: string,
+  payload: UpdateProductFeatureCategoryRequest,
+  apiBaseUrl?: string
+): Promise<void> {
+  await requestJson(
+    `/api/parties/enterprises/${enterpriseId}/products/feature-categories/${productFeatureCategoryId}`,
+    { method: "PUT", body: JSON.stringify(payload) },
+    apiBaseUrl
+  );
+}
+
+export async function deleteEnterpriseProductFeatureCategory(
+  enterpriseId: string,
+  productFeatureCategoryId: string,
+  apiBaseUrl?: string
+): Promise<void> {
+  await requestJson(
+    `/api/parties/enterprises/${enterpriseId}/products/feature-categories/${productFeatureCategoryId}`,
+    { method: "DELETE" },
+    apiBaseUrl
+  );
+}
+
+export async function fetchEnterpriseProductFeatureTypes(
+  enterpriseId: string,
+  apiBaseUrl?: string
+): Promise<string[]> {
+  return requestJson<string[]>(
+    `/api/parties/enterprises/${enterpriseId}/products/feature-types`,
     { method: "GET" },
     apiBaseUrl
   );

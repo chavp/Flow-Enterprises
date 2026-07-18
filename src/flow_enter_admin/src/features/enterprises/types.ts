@@ -40,7 +40,14 @@ export type UpdateEnterpriseServiceRequest = CreateEnterpriseServiceRequest;
 export type ProductFeatureCategory = {
   productFeatureCategoryId: string;
   name: string;
+  isGlobal: boolean;
 };
+
+export type CreateProductFeatureCategoryRequest = {
+  name: string;
+};
+
+export type UpdateProductFeatureCategoryRequest = CreateProductFeatureCategoryRequest;
 
 export type EnterpriseProductFeature = {
   productFeatureId: string;
@@ -57,6 +64,7 @@ export type EnterpriseProductFeature = {
 };
 
 export type CreateEnterpriseProductFeatureRequest = {
+  productFeatureType: string;
   productFeatureCategoryId: string;
   code: string;
   title: string;
