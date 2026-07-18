@@ -1,7 +1,5 @@
-using Flowenter.Products.Mappings;
-using Flowenter.Products.Models;
+using Flowenter.Products.IServices;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Flowenter.Api.Controllers.Products;
 
@@ -9,35 +7,18 @@ namespace Flowenter.Api.Controllers.Products;
 [Route("api/parties/enterprises/{enterpriseId:guid}/products")]
 public class ProductsController : ControllerBase
 {
-    private readonly IDbContextFactory<ProductsContext> _factory;
+    private readonly IProductsServices _productsServices;
 
-    public ProductsController(IDbContextFactory<ProductsContext> factory)
+    public ProductsController(IProductsServices productsServices)
     {
-        _factory = factory;
+        _productsServices = productsServices;
     }
 
     [HttpGet("services")]
     [ProducesResponseType(typeof(List<EnterpriseServiceDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetServices([FromRoute] Guid enterpriseId, CancellationToken cancellationToken)
     {
-        using var context = _factory.CreateDbContext();
-
-        var services = await context.Products
-            .OfType<Service>()
-            .Where(item => item.ProviderPartyId == enterpriseId)
-            .OrderBy(item => item.Name)
-            .Select(item => new EnterpriseServiceDto
-            {
-                ServiceId = item.Id!.Value,
-                EnterpriseId = enterpriseId,
-                Name = item.Name!,
-                Description = item.Description,
-                CreatedAtUtc = item.CreatedAtUtc,
-                UpdatedAtUtc = item.UpdatedAtUtc,
-                Revision = item.Revision
-            })
-            .ToListAsync(cancellationToken);
-
+        var services = await _productsServices.GetServicesAsync(enterpriseId, cancellationToken);
         return Ok(services);
     }
 
@@ -49,26 +30,15 @@ public class ProductsController : ControllerBase
         [FromBody] CreateEnterpriseServiceDto payload,
         CancellationToken cancellationToken)
     {
-        var name = payload.Name?.Trim();
-        if (string.IsNullOrWhiteSpace(name))
+        try
         {
-            return BadRequest(new { message = "Service name is required." });
+            await _productsServices.CreateServiceAsync(enterpriseId, payload, cancellationToken);
+            return CreatedAtAction(nameof(GetServices), new { enterpriseId }, null);
         }
-
-        using var context = _factory.CreateDbContext();
-
-        var data = new Service
+        catch (ArgumentException error)
         {
-            Id = Guid.NewGuid(),
-            ProviderPartyId = enterpriseId,
-            Name = name,
-            Description = string.IsNullOrWhiteSpace(payload.Description) ? null : payload.Description.Trim()
-        };
-
-        await context.AddAsync(data, cancellationToken);
-        await context.SaveChangesAsync(cancellationToken);
-
-        return CreatedAtAction(nameof(GetServices), new { enterpriseId }, null);
+            return BadRequest(new { message = error.Message });
+        }
     }
 
     [HttpPut("services/{serviceId:guid}")]
@@ -81,27 +51,20 @@ public class ProductsController : ControllerBase
         [FromBody] UpdateEnterpriseServiceDto payload,
         CancellationToken cancellationToken)
     {
-        var name = payload.Name?.Trim();
-        if (string.IsNullOrWhiteSpace(name))
+        try
         {
-            return BadRequest(new { message = "Service name is required." });
+            var updated = await _productsServices.UpdateServiceAsync(enterpriseId, serviceId, payload, cancellationToken);
+            if (!updated)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
         }
-
-        using var context = _factory.CreateDbContext();
-
-        var service = await context.Products
-            .OfType<Service>()
-            .FirstOrDefaultAsync(item => item.Id == serviceId && item.ProviderPartyId == enterpriseId, cancellationToken);
-        if (service == null)
+        catch (ArgumentException error)
         {
-            return NotFound();
+            return BadRequest(new { message = error.Message });
         }
-
-        service.Name = name;
-        service.Description = string.IsNullOrWhiteSpace(payload.Description) ? null : payload.Description.Trim();
-
-        await context.SaveChangesAsync(cancellationToken);
-        return NoContent();
     }
 
     [HttpDelete("services/{serviceId:guid}")]
@@ -112,41 +75,12 @@ public class ProductsController : ControllerBase
         [FromRoute] Guid serviceId,
         CancellationToken cancellationToken)
     {
-        using var context = _factory.CreateDbContext();
-
-        var service = await context.Products
-            .OfType<Service>()
-            .FirstOrDefaultAsync(item => item.Id == serviceId && item.ProviderPartyId == enterpriseId, cancellationToken);
-        if (service == null)
+        var deleted = await _productsServices.DeleteServiceAsync(enterpriseId, serviceId, cancellationToken);
+        if (!deleted)
         {
             return NotFound();
         }
 
-        context.Remove(service);
-        await context.SaveChangesAsync(cancellationToken);
         return NoContent();
     }
-}
-
-public sealed class EnterpriseServiceDto
-{
-    public Guid ServiceId { get; set; }
-    public Guid EnterpriseId { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string? Description { get; set; }
-    public DateTime CreatedAtUtc { get; set; }
-    public DateTime? UpdatedAtUtc { get; set; }
-    public ulong Revision { get; set; }
-}
-
-public sealed class CreateEnterpriseServiceDto
-{
-    public string Name { get; set; } = string.Empty;
-    public string? Description { get; set; }
-}
-
-public sealed class UpdateEnterpriseServiceDto
-{
-    public string Name { get; set; } = string.Empty;
-    public string? Description { get; set; }
 }
