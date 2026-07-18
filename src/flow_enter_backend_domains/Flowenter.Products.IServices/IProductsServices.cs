@@ -157,6 +157,7 @@ public sealed class EnterpriseServicePriceCoponentDto
 {
     public Guid PriceCoponentId { get; set; }
     public string PriceCoponentType { get; set; } = string.Empty;
+    public Guid? SpecifiedForPartyId { get; set; }
     public decimal? Price { get; set; }
     public decimal? Percent { get; set; }
     public Guid? UnitOfMeasureId { get; set; }
@@ -171,6 +172,7 @@ public sealed class EnterpriseServicePriceCoponentDto
 public sealed class UpsertEnterpriseServicePriceCoponentDto
 {
     public string PriceCoponentType { get; set; } = string.Empty;
+    public Guid? SpecifiedForPartyId { get; set; }
     public decimal? Price { get; set; }
     public decimal? Percent { get; set; }
     public Guid? UnitOfMeasureId { get; set; }

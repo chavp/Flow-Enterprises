@@ -245,6 +245,7 @@ public class ProductsServices : IProductsServices
             {
                 PriceCoponentId = item.Id!.Value,
                 PriceCoponentType = item.PriceCoponentType!,
+                SpecifiedForPartyId = item.SpecifiedForPartyId,
                 Price = item.Price,
                 Percent = item.Percent,
                 UnitOfMeasureId = item.UnitOfMeasureId,

@@ -1,4 +1,7 @@
 using Flowenter.Products.IServices;
+using Flowenter.Parties.Mappings;
+using Flowenter.Parties.Models.PartyModels;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Flowenter.Api.Controllers.Products;
@@ -8,17 +11,27 @@ namespace Flowenter.Api.Controllers.Products;
 public class ProductsController : ControllerBase
 {
     private readonly IProductsServices _productsServices;
+    private readonly IDbContextFactory<PartiesContext> _partiesFactory;
 
-    public ProductsController(IProductsServices productsServices)
+    public ProductsController(
+        IProductsServices productsServices,
+        IDbContextFactory<PartiesContext> partiesFactory)
     {
         _productsServices = productsServices;
+        _partiesFactory = partiesFactory;
     }
 
     [HttpGet("services")]
     [ProducesResponseType(typeof(List<EnterpriseServiceDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetServices([FromRoute] Guid enterpriseId, CancellationToken cancellationToken)
     {
-        var services = await _productsServices.GetServicesAsync(enterpriseId, cancellationToken);
+        var providerPartyId = await ResolveProviderPartyIdAsync(enterpriseId, cancellationToken);
+        if (!providerPartyId.HasValue)
+        {
+            return NotFound();
+        }
+
+        var services = await _productsServices.GetServicesAsync(providerPartyId.Value, cancellationToken);
         return Ok(services);
     }
 
@@ -26,7 +39,13 @@ public class ProductsController : ControllerBase
     [ProducesResponseType(typeof(List<EnterpriseGoodDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetGoods([FromRoute] Guid enterpriseId, CancellationToken cancellationToken)
     {
-        var goods = await _productsServices.GetGoodsAsync(enterpriseId, cancellationToken);
+        var providerPartyId = await ResolveProviderPartyIdAsync(enterpriseId, cancellationToken);
+        if (!providerPartyId.HasValue)
+        {
+            return NotFound();
+        }
+
+        var goods = await _productsServices.GetGoodsAsync(providerPartyId.Value, cancellationToken);
         return Ok(goods);
     }
 
@@ -40,7 +59,13 @@ public class ProductsController : ControllerBase
     {
         try
         {
-            await _productsServices.CreateServiceAsync(enterpriseId, payload, cancellationToken);
+            var providerPartyId = await ResolveProviderPartyIdAsync(enterpriseId, cancellationToken);
+            if (!providerPartyId.HasValue)
+            {
+                return NotFound();
+            }
+
+            await _productsServices.CreateServiceAsync(providerPartyId.Value, payload, cancellationToken);
             return CreatedAtAction(nameof(GetServices), new { enterpriseId }, null);
         }
         catch (ArgumentException error)
@@ -61,7 +86,13 @@ public class ProductsController : ControllerBase
     {
         try
         {
-            var updated = await _productsServices.UpdateServiceAsync(enterpriseId, serviceId, payload, cancellationToken);
+            var providerPartyId = await ResolveProviderPartyIdAsync(enterpriseId, cancellationToken);
+            if (!providerPartyId.HasValue)
+            {
+                return NotFound();
+            }
+
+            var updated = await _productsServices.UpdateServiceAsync(providerPartyId.Value, serviceId, payload, cancellationToken);
             if (!updated)
             {
                 return NotFound();
@@ -83,7 +114,13 @@ public class ProductsController : ControllerBase
         [FromRoute] Guid serviceId,
         CancellationToken cancellationToken)
     {
-        var deleted = await _productsServices.DeleteServiceAsync(enterpriseId, serviceId, cancellationToken);
+        var providerPartyId = await ResolveProviderPartyIdAsync(enterpriseId, cancellationToken);
+        if (!providerPartyId.HasValue)
+        {
+            return NotFound();
+        }
+
+        var deleted = await _productsServices.DeleteServiceAsync(providerPartyId.Value, serviceId, cancellationToken);
         if (!deleted)
         {
             return NotFound();
@@ -96,7 +133,13 @@ public class ProductsController : ControllerBase
     [ProducesResponseType(typeof(List<ProductFeatureCategoryDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetFeatureCategories([FromRoute] Guid enterpriseId, CancellationToken cancellationToken)
     {
-        var categories = await _productsServices.GetFeatureCategoriesAsync(enterpriseId, cancellationToken);
+        var providerPartyId = await ResolveProviderPartyIdAsync(enterpriseId, cancellationToken);
+        if (!providerPartyId.HasValue)
+        {
+            return NotFound();
+        }
+
+        var categories = await _productsServices.GetFeatureCategoriesAsync(providerPartyId.Value, cancellationToken);
         return Ok(categories);
     }
 
@@ -110,7 +153,13 @@ public class ProductsController : ControllerBase
     {
         try
         {
-            await _productsServices.CreateFeatureCategoryAsync(enterpriseId, payload, cancellationToken);
+            var providerPartyId = await ResolveProviderPartyIdAsync(enterpriseId, cancellationToken);
+            if (!providerPartyId.HasValue)
+            {
+                return NotFound();
+            }
+
+            await _productsServices.CreateFeatureCategoryAsync(providerPartyId.Value, payload, cancellationToken);
             return CreatedAtAction(nameof(GetFeatureCategories), new { enterpriseId }, null);
         }
         catch (ArgumentException error)
@@ -131,7 +180,13 @@ public class ProductsController : ControllerBase
     {
         try
         {
-            var updated = await _productsServices.UpdateFeatureCategoryAsync(enterpriseId, categoryId, payload, cancellationToken);
+            var providerPartyId = await ResolveProviderPartyIdAsync(enterpriseId, cancellationToken);
+            if (!providerPartyId.HasValue)
+            {
+                return NotFound();
+            }
+
+            var updated = await _productsServices.UpdateFeatureCategoryAsync(providerPartyId.Value, categoryId, payload, cancellationToken);
             if (!updated)
             {
                 return NotFound();
@@ -156,7 +211,13 @@ public class ProductsController : ControllerBase
     {
         try
         {
-            var deleted = await _productsServices.DeleteFeatureCategoryAsync(enterpriseId, categoryId, cancellationToken);
+            var providerPartyId = await ResolveProviderPartyIdAsync(enterpriseId, cancellationToken);
+            if (!providerPartyId.HasValue)
+            {
+                return NotFound();
+            }
+
+            var deleted = await _productsServices.DeleteFeatureCategoryAsync(providerPartyId.Value, categoryId, cancellationToken);
             if (!deleted)
             {
                 return NotFound();
@@ -195,7 +256,13 @@ public class ProductsController : ControllerBase
         [FromRoute] Guid serviceId,
         CancellationToken cancellationToken)
     {
-        var applicabilities = await _productsServices.GetServiceFeatureApplicabilitiesAsync(enterpriseId, serviceId, cancellationToken);
+        var providerPartyId = await ResolveProviderPartyIdAsync(enterpriseId, cancellationToken);
+        if (!providerPartyId.HasValue)
+        {
+            return NotFound();
+        }
+
+        var applicabilities = await _productsServices.GetServiceFeatureApplicabilitiesAsync(providerPartyId.Value, serviceId, cancellationToken);
         return Ok(applicabilities);
     }
 
@@ -206,7 +273,13 @@ public class ProductsController : ControllerBase
         [FromRoute] Guid serviceId,
         CancellationToken cancellationToken)
     {
-        var priceCoponents = await _productsServices.GetServicePriceCoponentsAsync(enterpriseId, serviceId, cancellationToken);
+        var providerPartyId = await ResolveProviderPartyIdAsync(enterpriseId, cancellationToken);
+        if (!providerPartyId.HasValue)
+        {
+            return NotFound();
+        }
+
+        var priceCoponents = await _productsServices.GetServicePriceCoponentsAsync(providerPartyId.Value, serviceId, cancellationToken);
         return Ok(priceCoponents);
     }
 
@@ -217,7 +290,13 @@ public class ProductsController : ControllerBase
         [FromRoute] Guid productId,
         CancellationToken cancellationToken)
     {
-        var applicabilities = await _productsServices.GetProductFeatureApplicabilitiesAsync(enterpriseId, productId, cancellationToken);
+        var providerPartyId = await ResolveProviderPartyIdAsync(enterpriseId, cancellationToken);
+        if (!providerPartyId.HasValue)
+        {
+            return NotFound();
+        }
+
+        var applicabilities = await _productsServices.GetProductFeatureApplicabilitiesAsync(providerPartyId.Value, productId, cancellationToken);
         return Ok(applicabilities);
     }
 
@@ -225,7 +304,13 @@ public class ProductsController : ControllerBase
     [ProducesResponseType(typeof(List<EnterpriseProductFeatureDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetFeatures([FromRoute] Guid enterpriseId, CancellationToken cancellationToken)
     {
-        var features = await _productsServices.GetFeaturesAsync(enterpriseId, cancellationToken);
+        var providerPartyId = await ResolveProviderPartyIdAsync(enterpriseId, cancellationToken);
+        if (!providerPartyId.HasValue)
+        {
+            return NotFound();
+        }
+
+        var features = await _productsServices.GetFeaturesAsync(providerPartyId.Value, cancellationToken);
         return Ok(features);
     }
 
@@ -239,7 +324,13 @@ public class ProductsController : ControllerBase
     {
         try
         {
-            await _productsServices.CreateFeatureAsync(enterpriseId, payload, cancellationToken);
+            var providerPartyId = await ResolveProviderPartyIdAsync(enterpriseId, cancellationToken);
+            if (!providerPartyId.HasValue)
+            {
+                return NotFound();
+            }
+
+            await _productsServices.CreateFeatureAsync(providerPartyId.Value, payload, cancellationToken);
             return CreatedAtAction(nameof(GetFeatures), new { enterpriseId }, null);
         }
         catch (ArgumentException error)
@@ -260,7 +351,13 @@ public class ProductsController : ControllerBase
     {
         try
         {
-            var updated = await _productsServices.UpdateFeatureAsync(enterpriseId, featureId, payload, cancellationToken);
+            var providerPartyId = await ResolveProviderPartyIdAsync(enterpriseId, cancellationToken);
+            if (!providerPartyId.HasValue)
+            {
+                return NotFound();
+            }
+
+            var updated = await _productsServices.UpdateFeatureAsync(providerPartyId.Value, featureId, payload, cancellationToken);
             if (!updated)
             {
                 return NotFound();
@@ -282,12 +379,28 @@ public class ProductsController : ControllerBase
         [FromRoute] Guid featureId,
         CancellationToken cancellationToken)
     {
-        var deleted = await _productsServices.DeleteFeatureAsync(enterpriseId, featureId, cancellationToken);
+        var providerPartyId = await ResolveProviderPartyIdAsync(enterpriseId, cancellationToken);
+        if (!providerPartyId.HasValue)
+        {
+            return NotFound();
+        }
+
+        var deleted = await _productsServices.DeleteFeatureAsync(providerPartyId.Value, featureId, cancellationToken);
         if (!deleted)
         {
             return NotFound();
         }
 
         return NoContent();
+    }
+
+    private async Task<Guid?> ResolveProviderPartyIdAsync(Guid enterpriseRoleId, CancellationToken cancellationToken)
+    {
+        using var context = _partiesFactory.CreateDbContext();
+        return await context.PartyRoles
+            .OfType<Enterprise>()
+            .Where(item => item.Id == enterpriseRoleId && item.PartyId.HasValue)
+            .Select(item => item.PartyId)
+            .FirstOrDefaultAsync(cancellationToken);
     }
 }

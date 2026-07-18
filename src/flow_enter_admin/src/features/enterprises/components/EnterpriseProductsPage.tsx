@@ -15,6 +15,7 @@ import {
   fetchEnterpriseProductFeatureCategories,
   fetchEnterpriseProductFeatureTypes,
   fetchEnterpriseProductFeatures,
+  fetchEnterpriseBranchs,
   fetchEnterpriseServiceFeatureApplicabilities,
   fetchEnterpriseServicePriceCoponents,
   fetchEnterpriseServices,
@@ -131,6 +132,11 @@ export function EnterpriseProductsPage({
     queryKey: ["enterprise-service-price-coponents", enterprise.enterpriseId, editingService?.serviceId, apiBaseUrl],
     queryFn: () => fetchEnterpriseServicePriceCoponents(enterprise.enterpriseId, editingService!.serviceId, apiBaseUrl),
     enabled: Boolean(editingService)
+  });
+  const enterpriseBranchsQuery = useQuery({
+    queryKey: ["enterprise-branchs", enterprise.enterpriseId, apiBaseUrl],
+    queryFn: () => fetchEnterpriseBranchs(enterprise.enterpriseId, apiBaseUrl),
+    enabled: productsTabKey === "manage-products" && productManagementTabKey === "services"
   });
   const currencyMeasuresQuery = useQuery({
     queryKey: ["currency-measures", apiBaseUrl],
@@ -389,6 +395,14 @@ export function EnterpriseProductsPage({
       })),
     [timeFrequencyMeasuresQuery.data]
   );
+  const enterpriseBranchOptions = useMemo(
+    () =>
+      (enterpriseBranchsQuery.data ?? []).map((item) => ({
+        value: item.branchId,
+        label: item.branchLegalName
+      })),
+    [enterpriseBranchsQuery.data]
+  );
   const priceCoponentTypeOptions = useMemo(
     () => [
       { value: "BasePrice", label: "BasePrice" },
@@ -415,6 +429,7 @@ export function EnterpriseProductsPage({
       })),
       priceCoponents: servicePriceCoponentsQuery.data.map((item) => ({
         priceCoponentType: item.priceCoponentType,
+        specifiedForPartyId: item.specifiedForPartyId,
         price: item.price,
         percent: item.percent,
         unitOfMeasureId: item.unitOfMeasureId,
@@ -446,6 +461,7 @@ export function EnterpriseProductsPage({
       priceCoponents:
         (values.priceCoponents ?? []).map((item: EnterpriseServicePriceCoponentRequest) => ({
           ...item,
+          specifiedForPartyId: item.specifiedForPartyId || undefined,
           unitOfMeasureId: item.unitOfMeasureId || undefined,
           timeFrequencyMeasureId: item.timeFrequencyMeasureId || undefined,
           fromDate: item.fromDate || undefined,
@@ -585,6 +601,7 @@ export function EnterpriseProductsPage({
               onClick={() =>
                 add({
                   priceCoponentType: "BasePrice",
+                  specifiedForPartyId: undefined,
                   price: undefined,
                   percent: undefined,
                   unitOfMeasureId: undefined,
@@ -606,6 +623,7 @@ export function EnterpriseProductsPage({
                 <thead>
                   <tr>
                     <th>Type</th>
+                    <th>Specified For Party</th>
                     <th>Price</th>
                     <th>Percent</th>
                     <th>Unit</th>
@@ -626,6 +644,18 @@ export function EnterpriseProductsPage({
                           style={{ marginBottom: 0 }}
                         >
                           <Select options={priceCoponentTypeOptions} />
+                        </Form.Item>
+                      </td>
+                      <td>
+                        <Form.Item name={[field.name, "specifiedForPartyId"]} style={{ marginBottom: 0 }}>
+                          <Select
+                            options={enterpriseBranchOptions}
+                            loading={enterpriseBranchsQuery.isLoading}
+                            placeholder="Branch"
+                            optionFilterProp="label"
+                            showSearch
+                            allowClear
+                          />
                         </Form.Item>
                       </td>
                       <td>

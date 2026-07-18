@@ -72,6 +72,7 @@ export type EnterpriseServiceFeatureApplicabilityRequest = {
 export type EnterpriseServicePriceCoponent = {
   priceCoponentId: string;
   priceCoponentType: string;
+  specifiedForPartyId?: string;
   price?: number;
   percent?: number;
   unitOfMeasureId?: string;
@@ -85,6 +86,7 @@ export type EnterpriseServicePriceCoponent = {
 
 export type EnterpriseServicePriceCoponentRequest = {
   priceCoponentType: string;
+  specifiedForPartyId?: string;
   price?: number;
   percent?: number;
   unitOfMeasureId?: string;
