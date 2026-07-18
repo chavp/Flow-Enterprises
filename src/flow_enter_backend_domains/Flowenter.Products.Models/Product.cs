@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Flowenter.Products.Models;
 
-[Index(nameof(Name), nameof(ProviderPartyId), IsUnique = true)]
+[Index(nameof(ProviderPartyId), nameof(Name), IsUnique = true)]
 public abstract class Product : BaseEntity
 {
     public Guid? ProviderPartyId { get; set; }

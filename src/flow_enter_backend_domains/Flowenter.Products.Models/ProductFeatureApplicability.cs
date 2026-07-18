@@ -15,6 +15,9 @@ public abstract class ProductFeatureApplicability : EffectiveEntity
     [Required]
     public Guid? ProductFeatureId { get; set; }
     public ProductFeature? ProductFeature { get; set; }
+
+    [Required, StringLength(200)]
+    public string? ProductFeatureApplicabilityType { get; set; }
 }
 
 public class RequiredFeature : ProductFeatureApplicability;
