@@ -18,6 +18,7 @@ import {
   Floor,
   LegalStructure,
   EnterpriseService,
+  EnterpriseServiceFeatureApplicability,
   EnterpriseProductFeature,
   ProductFeatureCategory,
   EnterprisesResponse,
@@ -416,6 +417,18 @@ export async function fetchEnterpriseServices(
   );
 }
 
+export async function fetchEnterpriseServiceFeatureApplicabilities(
+  enterpriseId: string,
+  serviceId: string,
+  apiBaseUrl?: string
+): Promise<EnterpriseServiceFeatureApplicability[]> {
+  return requestJson<EnterpriseServiceFeatureApplicability[]>(
+    `/api/parties/enterprises/${enterpriseId}/products/services/${serviceId}/feature-applicabilities`,
+    { method: "GET" },
+    apiBaseUrl
+  );
+}
+
 export async function createEnterpriseService(
   enterpriseId: string,
   payload: CreateEnterpriseServiceRequest,
@@ -507,6 +520,17 @@ export async function fetchEnterpriseProductFeatureTypes(
 ): Promise<string[]> {
   return requestJson<string[]>(
     `/api/parties/enterprises/${enterpriseId}/products/feature-types`,
+    { method: "GET" },
+    apiBaseUrl
+  );
+}
+
+export async function fetchEnterpriseProductFeatureApplicabilityTypes(
+  enterpriseId: string,
+  apiBaseUrl?: string
+): Promise<string[]> {
+  return requestJson<string[]>(
+    `/api/parties/enterprises/${enterpriseId}/products/feature-applicability-types`,
     { method: "GET" },
     apiBaseUrl
   );

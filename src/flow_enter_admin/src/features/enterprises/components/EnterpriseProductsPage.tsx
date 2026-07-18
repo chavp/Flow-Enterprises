@@ -1,7 +1,7 @@
 import { AppstoreOutlined, GiftOutlined, TagsOutlined, ToolOutlined } from "@ant-design/icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Alert, Button, Card, Empty, Form, Input, Layout, Menu, Modal, Popconfirm, Select, Space, Spin, Tabs, Typography, message } from "antd";
-import { useMemo, useState } from "react";
+import { Alert, Button, Card, Empty, Form, Input, InputNumber, Layout, Menu, Modal, Popconfirm, Select, Space, Spin, Tabs, Typography, message } from "antd";
+import { useEffect, useMemo, useState } from "react";
 import {
   createEnterpriseProductFeature,
   createEnterpriseProductFeatureCategory,
@@ -9,9 +9,11 @@ import {
   deleteEnterpriseProductFeatureCategory,
   deleteEnterpriseProductFeature,
   deleteEnterpriseService,
+  fetchEnterpriseProductFeatureApplicabilityTypes,
   fetchEnterpriseProductFeatureCategories,
   fetchEnterpriseProductFeatureTypes,
   fetchEnterpriseProductFeatures,
+  fetchEnterpriseServiceFeatureApplicabilities,
   fetchEnterpriseServices,
   updateEnterpriseProductFeatureCategory,
   updateEnterpriseProductFeature,
@@ -76,7 +78,9 @@ export function EnterpriseProductsPage({
   const featureCategoriesQuery = useQuery({
     queryKey: ["enterprise-product-feature-categories", enterprise.enterpriseId, apiBaseUrl],
     queryFn: () => fetchEnterpriseProductFeatureCategories(enterprise.enterpriseId, apiBaseUrl),
-    enabled: productsTabKey === "manage-products" && productManagementTabKey === "features"
+    enabled:
+      productsTabKey === "manage-products" &&
+      (productManagementTabKey === "features" || productManagementTabKey === "services")
   });
 
   const featureTypesQuery = useQuery({
@@ -88,7 +92,22 @@ export function EnterpriseProductsPage({
   const featuresQuery = useQuery({
     queryKey: ["enterprise-product-features", enterprise.enterpriseId, apiBaseUrl],
     queryFn: () => fetchEnterpriseProductFeatures(enterprise.enterpriseId, apiBaseUrl),
-    enabled: productsTabKey === "manage-products" && productManagementTabKey === "features"
+    enabled:
+      productsTabKey === "manage-products" &&
+      (productManagementTabKey === "features" || productManagementTabKey === "services")
+  });
+
+  const featureApplicabilityTypesQuery = useQuery({
+    queryKey: ["enterprise-product-feature-applicability-types", enterprise.enterpriseId, apiBaseUrl],
+    queryFn: () => fetchEnterpriseProductFeatureApplicabilityTypes(enterprise.enterpriseId, apiBaseUrl),
+    enabled: productsTabKey === "manage-products" && productManagementTabKey === "services"
+  });
+
+  const serviceFeatureApplicabilitiesQuery = useQuery({
+    queryKey: ["enterprise-service-feature-applicabilities", enterprise.enterpriseId, editingService?.serviceId, apiBaseUrl],
+    queryFn: () =>
+      fetchEnterpriseServiceFeatureApplicabilities(enterprise.enterpriseId, editingService!.serviceId, apiBaseUrl),
+    enabled: Boolean(editingService)
   });
 
   const createServiceMutation = useMutation({
@@ -274,6 +293,104 @@ export function EnterpriseProductsPage({
       })),
     [featureTypesQuery.data]
   );
+  const productFeatureOptions = useMemo(
+    () =>
+      productFeatures.map((item) => ({
+        value: item.productFeatureId,
+        label: `${item.code} - ${item.title}`
+      })),
+    [productFeatures]
+  );
+  const productFeatureApplicabilityTypeOptions = useMemo(
+    () =>
+      (featureApplicabilityTypesQuery.data ?? []).map((item) => ({
+        value: item,
+        label: item
+      })),
+    [featureApplicabilityTypesQuery.data]
+  );
+
+  useEffect(() => {
+    if (!editingService || !serviceFeatureApplicabilitiesQuery.data) {
+      return;
+    }
+
+    editServiceForm.setFieldsValue({
+      name: editingService.name,
+      description: editingService.description,
+      productFeatureApplicabilities: serviceFeatureApplicabilitiesQuery.data.map((item) => ({
+        productFeatureId: item.productFeatureId,
+        productFeatureApplicabilityType: item.productFeatureApplicabilityType,
+        order: item.order
+      }))
+    });
+  }, [editingService, serviceFeatureApplicabilitiesQuery.data, editServiceForm]);
+
+  const renderServiceFeatureApplicabilities = () => (
+    <Form.List name="productFeatureApplicabilities">
+      {(fields, { add, remove }) => (
+        <Space direction="vertical" size="middle" style={{ width: "100%" }}>
+          <Space style={{ width: "100%", justifyContent: "space-between" }}>
+            <Text strong>Product Feature Applicability</Text>
+            <Button
+              type="dashed"
+              onClick={() =>
+                add({
+                  productFeatureId: undefined,
+                  productFeatureApplicabilityType: undefined,
+                  order: 0
+                })
+              }
+            >
+              Add Applicability
+            </Button>
+          </Space>
+          {fields.map((field) => (
+            <Card key={field.key} size="small">
+              <Space direction="vertical" size="small" style={{ width: "100%" }}>
+                <Form.Item
+                  name={[field.name, "productFeatureId"]}
+                  label="Product Feature"
+                  rules={[{ required: true, message: "Product feature is required" }]}
+                >
+                  <Select
+                    options={productFeatureOptions}
+                    loading={featuresQuery.isLoading}
+                    placeholder="Select product feature"
+                    optionFilterProp="label"
+                    showSearch
+                  />
+                </Form.Item>
+                <Form.Item
+                  name={[field.name, "productFeatureApplicabilityType"]}
+                  label="Applicability Type"
+                  rules={[{ required: true, message: "Applicability type is required" }]}
+                >
+                  <Select
+                    options={productFeatureApplicabilityTypeOptions}
+                    loading={featureApplicabilityTypesQuery.isLoading}
+                    placeholder="Select applicability type"
+                    optionFilterProp="label"
+                    showSearch
+                  />
+                </Form.Item>
+                <Form.Item
+                  name={[field.name, "order"]}
+                  label="Order"
+                  rules={[{ required: true, message: "Order is required" }]}
+                >
+                  <InputNumber min={0} style={{ width: "100%" }} />
+                </Form.Item>
+                <Button danger onClick={() => remove(field.name)}>
+                  Remove
+                </Button>
+              </Space>
+            </Card>
+          ))}
+        </Space>
+      )}
+    </Form.List>
+  );
 
   return (
     <div className="page-container" style={{ height: "calc(100vh - 112px)" }}>
@@ -384,7 +501,8 @@ export function EnterpriseProductsPage({
                                           setEditingService(service);
                                           editServiceForm.setFieldsValue({
                                             name: service.name,
-                                            description: service.description
+                                            description: service.description,
+                                            productFeatureApplicabilities: []
                                           });
                                         }}
                                       >
@@ -594,6 +712,7 @@ export function EnterpriseProductsPage({
         <Form<CreateEnterpriseServiceRequest>
           form={createServiceForm}
           layout="vertical"
+          initialValues={{ productFeatureApplicabilities: [] }}
           onFinish={(values) => createServiceMutation.mutate(values)}
         >
           <Form.Item name="name" label="Service Name" rules={[{ required: true, message: "Service name is required" }]}>
@@ -602,6 +721,7 @@ export function EnterpriseProductsPage({
           <Form.Item name="description" label="Description">
             <Input.TextArea rows={4} maxLength={500} />
           </Form.Item>
+          {renderServiceFeatureApplicabilities()}
         </Form>
       </TopDrawerForm>
 
@@ -614,11 +734,12 @@ export function EnterpriseProductsPage({
           editServiceForm.resetFields();
         }}
         onSubmit={() => editServiceForm.submit()}
-        loading={updateServiceMutation.isPending}
+        loading={updateServiceMutation.isPending || serviceFeatureApplicabilitiesQuery.isLoading}
       >
         <Form<CreateEnterpriseServiceRequest>
           form={editServiceForm}
           layout="vertical"
+          initialValues={{ productFeatureApplicabilities: [] }}
           onFinish={(values) => updateServiceMutation.mutate(values)}
         >
           <Form.Item name="name" label="Service Name" rules={[{ required: true, message: "Service name is required" }]}>
@@ -627,6 +748,7 @@ export function EnterpriseProductsPage({
           <Form.Item name="description" label="Description">
             <Input.TextArea rows={4} maxLength={500} />
           </Form.Item>
+          {renderServiceFeatureApplicabilities()}
         </Form>
       </TopDrawerForm>
 

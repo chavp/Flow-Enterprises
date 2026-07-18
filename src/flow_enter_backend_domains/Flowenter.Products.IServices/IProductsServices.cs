@@ -3,6 +3,7 @@
 public interface IProductsServices
 {
     Task<IReadOnlyList<string>> GetFeatureTypesAsync();
+    Task<IReadOnlyList<string>> GetFeatureApplicabilityTypesAsync();
     Task<IReadOnlyList<ProductFeatureCategoryDto>> GetFeatureCategoriesAsync(Guid enterpriseId, CancellationToken cancellationToken = default);
     Task CreateFeatureCategoryAsync(Guid enterpriseId, CreateProductFeatureCategoryDto payload, CancellationToken cancellationToken = default);
     Task<bool> UpdateFeatureCategoryAsync(Guid enterpriseId, Guid categoryId, UpdateProductFeatureCategoryDto payload, CancellationToken cancellationToken = default);
@@ -13,6 +14,7 @@ public interface IProductsServices
     Task<bool> DeleteFeatureAsync(Guid enterpriseId, Guid featureId, CancellationToken cancellationToken = default);
 
     Task<IReadOnlyList<EnterpriseServiceDto>> GetServicesAsync(Guid enterpriseId, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<EnterpriseServiceFeatureApplicabilityDto>> GetServiceFeatureApplicabilitiesAsync(Guid enterpriseId, Guid serviceId, CancellationToken cancellationToken = default);
     Task CreateServiceAsync(Guid enterpriseId, CreateEnterpriseServiceDto payload, CancellationToken cancellationToken = default);
     Task<bool> UpdateServiceAsync(Guid enterpriseId, Guid serviceId, UpdateEnterpriseServiceDto payload, CancellationToken cancellationToken = default);
     Task<bool> DeleteServiceAsync(Guid enterpriseId, Guid serviceId, CancellationToken cancellationToken = default);
@@ -83,10 +85,29 @@ public sealed class CreateEnterpriseServiceDto
 {
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
+    public List<UpsertEnterpriseServiceFeatureApplicabilityDto> ProductFeatureApplicabilities { get; set; } = [];
 }
 
 public sealed class UpdateEnterpriseServiceDto
 {
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
+    public List<UpsertEnterpriseServiceFeatureApplicabilityDto> ProductFeatureApplicabilities { get; set; } = [];
+}
+
+public sealed class EnterpriseServiceFeatureApplicabilityDto
+{
+    public Guid ProductFeatureApplicabilityId { get; set; }
+    public Guid ProductFeatureId { get; set; }
+    public string ProductFeatureCode { get; set; } = string.Empty;
+    public string ProductFeatureTitle { get; set; } = string.Empty;
+    public string ProductFeatureApplicabilityType { get; set; } = string.Empty;
+    public int Order { get; set; }
+}
+
+public sealed class UpsertEnterpriseServiceFeatureApplicabilityDto
+{
+    public Guid ProductFeatureId { get; set; }
+    public string ProductFeatureApplicabilityType { get; set; } = string.Empty;
+    public int Order { get; set; }
 }

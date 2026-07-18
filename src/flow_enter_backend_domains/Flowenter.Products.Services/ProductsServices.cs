@@ -13,6 +13,11 @@ public class ProductsServices : IProductsServices
         .GetTypes()
         .Where(type => type.IsClass && !type.IsAbstract && type.IsSubclassOf(typeof(ProductFeature)))
         .ToDictionary(type => type.Name, type => type, StringComparer.OrdinalIgnoreCase);
+    private static readonly Dictionary<string, Type> ProductFeatureApplicabilityTypes = typeof(ProductFeatureApplicability)
+        .Assembly
+        .GetTypes()
+        .Where(type => type.IsClass && !type.IsAbstract && type.IsSubclassOf(typeof(ProductFeatureApplicability)))
+        .ToDictionary(type => type.Name, type => type, StringComparer.OrdinalIgnoreCase);
 
     public ProductsServices(IDbContextFactory<ProductsContext> factory)
     {
@@ -22,6 +27,16 @@ public class ProductsServices : IProductsServices
     public Task<IReadOnlyList<string>> GetFeatureTypesAsync()
     {
         var types = ProductFeatureTypes
+            .Keys
+            .OrderBy(name => name)
+            .ToList()
+            .AsReadOnly();
+        return Task.FromResult<IReadOnlyList<string>>(types);
+    }
+
+    public Task<IReadOnlyList<string>> GetFeatureApplicabilityTypesAsync()
+    {
+        var types = ProductFeatureApplicabilityTypes
             .Keys
             .OrderBy(name => name)
             .ToList()
@@ -46,6 +61,37 @@ public class ProductsServices : IProductsServices
                 CreatedAtUtc = item.CreatedAtUtc,
                 UpdatedAtUtc = item.UpdatedAtUtc,
                 Revision = item.Revision
+            })
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<EnterpriseServiceFeatureApplicabilityDto>> GetServiceFeatureApplicabilitiesAsync(
+        Guid enterpriseId,
+        Guid serviceId,
+        CancellationToken cancellationToken = default)
+    {
+        using var context = _factory.CreateDbContext();
+
+        var serviceExists = await context.Products
+            .OfType<Service>()
+            .AnyAsync(item => item.Id == serviceId && item.ProviderPartyId == enterpriseId, cancellationToken);
+        if (!serviceExists)
+        {
+            return [];
+        }
+
+        return await context.ProductFeatureApplicabilities
+            .Where(item => item.ProductId == serviceId)
+            .OrderBy(item => item.Order)
+            .ThenBy(item => item.ProductFeature!.Code)
+            .Select(item => new EnterpriseServiceFeatureApplicabilityDto
+            {
+                ProductFeatureApplicabilityId = item.Id!.Value,
+                ProductFeatureId = item.ProductFeatureId!.Value,
+                ProductFeatureCode = item.ProductFeature!.Code!,
+                ProductFeatureTitle = item.ProductFeature.Title!,
+                ProductFeatureApplicabilityType = item.ProductFeatureApplicabilityType!,
+                Order = item.Order
             })
             .ToListAsync(cancellationToken);
     }
@@ -179,6 +225,12 @@ public class ProductsServices : IProductsServices
         };
 
         await context.AddAsync(data, cancellationToken);
+        await SyncServiceFeatureApplicabilitiesAsync(
+            context,
+            enterpriseId,
+            data.Id!.Value,
+            payload.ProductFeatureApplicabilities,
+            cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
     }
 
@@ -228,6 +280,12 @@ public class ProductsServices : IProductsServices
 
         service.Name = name;
         service.Description = NormalizeDescription(payload.Description);
+        await SyncServiceFeatureApplicabilitiesAsync(
+            context,
+            enterpriseId,
+            serviceId,
+            payload.ProductFeatureApplicabilities,
+            cancellationToken);
 
         await context.SaveChangesAsync(cancellationToken);
         return true;
@@ -362,6 +420,22 @@ public class ProductsServices : IProductsServices
         return string.IsNullOrWhiteSpace(description) ? null : description.Trim();
     }
 
+    private static string NormalizeProductFeatureApplicabilityType(string? productFeatureApplicabilityType)
+    {
+        var normalized = productFeatureApplicabilityType?.Trim();
+        if (string.IsNullOrWhiteSpace(normalized))
+        {
+            throw new ArgumentException("Product feature applicability type is required.");
+        }
+
+        if (!ProductFeatureApplicabilityTypes.TryGetValue(normalized, out var resolvedType))
+        {
+            throw new ArgumentException("Product feature applicability type is invalid.");
+        }
+
+        return resolvedType.Name;
+    }
+
     private static async Task EnsureFeatureCategoryExistsAsync(
         ProductsContext context,
         Guid enterpriseId,
@@ -391,5 +465,65 @@ public class ProductsServices : IProductsServices
         }
 
         return instance;
+    }
+
+    private static ProductFeatureApplicability CreateProductFeatureApplicability(string productFeatureApplicabilityType)
+    {
+        if (!ProductFeatureApplicabilityTypes.TryGetValue(productFeatureApplicabilityType, out var resolvedType))
+        {
+            throw new ArgumentException("Product feature applicability type is invalid.");
+        }
+
+        var instance = Activator.CreateInstance(resolvedType) as ProductFeatureApplicability;
+        if (instance == null)
+        {
+            throw new ArgumentException("Product feature applicability type is invalid.");
+        }
+
+        return instance;
+    }
+
+    private static async Task SyncServiceFeatureApplicabilitiesAsync(
+        ProductsContext context,
+        Guid enterpriseId,
+        Guid serviceId,
+        IReadOnlyCollection<UpsertEnterpriseServiceFeatureApplicabilityDto>? productFeatureApplicabilities,
+        CancellationToken cancellationToken)
+    {
+        var applicabilities = productFeatureApplicabilities ?? [];
+        var featureIds = applicabilities.Select(item => item.ProductFeatureId).ToHashSet();
+        if (featureIds.Count != applicabilities.Count)
+        {
+            throw new ArgumentException("Product feature applicability contains duplicate product feature.");
+        }
+
+        var enterpriseFeatureIds = await context.ProductFeatures
+            .Where(item => item.ProviderPartyId == enterpriseId && featureIds.Contains(item.Id!.Value))
+            .Select(item => item.Id!.Value)
+            .ToListAsync(cancellationToken);
+        if (enterpriseFeatureIds.Count != featureIds.Count)
+        {
+            throw new ArgumentException("One or more product features were not found for this enterprise.");
+        }
+
+        var existing = await context.ProductFeatureApplicabilities
+            .Where(item => item.ProductId == serviceId)
+            .ToListAsync(cancellationToken);
+        if (existing.Count > 0)
+        {
+            context.RemoveRange(existing);
+        }
+
+        foreach (var applicability in applicabilities)
+        {
+            var applicabilityType = NormalizeProductFeatureApplicabilityType(applicability.ProductFeatureApplicabilityType);
+            var data = CreateProductFeatureApplicability(applicabilityType);
+            data.Id = Guid.NewGuid();
+            data.ProductId = serviceId;
+            data.ProductFeatureId = applicability.ProductFeatureId;
+            data.ProductFeatureApplicabilityType = applicabilityType;
+            data.Order = applicability.Order;
+            await context.AddAsync(data, cancellationToken);
+        }
     }
 }

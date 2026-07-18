@@ -30,9 +30,25 @@ export type EnterpriseService = {
   revision: number;
 };
 
+export type EnterpriseServiceFeatureApplicability = {
+  productFeatureApplicabilityId: string;
+  productFeatureId: string;
+  productFeatureCode: string;
+  productFeatureTitle: string;
+  productFeatureApplicabilityType: string;
+  order: number;
+};
+
+export type EnterpriseServiceFeatureApplicabilityRequest = {
+  productFeatureId: string;
+  productFeatureApplicabilityType: string;
+  order: number;
+};
+
 export type CreateEnterpriseServiceRequest = {
   name: string;
   description?: string;
+  productFeatureApplicabilities: EnterpriseServiceFeatureApplicabilityRequest[];
 };
 
 export type UpdateEnterpriseServiceRequest = CreateEnterpriseServiceRequest;

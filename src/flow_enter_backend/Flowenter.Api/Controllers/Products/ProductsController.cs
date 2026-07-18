@@ -171,6 +171,26 @@ public class ProductsController : ControllerBase
         return Ok(types);
     }
 
+    [HttpGet("feature-applicability-types")]
+    [ProducesResponseType(typeof(List<string>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetFeatureApplicabilityTypes([FromRoute] Guid enterpriseId)
+    {
+        _ = enterpriseId;
+        var types = await _productsServices.GetFeatureApplicabilityTypesAsync();
+        return Ok(types);
+    }
+
+    [HttpGet("services/{serviceId:guid}/feature-applicabilities")]
+    [ProducesResponseType(typeof(List<EnterpriseServiceFeatureApplicabilityDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetServiceFeatureApplicabilities(
+        [FromRoute] Guid enterpriseId,
+        [FromRoute] Guid serviceId,
+        CancellationToken cancellationToken)
+    {
+        var applicabilities = await _productsServices.GetServiceFeatureApplicabilitiesAsync(enterpriseId, serviceId, cancellationToken);
+        return Ok(applicabilities);
+    }
+
     [HttpGet("features")]
     [ProducesResponseType(typeof(List<EnterpriseProductFeatureDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetFeatures([FromRoute] Guid enterpriseId, CancellationToken cancellationToken)
