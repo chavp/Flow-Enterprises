@@ -61,6 +61,8 @@ public class ProductsServices : IProductsServices
                 ReleaseDate = item.ReleaseDate,
                 DiscontinuedDate = item.DiscontinuedDate,
                 SupportDiscontinuedDate = item.SupportDiscontinuedDate,
+                HasCoverImage = item.CoverImage != null && item.CoverImage.Length > 0,
+                CoverImageName = item.CoverImageName,
                 FeatureCount = context.ProductFeatureApplicabilities.Count(app => app.ProductId == item.Id),
                 CreatedAtUtc = item.CreatedAtUtc,
                 UpdatedAtUtc = item.UpdatedAtUtc,
@@ -86,6 +88,8 @@ public class ProductsServices : IProductsServices
                 ReleaseDate = item.ReleaseDate,
                 DiscontinuedDate = item.DiscontinuedDate,
                 SupportDiscontinuedDate = item.SupportDiscontinuedDate,
+                HasCoverImage = item.CoverImage != null && item.CoverImage.Length > 0,
+                CoverImageName = item.CoverImageName,
                 FeatureCount = context.ProductFeatureApplicabilities.Count(app => app.ProductId == item.Id),
                 CreatedAtUtc = item.CreatedAtUtc,
                 UpdatedAtUtc = item.UpdatedAtUtc,
@@ -272,6 +276,11 @@ public class ProductsServices : IProductsServices
             DiscontinuedDate = payload.DiscontinuedDate,
             SupportDiscontinuedDate = payload.SupportDiscontinuedDate
         };
+        if (payload.CoverImage.Length > 0)
+        {
+            data.CoverImage = payload.CoverImage;
+            data.CoverImageName = NormalizeCoverImageName(payload.CoverImageName);
+        }
 
         await context.AddAsync(data, cancellationToken);
         await SyncServiceFeatureApplicabilitiesAsync(
@@ -332,6 +341,16 @@ public class ProductsServices : IProductsServices
         service.ReleaseDate = payload.ReleaseDate;
         service.DiscontinuedDate = payload.DiscontinuedDate;
         service.SupportDiscontinuedDate = payload.SupportDiscontinuedDate;
+        if (payload.RemoveCoverImage)
+        {
+            service.CoverImage = [];
+            service.CoverImageName = null;
+        }
+        else if (payload.CoverImage.Length > 0)
+        {
+            service.CoverImage = payload.CoverImage;
+            service.CoverImageName = NormalizeCoverImageName(payload.CoverImageName);
+        }
         await SyncServiceFeatureApplicabilitiesAsync(
             context,
             enterpriseId,
@@ -470,6 +489,16 @@ public class ProductsServices : IProductsServices
     private static string? NormalizeDescription(string? description)
     {
         return string.IsNullOrWhiteSpace(description) ? null : description.Trim();
+    }
+
+    private static string? NormalizeCoverImageName(string? coverImageName)
+    {
+        if (string.IsNullOrWhiteSpace(coverImageName))
+        {
+            return null;
+        }
+
+        return coverImageName.Trim();
     }
 
     private static string NormalizeProductFeatureApplicabilityType(string? productFeatureApplicabilityType)

@@ -81,6 +81,8 @@ public sealed class EnterpriseServiceDto
     public DateOnly? ReleaseDate { get; set; }
     public DateOnly? DiscontinuedDate { get; set; }
     public DateOnly? SupportDiscontinuedDate { get; set; }
+    public bool HasCoverImage { get; set; }
+    public string? CoverImageName { get; set; }
     public int FeatureCount { get; set; }
     public DateTime CreatedAtUtc { get; set; }
     public DateTime? UpdatedAtUtc { get; set; }
@@ -96,6 +98,8 @@ public sealed class EnterpriseGoodDto
     public DateOnly? ReleaseDate { get; set; }
     public DateOnly? DiscontinuedDate { get; set; }
     public DateOnly? SupportDiscontinuedDate { get; set; }
+    public bool HasCoverImage { get; set; }
+    public string? CoverImageName { get; set; }
     public int FeatureCount { get; set; }
     public DateTime CreatedAtUtc { get; set; }
     public DateTime? UpdatedAtUtc { get; set; }
@@ -109,6 +113,8 @@ public sealed class CreateEnterpriseServiceDto
     public DateOnly? ReleaseDate { get; set; }
     public DateOnly? DiscontinuedDate { get; set; }
     public DateOnly? SupportDiscontinuedDate { get; set; }
+    public byte[] CoverImage { get; set; } = [];
+    public string? CoverImageName { get; set; }
     public List<UpsertEnterpriseServiceFeatureApplicabilityDto> ProductFeatureApplicabilities { get; set; } = [];
 }
 
@@ -119,6 +125,9 @@ public sealed class UpdateEnterpriseServiceDto
     public DateOnly? ReleaseDate { get; set; }
     public DateOnly? DiscontinuedDate { get; set; }
     public DateOnly? SupportDiscontinuedDate { get; set; }
+    public byte[] CoverImage { get; set; } = [];
+    public string? CoverImageName { get; set; }
+    public bool RemoveCoverImage { get; set; }
     public List<UpsertEnterpriseServiceFeatureApplicabilityDto> ProductFeatureApplicabilities { get; set; } = [];
 }
 

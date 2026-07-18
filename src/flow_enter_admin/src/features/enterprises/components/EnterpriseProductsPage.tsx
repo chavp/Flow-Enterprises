@@ -65,6 +65,11 @@ export function EnterpriseProductsPage({
   const [featureCategoryCreateOpen, setFeatureCategoryCreateOpen] = useState(false);
   const [editingFeatureCategory, setEditingFeatureCategory] = useState<ProductFeatureCategory | null>(null);
   const [selectedProductForFeatures, setSelectedProductForFeatures] = useState<{ productId: string; productName: string } | null>(null);
+  const [createServiceCoverImageBase64, setCreateServiceCoverImageBase64] = useState<string | undefined>(undefined);
+  const [createServiceCoverImageName, setCreateServiceCoverImageName] = useState<string | undefined>(undefined);
+  const [editServiceCoverImageBase64, setEditServiceCoverImageBase64] = useState<string | undefined>(undefined);
+  const [editServiceCoverImageName, setEditServiceCoverImageName] = useState<string | undefined>(undefined);
+  const [editServiceCoverImageRemoved, setEditServiceCoverImageRemoved] = useState(false);
 
   const [createServiceForm] = Form.useForm<CreateEnterpriseServiceRequest>();
   const [editServiceForm] = Form.useForm<CreateEnterpriseServiceRequest>();
@@ -129,7 +134,15 @@ export function EnterpriseProductsPage({
 
   const createServiceMutation = useMutation({
     mutationFn: async (values: CreateEnterpriseServiceRequest) => {
-      await createEnterpriseService(enterprise.enterpriseId, normalizeServicePayload(values), apiBaseUrl);
+      await createEnterpriseService(
+        enterprise.enterpriseId,
+        normalizeServicePayload({
+          ...values,
+          coverImage: createServiceCoverImageBase64,
+          coverImageName: createServiceCoverImageName
+        }),
+        apiBaseUrl
+      );
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
@@ -137,6 +150,8 @@ export function EnterpriseProductsPage({
       });
       setServiceCreateOpen(false);
       createServiceForm.resetFields();
+      setCreateServiceCoverImageBase64(undefined);
+      setCreateServiceCoverImageName(undefined);
       messageApi.success("Service created");
     },
     onError: (error) => {
@@ -150,7 +165,17 @@ export function EnterpriseProductsPage({
         throw new Error("No service selected");
       }
 
-      await updateEnterpriseService(enterprise.enterpriseId, editingService.serviceId, normalizeServicePayload(values), apiBaseUrl);
+      await updateEnterpriseService(
+        enterprise.enterpriseId,
+        editingService.serviceId,
+        normalizeServicePayload({
+          ...values,
+          coverImage: editServiceCoverImageBase64,
+          coverImageName: editServiceCoverImageName,
+          removeCoverImage: editServiceCoverImageRemoved
+        }),
+        apiBaseUrl
+      );
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
@@ -158,6 +183,9 @@ export function EnterpriseProductsPage({
       });
       setEditingService(null);
       editServiceForm.resetFields();
+      setEditServiceCoverImageBase64(undefined);
+      setEditServiceCoverImageName(undefined);
+      setEditServiceCoverImageRemoved(false);
       messageApi.success("Service updated");
     },
     onError: (error) => {
@@ -355,12 +383,45 @@ export function EnterpriseProductsPage({
     });
   };
 
-  const normalizeServicePayload = (values: CreateEnterpriseServiceRequest): CreateEnterpriseServiceRequest => ({
-    ...values,
-    releaseDate: values.releaseDate || undefined,
-    discontinuedDate: values.discontinuedDate || undefined,
-    supportDiscontinuedDate: values.supportDiscontinuedDate || undefined
-  });
+  const normalizeServicePayload = <T extends CreateEnterpriseServiceRequest>(values: T): T =>
+    ({
+      ...values,
+      releaseDate: values.releaseDate || undefined,
+      discontinuedDate: values.discontinuedDate || undefined,
+      supportDiscontinuedDate: values.supportDiscontinuedDate || undefined,
+      coverImage: values.coverImage || undefined,
+      coverImageName: values.coverImageName || undefined
+    }) as T;
+
+  const toBase64 = async (file: File): Promise<string> => {
+    const dataUrl = await new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result ?? ""));
+      reader.onerror = () => reject(new Error("Failed to read selected image"));
+      reader.readAsDataURL(file);
+    });
+
+    const markerIndex = dataUrl.indexOf(",");
+    return markerIndex >= 0 ? dataUrl.slice(markerIndex + 1) : dataUrl;
+  };
+
+  const handleServiceCoverImageChange = async (file: File, mode: "create" | "edit") => {
+    if (!file.type.startsWith("image/")) {
+      messageApi.error("Please select an image file.");
+      return;
+    }
+
+    const base64 = await toBase64(file);
+    if (mode === "create") {
+      setCreateServiceCoverImageBase64(base64);
+      setCreateServiceCoverImageName(file.name);
+      return;
+    }
+
+    setEditServiceCoverImageBase64(base64);
+    setEditServiceCoverImageName(file.name);
+    setEditServiceCoverImageRemoved(false);
+  };
 
   const renderServiceFeatureApplicabilities = () => (
     <Form.List name="productFeatureApplicabilities">
@@ -520,7 +581,14 @@ export function EnterpriseProductsPage({
                   {productManagementTabKey === "services" ? (
                     <Space direction="vertical" size="middle" style={{ width: "100%" }}>
                       <Space style={{ width: "100%", justifyContent: "flex-end" }}>
-                        <Button type="primary" onClick={() => setServiceCreateOpen(true)}>
+                        <Button
+                          type="primary"
+                          onClick={() => {
+                            setCreateServiceCoverImageBase64(undefined);
+                            setCreateServiceCoverImageName(undefined);
+                            setServiceCreateOpen(true);
+                          }}
+                        >
                           Add Service
                         </Button>
                       </Space>
@@ -565,6 +633,11 @@ export function EnterpriseProductsPage({
                                         size="small"
                                         onClick={() => {
                                           setEditingService(service);
+                                          setEditServiceCoverImageBase64(undefined);
+                                          setEditServiceCoverImageName(
+                                            service.coverImageName ?? (service.hasCoverImage ? "Current cover image" : undefined)
+                                          );
+                                          setEditServiceCoverImageRemoved(false);
                                           editServiceForm.setFieldsValue({
                                             name: service.name,
                                             description: service.description,
@@ -863,6 +936,8 @@ export function EnterpriseProductsPage({
         onClose={() => {
           setServiceCreateOpen(false);
           createServiceForm.resetFields();
+          setCreateServiceCoverImageBase64(undefined);
+          setCreateServiceCoverImageName(undefined);
         }}
         onSubmit={() => createServiceForm.submit()}
         loading={createServiceMutation.isPending}
@@ -888,6 +963,37 @@ export function EnterpriseProductsPage({
           <Form.Item name="supportDiscontinuedDate" label="Support Discontinued Date">
             <Input type="date" />
           </Form.Item>
+          <Form.Item label="Product Cover Image">
+            <Space direction="vertical" size="small" style={{ width: "100%" }}>
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={async (event) => {
+                  const file = event.currentTarget.files?.[0];
+                  if (!file) {
+                    return;
+                  }
+
+                  await handleServiceCoverImageChange(file, "create");
+                }}
+              />
+              {createServiceCoverImageName ? (
+                <Space>
+                  <Text type="secondary">Selected: {createServiceCoverImageName}</Text>
+                  <Button
+                    size="small"
+                    danger
+                    onClick={() => {
+                      setCreateServiceCoverImageBase64(undefined);
+                      setCreateServiceCoverImageName(undefined);
+                    }}
+                  >
+                    Remove
+                  </Button>
+                </Space>
+              ) : null}
+            </Space>
+          </Form.Item>
           {renderServiceFeatureApplicabilities()}
         </Form>
       </TopDrawerForm>
@@ -899,6 +1005,9 @@ export function EnterpriseProductsPage({
         onClose={() => {
           setEditingService(null);
           editServiceForm.resetFields();
+          setEditServiceCoverImageBase64(undefined);
+          setEditServiceCoverImageName(undefined);
+          setEditServiceCoverImageRemoved(false);
         }}
         onSubmit={() => editServiceForm.submit()}
         loading={updateServiceMutation.isPending || serviceFeatureApplicabilitiesQuery.isLoading}
@@ -923,6 +1032,38 @@ export function EnterpriseProductsPage({
           </Form.Item>
           <Form.Item name="supportDiscontinuedDate" label="Support Discontinued Date">
             <Input type="date" />
+          </Form.Item>
+          <Form.Item label="Product Cover Image">
+            <Space direction="vertical" size="small" style={{ width: "100%" }}>
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={async (event) => {
+                  const file = event.currentTarget.files?.[0];
+                  if (!file) {
+                    return;
+                  }
+
+                  await handleServiceCoverImageChange(file, "edit");
+                }}
+              />
+              {editServiceCoverImageName ? (
+                <Space>
+                  <Text type="secondary">Current/Selected: {editServiceCoverImageName}</Text>
+                  <Button
+                    size="small"
+                    danger
+                    onClick={() => {
+                      setEditServiceCoverImageBase64(undefined);
+                      setEditServiceCoverImageName(undefined);
+                      setEditServiceCoverImageRemoved(true);
+                    }}
+                  >
+                    Remove
+                  </Button>
+                </Space>
+              ) : null}
+            </Space>
           </Form.Item>
           {renderServiceFeatureApplicabilities()}
         </Form>

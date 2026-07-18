@@ -28,6 +28,8 @@ export type EnterpriseService = {
   releaseDate?: string;
   discontinuedDate?: string;
   supportDiscontinuedDate?: string;
+  hasCoverImage: boolean;
+  coverImageName?: string;
   featureCount: number;
   createdAtUtc: string;
   updatedAtUtc?: string;
@@ -42,6 +44,8 @@ export type EnterpriseGood = {
   releaseDate?: string;
   discontinuedDate?: string;
   supportDiscontinuedDate?: string;
+  hasCoverImage: boolean;
+  coverImageName?: string;
   featureCount: number;
   createdAtUtc: string;
   updatedAtUtc?: string;
@@ -69,10 +73,14 @@ export type CreateEnterpriseServiceRequest = {
   releaseDate?: string;
   discontinuedDate?: string;
   supportDiscontinuedDate?: string;
+  coverImage?: string;
+  coverImageName?: string;
   productFeatureApplicabilities: EnterpriseServiceFeatureApplicabilityRequest[];
 };
 
-export type UpdateEnterpriseServiceRequest = CreateEnterpriseServiceRequest;
+export type UpdateEnterpriseServiceRequest = CreateEnterpriseServiceRequest & {
+  removeCoverImage?: boolean;
+};
 
 export type ProductFeatureCategory = {
   productFeatureCategoryId: string;
