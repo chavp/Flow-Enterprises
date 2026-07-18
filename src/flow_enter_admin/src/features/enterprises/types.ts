@@ -37,6 +37,34 @@ export type CreateEnterpriseServiceRequest = {
 
 export type UpdateEnterpriseServiceRequest = CreateEnterpriseServiceRequest;
 
+export type ProductFeatureCategory = {
+  productFeatureCategoryId: string;
+  name: string;
+};
+
+export type EnterpriseProductFeature = {
+  productFeatureId: string;
+  enterpriseId: string;
+  productFeatureCategoryId: string;
+  productFeatureCategoryName: string;
+  productFeatureType: string;
+  code: string;
+  title: string;
+  description?: string;
+  createdAtUtc: string;
+  updatedAtUtc?: string;
+  revision: number;
+};
+
+export type CreateEnterpriseProductFeatureRequest = {
+  productFeatureCategoryId: string;
+  code: string;
+  title: string;
+  description?: string;
+};
+
+export type UpdateEnterpriseProductFeatureRequest = CreateEnterpriseProductFeatureRequest;
+
 export type LegalStructure = {
   id: string;
   code?: string;

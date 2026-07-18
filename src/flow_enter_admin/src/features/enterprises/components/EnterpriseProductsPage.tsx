@@ -1,15 +1,26 @@
-import { AppstoreOutlined, GiftOutlined, ToolOutlined } from "@ant-design/icons";
+import { AppstoreOutlined, GiftOutlined, TagsOutlined, ToolOutlined } from "@ant-design/icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Alert, Button, Card, Empty, Form, Input, Layout, Menu, Popconfirm, Space, Spin, Tabs, Typography, message } from "antd";
-import { useState } from "react";
+import { Alert, Button, Card, Empty, Form, Input, Layout, Menu, Popconfirm, Select, Space, Spin, Tabs, Typography, message } from "antd";
+import { useMemo, useState } from "react";
 import {
+  createEnterpriseProductFeature,
   createEnterpriseService,
+  deleteEnterpriseProductFeature,
   deleteEnterpriseService,
+  fetchEnterpriseProductFeatureCategories,
+  fetchEnterpriseProductFeatures,
   fetchEnterpriseServices,
+  updateEnterpriseProductFeature,
   updateEnterpriseService
 } from "../../../api/enterprises";
 import { TopDrawerForm } from "../../../components/TopDrawerForm";
-import type { CreateEnterpriseServiceRequest, Enterprise, EnterpriseService } from "../types";
+import type {
+  CreateEnterpriseProductFeatureRequest,
+  CreateEnterpriseServiceRequest,
+  Enterprise,
+  EnterpriseProductFeature,
+  EnterpriseService
+} from "../types";
 
 const { Title, Text } = Typography;
 
@@ -34,15 +45,33 @@ export function EnterpriseProductsPage({
 }: EnterpriseProductsPageProps) {
   const queryClient = useQueryClient();
   const [messageApi, contextHolder] = message.useMessage();
+
   const [serviceCreateOpen, setServiceCreateOpen] = useState(false);
   const [editingService, setEditingService] = useState<EnterpriseService | null>(null);
+  const [featureCreateOpen, setFeatureCreateOpen] = useState(false);
+  const [editingFeature, setEditingFeature] = useState<EnterpriseProductFeature | null>(null);
+
   const [createServiceForm] = Form.useForm<CreateEnterpriseServiceRequest>();
   const [editServiceForm] = Form.useForm<CreateEnterpriseServiceRequest>();
+  const [createFeatureForm] = Form.useForm<CreateEnterpriseProductFeatureRequest>();
+  const [editFeatureForm] = Form.useForm<CreateEnterpriseProductFeatureRequest>();
 
   const servicesQuery = useQuery({
     queryKey: ["enterprise-services", enterprise.enterpriseId, apiBaseUrl],
     queryFn: () => fetchEnterpriseServices(enterprise.enterpriseId, apiBaseUrl),
     enabled: productsTabKey === "manage-products" && productManagementTabKey === "services"
+  });
+
+  const featureCategoriesQuery = useQuery({
+    queryKey: ["enterprise-product-feature-categories", enterprise.enterpriseId, apiBaseUrl],
+    queryFn: () => fetchEnterpriseProductFeatureCategories(enterprise.enterpriseId, apiBaseUrl),
+    enabled: productsTabKey === "manage-products" && productManagementTabKey === "features"
+  });
+
+  const featuresQuery = useQuery({
+    queryKey: ["enterprise-product-features", enterprise.enterpriseId, apiBaseUrl],
+    queryFn: () => fetchEnterpriseProductFeatures(enterprise.enterpriseId, apiBaseUrl),
+    enabled: productsTabKey === "manage-products" && productManagementTabKey === "features"
   });
 
   const createServiceMutation = useMutation({
@@ -98,7 +127,69 @@ export function EnterpriseProductsPage({
     }
   });
 
+  const createFeatureMutation = useMutation({
+    mutationFn: async (values: CreateEnterpriseProductFeatureRequest) => {
+      await createEnterpriseProductFeature(enterprise.enterpriseId, values, apiBaseUrl);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["enterprise-product-features", enterprise.enterpriseId, apiBaseUrl]
+      });
+      setFeatureCreateOpen(false);
+      createFeatureForm.resetFields();
+      messageApi.success("Product feature created");
+    },
+    onError: (error) => {
+      messageApi.error(error instanceof Error ? error.message : "Create product feature failed");
+    }
+  });
+
+  const updateFeatureMutation = useMutation({
+    mutationFn: async (values: CreateEnterpriseProductFeatureRequest) => {
+      if (!editingFeature) {
+        throw new Error("No product feature selected");
+      }
+
+      await updateEnterpriseProductFeature(enterprise.enterpriseId, editingFeature.productFeatureId, values, apiBaseUrl);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["enterprise-product-features", enterprise.enterpriseId, apiBaseUrl]
+      });
+      setEditingFeature(null);
+      editFeatureForm.resetFields();
+      messageApi.success("Product feature updated");
+    },
+    onError: (error) => {
+      messageApi.error(error instanceof Error ? error.message : "Update product feature failed");
+    }
+  });
+
+  const deleteFeatureMutation = useMutation({
+    mutationFn: async (productFeatureId: string) => {
+      await deleteEnterpriseProductFeature(enterprise.enterpriseId, productFeatureId, apiBaseUrl);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["enterprise-product-features", enterprise.enterpriseId, apiBaseUrl]
+      });
+      messageApi.success("Product feature deleted");
+    },
+    onError: (error) => {
+      messageApi.error(error instanceof Error ? error.message : "Delete product feature failed");
+    }
+  });
+
   const services = servicesQuery.data ?? [];
+  const productFeatures = featuresQuery.data ?? [];
+  const productFeatureCategoryOptions = useMemo(
+    () =>
+      (featureCategoriesQuery.data ?? []).map((item) => ({
+        value: item.productFeatureCategoryId,
+        label: item.name
+      })),
+    [featureCategoriesQuery.data]
+  );
 
   return (
     <div className="page-container" style={{ height: "calc(100vh - 112px)" }}>
@@ -150,24 +241,23 @@ export function EnterpriseProductsPage({
                           Goods
                         </span>
                       )
+                    },
+                    {
+                      key: "features",
+                      label: (
+                        <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                          <TagsOutlined />
+                          Features
+                        </span>
+                      )
                     }
                   ]}
                 />
               </Layout.Header>
               <Layout.Content style={{ padding: 16, flex: 1, minHeight: 0 }}>
-                <div
-                  style={{
-                    height: "100%",
-                    width: "100%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    border: "1px dashed #f0f0f0",
-                    borderRadius: 8
-                  }}
-                >
+                <div style={{ height: "100%", width: "100%", border: "1px dashed #f0f0f0", borderRadius: 8, padding: 12, overflow: "auto" }}>
                   {productManagementTabKey === "services" ? (
-                    <Space direction="vertical" size="middle" style={{ width: "100%", height: "100%", padding: 12 }}>
+                    <Space direction="vertical" size="middle" style={{ width: "100%" }}>
                       <Space style={{ width: "100%", justifyContent: "flex-end" }}>
                         <Button type="primary" onClick={() => setServiceCreateOpen(true)}>
                           Add Service
@@ -236,6 +326,82 @@ export function EnterpriseProductsPage({
                         </div>
                       )}
                     </Space>
+                  ) : productManagementTabKey === "features" ? (
+                    <Space direction="vertical" size="middle" style={{ width: "100%" }}>
+                      <Space style={{ width: "100%", justifyContent: "flex-end" }}>
+                        <Button type="primary" onClick={() => setFeatureCreateOpen(true)}>
+                          Add Product Feature
+                        </Button>
+                      </Space>
+
+                      {featuresQuery.isError ? (
+                        <Alert
+                          type="error"
+                          message="Failed to load product features"
+                          description={featuresQuery.error instanceof Error ? featuresQuery.error.message : "Unknown error"}
+                          showIcon
+                        />
+                      ) : featuresQuery.isLoading ? (
+                        <div className="table-loading">
+                          <Spin />
+                        </div>
+                      ) : productFeatures.length === 0 ? (
+                        <Empty description="No product features found for this enterprise." />
+                      ) : (
+                        <div className="tanstack-table-wrapper">
+                          <table className="tanstack-table">
+                            <thead>
+                              <tr>
+                                <th>Code</th>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Description</th>
+                                <th>Actions</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {productFeatures.map((feature) => (
+                                <tr key={feature.productFeatureId}>
+                                  <td>{feature.code}</td>
+                                  <td>{feature.title}</td>
+                                  <td>{feature.productFeatureCategoryName}</td>
+                                  <td>{feature.description || "-"}</td>
+                                  <td>
+                                    <Space>
+                                      <Button
+                                        size="small"
+                                        onClick={() => {
+                                          setEditingFeature(feature);
+                                          editFeatureForm.setFieldsValue({
+                                            productFeatureCategoryId: feature.productFeatureCategoryId,
+                                            code: feature.code,
+                                            title: feature.title,
+                                            description: feature.description
+                                          });
+                                        }}
+                                      >
+                                        Edit
+                                      </Button>
+                                      <Popconfirm
+                                        title="Delete product feature?"
+                                        description="This action cannot be undone."
+                                        okText="Delete"
+                                        okButtonProps={{ danger: true, loading: deleteFeatureMutation.isPending }}
+                                        onConfirm={() => deleteFeatureMutation.mutate(feature.productFeatureId)}
+                                      >
+                                        <Button size="small" danger>
+                                          Delete
+                                        </Button>
+                                      </Popconfirm>
+                                    </Space>
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      )}
+                    </Space>
                   ) : (
                     <Empty description="Goods products management UI for this enterprise will be added here." />
                   )}
@@ -289,6 +455,88 @@ export function EnterpriseProductsPage({
         >
           <Form.Item name="name" label="Service Name" rules={[{ required: true, message: "Service name is required" }]}>
             <Input maxLength={200} />
+          </Form.Item>
+          <Form.Item name="description" label="Description">
+            <Input.TextArea rows={4} maxLength={500} />
+          </Form.Item>
+        </Form>
+      </TopDrawerForm>
+
+      <TopDrawerForm
+        open={featureCreateOpen}
+        title="Create Product Feature"
+        submitText="Create"
+        onClose={() => {
+          setFeatureCreateOpen(false);
+          createFeatureForm.resetFields();
+        }}
+        onSubmit={() => createFeatureForm.submit()}
+        loading={createFeatureMutation.isPending}
+      >
+        <Form<CreateEnterpriseProductFeatureRequest>
+          form={createFeatureForm}
+          layout="vertical"
+          onFinish={(values) => createFeatureMutation.mutate(values)}
+        >
+          <Form.Item
+            name="productFeatureCategoryId"
+            label="Category"
+            rules={[{ required: true, message: "Product feature category is required" }]}
+          >
+            <Select
+              options={productFeatureCategoryOptions}
+              loading={featureCategoriesQuery.isLoading}
+              placeholder="Select category"
+              optionFilterProp="label"
+              showSearch
+            />
+          </Form.Item>
+          <Form.Item name="code" label="Code" rules={[{ required: true, message: "Product feature code is required" }]}>
+            <Input maxLength={100} />
+          </Form.Item>
+          <Form.Item name="title" label="Title" rules={[{ required: true, message: "Product feature title is required" }]}>
+            <Input maxLength={300} />
+          </Form.Item>
+          <Form.Item name="description" label="Description">
+            <Input.TextArea rows={4} maxLength={500} />
+          </Form.Item>
+        </Form>
+      </TopDrawerForm>
+
+      <TopDrawerForm
+        open={Boolean(editingFeature)}
+        title="Edit Product Feature"
+        submitText="Update"
+        onClose={() => {
+          setEditingFeature(null);
+          editFeatureForm.resetFields();
+        }}
+        onSubmit={() => editFeatureForm.submit()}
+        loading={updateFeatureMutation.isPending}
+      >
+        <Form<CreateEnterpriseProductFeatureRequest>
+          form={editFeatureForm}
+          layout="vertical"
+          onFinish={(values) => updateFeatureMutation.mutate(values)}
+        >
+          <Form.Item
+            name="productFeatureCategoryId"
+            label="Category"
+            rules={[{ required: true, message: "Product feature category is required" }]}
+          >
+            <Select
+              options={productFeatureCategoryOptions}
+              loading={featureCategoriesQuery.isLoading}
+              placeholder="Select category"
+              optionFilterProp="label"
+              showSearch
+            />
+          </Form.Item>
+          <Form.Item name="code" label="Code" rules={[{ required: true, message: "Product feature code is required" }]}>
+            <Input maxLength={100} />
+          </Form.Item>
+          <Form.Item name="title" label="Title" rules={[{ required: true, message: "Product feature title is required" }]}>
+            <Input maxLength={300} />
           </Form.Item>
           <Form.Item name="description" label="Description">
             <Input.TextArea rows={4} maxLength={500} />

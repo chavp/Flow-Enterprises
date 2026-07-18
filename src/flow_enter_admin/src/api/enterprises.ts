@@ -3,6 +3,7 @@ import {
   Bed,
   Building,
   CreateEnterpriseServiceRequest,
+  CreateEnterpriseProductFeatureRequest,
   CreateBuildingRequest,
   CreateBedRequest,
   CreateEmploymentRequest,
@@ -16,12 +17,15 @@ import {
   Floor,
   LegalStructure,
   EnterpriseService,
+  EnterpriseProductFeature,
+  ProductFeatureCategory,
   EnterprisesResponse,
   PatchOperation,
   PartyRoleType,
   Room,
   UpdateBuildingRequest,
   UpdateEnterpriseServiceRequest,
+  UpdateEnterpriseProductFeatureRequest,
   UpdateEmploymentEffectiveDateRequest,
   UpdateEnterpriseBranchRequest,
   UpdateEmploymentRequest,
@@ -442,6 +446,65 @@ export async function deleteEnterpriseService(
 ): Promise<void> {
   await requestJson(
     `/api/parties/enterprises/${enterpriseId}/products/services/${serviceId}`,
+    { method: "DELETE" },
+    apiBaseUrl
+  );
+}
+
+export async function fetchEnterpriseProductFeatureCategories(
+  enterpriseId: string,
+  apiBaseUrl?: string
+): Promise<ProductFeatureCategory[]> {
+  return requestJson<ProductFeatureCategory[]>(
+    `/api/parties/enterprises/${enterpriseId}/products/feature-categories`,
+    { method: "GET" },
+    apiBaseUrl
+  );
+}
+
+export async function fetchEnterpriseProductFeatures(
+  enterpriseId: string,
+  apiBaseUrl?: string
+): Promise<EnterpriseProductFeature[]> {
+  return requestJson<EnterpriseProductFeature[]>(
+    `/api/parties/enterprises/${enterpriseId}/products/features`,
+    { method: "GET" },
+    apiBaseUrl
+  );
+}
+
+export async function createEnterpriseProductFeature(
+  enterpriseId: string,
+  payload: CreateEnterpriseProductFeatureRequest,
+  apiBaseUrl?: string
+): Promise<void> {
+  await requestJson(
+    `/api/parties/enterprises/${enterpriseId}/products/features`,
+    { method: "POST", body: JSON.stringify(payload) },
+    apiBaseUrl
+  );
+}
+
+export async function updateEnterpriseProductFeature(
+  enterpriseId: string,
+  productFeatureId: string,
+  payload: UpdateEnterpriseProductFeatureRequest,
+  apiBaseUrl?: string
+): Promise<void> {
+  await requestJson(
+    `/api/parties/enterprises/${enterpriseId}/products/features/${productFeatureId}`,
+    { method: "PUT", body: JSON.stringify(payload) },
+    apiBaseUrl
+  );
+}
+
+export async function deleteEnterpriseProductFeature(
+  enterpriseId: string,
+  productFeatureId: string,
+  apiBaseUrl?: string
+): Promise<void> {
+  await requestJson(
+    `/api/parties/enterprises/${enterpriseId}/products/features/${productFeatureId}`,
     { method: "DELETE" },
     apiBaseUrl
   );

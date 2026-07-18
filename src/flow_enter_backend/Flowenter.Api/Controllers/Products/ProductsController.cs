@@ -83,4 +83,82 @@ public class ProductsController : ControllerBase
 
         return NoContent();
     }
+
+    [HttpGet("feature-categories")]
+    [ProducesResponseType(typeof(List<ProductFeatureCategoryDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetFeatureCategories([FromRoute] Guid enterpriseId, CancellationToken cancellationToken)
+    {
+        var categories = await _productsServices.GetFeatureCategoriesAsync(enterpriseId, cancellationToken);
+        return Ok(categories);
+    }
+
+    [HttpGet("features")]
+    [ProducesResponseType(typeof(List<EnterpriseProductFeatureDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetFeatures([FromRoute] Guid enterpriseId, CancellationToken cancellationToken)
+    {
+        var features = await _productsServices.GetFeaturesAsync(enterpriseId, cancellationToken);
+        return Ok(features);
+    }
+
+    [HttpPost("features")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> CreateFeature(
+        [FromRoute] Guid enterpriseId,
+        [FromBody] CreateEnterpriseProductFeatureDto payload,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            await _productsServices.CreateFeatureAsync(enterpriseId, payload, cancellationToken);
+            return CreatedAtAction(nameof(GetFeatures), new { enterpriseId }, null);
+        }
+        catch (ArgumentException error)
+        {
+            return BadRequest(new { message = error.Message });
+        }
+    }
+
+    [HttpPut("features/{featureId:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateFeature(
+        [FromRoute] Guid enterpriseId,
+        [FromRoute] Guid featureId,
+        [FromBody] UpdateEnterpriseProductFeatureDto payload,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var updated = await _productsServices.UpdateFeatureAsync(enterpriseId, featureId, payload, cancellationToken);
+            if (!updated)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
+        catch (ArgumentException error)
+        {
+            return BadRequest(new { message = error.Message });
+        }
+    }
+
+    [HttpDelete("features/{featureId:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteFeature(
+        [FromRoute] Guid enterpriseId,
+        [FromRoute] Guid featureId,
+        CancellationToken cancellationToken)
+    {
+        var deleted = await _productsServices.DeleteFeatureAsync(enterpriseId, featureId, cancellationToken);
+        if (!deleted)
+        {
+            return NotFound();
+        }
+
+        return NoContent();
+    }
 }
