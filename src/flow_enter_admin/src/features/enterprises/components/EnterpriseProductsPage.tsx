@@ -345,48 +345,72 @@ export function EnterpriseProductsPage({
               Add Applicability
             </Button>
           </Space>
-          {fields.map((field) => (
-            <Card key={field.key} size="small">
-              <Space direction="vertical" size="small" style={{ width: "100%" }}>
-                <Form.Item
-                  name={[field.name, "productFeatureId"]}
-                  label="Product Feature"
-                  rules={[{ required: true, message: "Product feature is required" }]}
-                >
-                  <Select
-                    options={productFeatureOptions}
-                    loading={featuresQuery.isLoading}
-                    placeholder="Select product feature"
-                    optionFilterProp="label"
-                    showSearch
-                  />
-                </Form.Item>
-                <Form.Item
-                  name={[field.name, "productFeatureApplicabilityType"]}
-                  label="Applicability Type"
-                  rules={[{ required: true, message: "Applicability type is required" }]}
-                >
-                  <Select
-                    options={productFeatureApplicabilityTypeOptions}
-                    loading={featureApplicabilityTypesQuery.isLoading}
-                    placeholder="Select applicability type"
-                    optionFilterProp="label"
-                    showSearch
-                  />
-                </Form.Item>
-                <Form.Item
-                  name={[field.name, "order"]}
-                  label="Order"
-                  rules={[{ required: true, message: "Order is required" }]}
-                >
-                  <InputNumber min={0} style={{ width: "100%" }} />
-                </Form.Item>
-                <Button danger onClick={() => remove(field.name)}>
-                  Remove
-                </Button>
-              </Space>
-            </Card>
-          ))}
+          {fields.length === 0 ? (
+            <Empty description="No applicability rows." />
+          ) : (
+            <div className="tanstack-table-wrapper">
+              <table className="tanstack-table">
+                <thead>
+                  <tr>
+                    <th style={{ width: "45%" }}>Product Feature</th>
+                    <th style={{ width: "35%" }}>Applicability Type</th>
+                    <th style={{ width: "12%" }}>Order</th>
+                    <th style={{ width: "8%" }}>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {fields.map((field) => (
+                    <tr key={field.key}>
+                      <td>
+                        <Form.Item
+                          name={[field.name, "productFeatureId"]}
+                          rules={[{ required: true, message: "Product feature is required" }]}
+                          style={{ marginBottom: 0 }}
+                        >
+                          <Select
+                            options={productFeatureOptions}
+                            loading={featuresQuery.isLoading}
+                            placeholder="Select product feature"
+                            optionFilterProp="label"
+                            showSearch
+                          />
+                        </Form.Item>
+                      </td>
+                      <td>
+                        <Form.Item
+                          name={[field.name, "productFeatureApplicabilityType"]}
+                          rules={[{ required: true, message: "Applicability type is required" }]}
+                          style={{ marginBottom: 0 }}
+                        >
+                          <Select
+                            options={productFeatureApplicabilityTypeOptions}
+                            loading={featureApplicabilityTypesQuery.isLoading}
+                            placeholder="Select applicability type"
+                            optionFilterProp="label"
+                            showSearch
+                          />
+                        </Form.Item>
+                      </td>
+                      <td>
+                        <Form.Item
+                          name={[field.name, "order"]}
+                          rules={[{ required: true, message: "Order is required" }]}
+                          style={{ marginBottom: 0 }}
+                        >
+                          <InputNumber min={0} style={{ width: "100%" }} />
+                        </Form.Item>
+                      </td>
+                      <td>
+                        <Button danger onClick={() => remove(field.name)}>
+                          Remove
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </Space>
       )}
     </Form.List>
