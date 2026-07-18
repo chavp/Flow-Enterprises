@@ -18,6 +18,10 @@ public abstract class PriceCoponent: EffectiveEntity
     public UnitOfMeasure? UnitOfMeasure { get; set; }
 
     public Guid? SpecifiedForPartyId { get; set; }
+    [StringLength(200)]
+    public string? SpecifiedForPartyName { get; set; }
+    [StringLength(100)]
+    public string? SpecifiedForPartyRoleTypeCode { get; set; }
 }
 
 public class BasePrice: PriceCoponent

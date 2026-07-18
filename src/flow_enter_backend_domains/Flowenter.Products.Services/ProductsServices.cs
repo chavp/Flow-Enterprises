@@ -82,8 +82,13 @@ public class ProductsServices : IProductsServices
         }
 
         var serviceIds = services.Select(item => item.ServiceId).ToHashSet();
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
         var priceCoponents = await context.PriceCoponents
-            .Where(item => item.SpecifiedForPartyId.HasValue && serviceIds.Contains(item.SpecifiedForPartyId.Value))
+            .Where(item =>
+                item.SpecifiedForPartyId.HasValue &&
+                serviceIds.Contains(item.SpecifiedForPartyId.Value) &&
+                item.FromDate <= today &&
+                today <= item.ThruDate)
             .OrderBy(item => item.FromDate)
             .ThenBy(item => item.Id)
             .Include(item => item.UnitOfMeasure)
