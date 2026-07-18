@@ -15,6 +15,9 @@ public sealed class ProductsContext : DbContext
     public DbSet<ProductFeature> ProductFeatures => Set<ProductFeature>();
     public DbSet<ProductFeatureApplicability> ProductFeatureApplicabilities => Set<ProductFeatureApplicability>();
 
+    public DbSet<PriceCoponent> PriceCoponents => Set<PriceCoponent>();
+    public DbSet<UnitOfMeasure> UnitOfMeasures => Set<UnitOfMeasure>();
+
     public ProductsContext(DbContextOptions<ProductsContext> options,
         ITenantProvider tenantProvider) : base(options)
     {
@@ -38,5 +41,28 @@ public sealed class ProductsContext : DbContext
         modelBuilder.Entity<ProductFeature>()
             .HasDiscriminator(b => b.ProductFeatureType);
         modelBuilder.Entity<ServiceFeature>();
+
+        modelBuilder.Entity<PriceCoponent>()
+            .HasDiscriminator(b => b.PriceCoponentType);
+        modelBuilder.Entity<BasePrice>();
+        modelBuilder.Entity<RecurringCharge>(builder =>
+        {
+            builder.HasOne(e => e.TimeFrequencyMeasure)
+                .WithMany()
+                .HasForeignKey(e => e.TimeFrequencyMeasureId)
+                .OnDelete(DeleteBehavior.NoAction);
+        });
+        modelBuilder.Entity<PriceCoponent>(builder =>
+        {
+            builder.HasOne(e => e.UnitOfMeasure)
+                .WithMany()
+                .HasForeignKey(e => e.UnitOfMeasureId)
+                .OnDelete(DeleteBehavior.NoAction);
+        });
+
+        modelBuilder.Entity<UnitOfMeasure>()
+            .HasDiscriminator(b => b.UnitOfMeasureType);
+        modelBuilder.Entity<CurrencyMeasure>();
+        modelBuilder.Entity<TimeFrequencyMeasure>();
     }
 }
