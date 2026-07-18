@@ -233,6 +233,7 @@ export type EnterpriseBranch = {
   enterpriseBranchId: string;
   enterpriseId: string;
   branchId: string;
+  branchPartyId?: string;
   branchLegalName: string;
   createdAtUtc: string;
   updatedAtUtc?: string;

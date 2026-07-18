@@ -398,8 +398,8 @@ export function EnterpriseProductsPage({
   const enterpriseBranchOptions = useMemo(
     () =>
       (enterpriseBranchsQuery.data ?? []).map((item) => ({
-        value: item.branchId,
-        label: item.branchLegalName
+        value: item.branchPartyId ?? item.branchId,
+        label: `${item.branchLegalName} (${item.branchPartyId ?? item.branchId})`
       })),
     [enterpriseBranchsQuery.data]
   );
@@ -651,7 +651,7 @@ export function EnterpriseProductsPage({
                           <Select
                             options={enterpriseBranchOptions}
                             loading={enterpriseBranchsQuery.isLoading}
-                            placeholder="Branch"
+                            placeholder="Branch party (empty = provider)"
                             optionFilterProp="label"
                             showSearch
                             allowClear

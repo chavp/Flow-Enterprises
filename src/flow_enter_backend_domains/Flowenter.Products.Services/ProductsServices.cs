@@ -82,11 +82,17 @@ public class ProductsServices : IProductsServices
         }
 
         var serviceIds = services.Select(item => item.ServiceId).ToHashSet();
+        var serviceKeys = serviceIds.Select(GetServicePriceCoponentBindingKey).ToHashSet(StringComparer.OrdinalIgnoreCase);
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
         var priceCoponents = await context.PriceCoponents
             .Where(item =>
-                item.SpecifiedForPartyId.HasValue &&
-                serviceIds.Contains(item.SpecifiedForPartyId.Value) &&
+                (
+                    (!string.IsNullOrWhiteSpace(item.SpecifiedForPartyRoleTypeCode) &&
+                     serviceKeys.Contains(item.SpecifiedForPartyRoleTypeCode!)) ||
+                    (string.IsNullOrWhiteSpace(item.SpecifiedForPartyRoleTypeCode) &&
+                     item.SpecifiedForPartyId.HasValue &&
+                     serviceIds.Contains(item.SpecifiedForPartyId.Value))
+                ) &&
                 item.FromDate <= today &&
                 today <= item.ThruDate)
             .OrderBy(item => item.FromDate)
@@ -106,9 +112,22 @@ public class ProductsServices : IProductsServices
                 .Where(item => recurringTimeFrequencyMeasureIds.Contains(item.Id!.Value))
                 .ToDictionaryAsync(item => item.Id!.Value, item => item.Abbreviation ?? string.Empty, cancellationToken);
 
-        var priceCoponentsByService = priceCoponents
-            .GroupBy(item => item.SpecifiedForPartyId!.Value)
-            .ToDictionary(group => group.Key, group => group.ToList());
+        var priceCoponentsByService = new Dictionary<Guid, List<PriceCoponent>>();
+        foreach (var component in priceCoponents)
+        {
+            if (!TryResolveServiceId(component, out var serviceId))
+            {
+                continue;
+            }
+
+            if (!priceCoponentsByService.TryGetValue(serviceId, out var bucket))
+            {
+                bucket = [];
+                priceCoponentsByService[serviceId] = bucket;
+            }
+
+            bucket.Add(component);
+        }
 
         foreach (var service in services)
         {
@@ -117,8 +136,12 @@ public class ProductsServices : IProductsServices
                 continue;
             }
 
-            service.Price = components.Select(item => item.Price).FirstOrDefault();
-            service.PriceDisplay = BuildServicePriceDisplay(components, timeFrequencyMeasureLookup);
+            var providerComponents = components
+                .Where(item => item.SpecifiedForPartyId == enterpriseId)
+                .ToList();
+            var selected = providerComponents.Count > 0 ? providerComponents : components;
+            service.Price = selected.Select(item => item.Price).FirstOrDefault();
+            service.PriceDisplay = BuildServicePriceDisplay(selected, timeFrequencyMeasureLookup);
         }
 
         return services;
@@ -215,7 +238,9 @@ public class ProductsServices : IProductsServices
         }
 
         var data = await context.PriceCoponents
-            .Where(item => item.SpecifiedForPartyId == serviceId)
+            .Where(item =>
+                item.SpecifiedForPartyRoleTypeCode == GetServicePriceCoponentBindingKey(serviceId) ||
+                (string.IsNullOrWhiteSpace(item.SpecifiedForPartyRoleTypeCode) && item.SpecifiedForPartyId == serviceId))
             .OrderBy(item => item.FromDate)
             .ThenBy(item => item.Id)
             .Include(item => item.UnitOfMeasure)
@@ -245,7 +270,7 @@ public class ProductsServices : IProductsServices
             {
                 PriceCoponentId = item.Id!.Value,
                 PriceCoponentType = item.PriceCoponentType!,
-                SpecifiedForPartyId = item.SpecifiedForPartyId,
+                SpecifiedForPartyId = item.SpecifiedForPartyId == serviceId ? enterpriseId : item.SpecifiedForPartyId,
                 Price = item.Price,
                 Percent = item.Percent,
                 UnitOfMeasureId = item.UnitOfMeasureId,
@@ -764,6 +789,29 @@ public class ProductsServices : IProductsServices
             : $"{withUnit} / {timeFrequencyAbbreviation}";
     }
 
+    private static string GetServicePriceCoponentBindingKey(Guid serviceId)
+    {
+        return serviceId.ToString("D");
+    }
+
+    private static bool TryResolveServiceId(PriceCoponent component, out Guid serviceId)
+    {
+        if (!string.IsNullOrWhiteSpace(component.SpecifiedForPartyRoleTypeCode) &&
+            Guid.TryParse(component.SpecifiedForPartyRoleTypeCode, out serviceId))
+        {
+            return true;
+        }
+
+        if (component.SpecifiedForPartyId.HasValue)
+        {
+            serviceId = component.SpecifiedForPartyId.Value;
+            return true;
+        }
+
+        serviceId = Guid.Empty;
+        return false;
+    }
+
     private static async Task SyncServiceFeatureApplicabilitiesAsync(
         ProductsContext context,
         Guid enterpriseId,
@@ -858,7 +906,9 @@ public class ProductsServices : IProductsServices
         }
 
         var existing = await context.PriceCoponents
-            .Where(item => item.SpecifiedForPartyId == serviceId)
+            .Where(item =>
+                item.SpecifiedForPartyRoleTypeCode == GetServicePriceCoponentBindingKey(serviceId) ||
+                (string.IsNullOrWhiteSpace(item.SpecifiedForPartyRoleTypeCode) && item.SpecifiedForPartyId == serviceId))
             .ToListAsync(cancellationToken);
         if (existing.Count > 0)
         {
@@ -871,7 +921,8 @@ public class ProductsServices : IProductsServices
             var data = CreatePriceCoponent(priceCoponentType);
             data.Id = Guid.NewGuid();
             data.PriceCoponentType = priceCoponentType;
-            data.SpecifiedForPartyId = serviceId;
+            data.SpecifiedForPartyId = item.SpecifiedForPartyId ?? enterpriseId;
+            data.SpecifiedForPartyRoleTypeCode = GetServicePriceCoponentBindingKey(serviceId);
             data.UnitOfMeasureId = item.UnitOfMeasureId;
             data.Price = item.Price;
             data.Percent = item.Percent;
