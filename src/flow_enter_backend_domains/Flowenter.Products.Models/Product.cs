@@ -16,4 +16,8 @@ public abstract class Product : BaseEntity
     public DateOnly? DiscontinuedDate { get; set; }
     public DateOnly? SupportDiscontinuedDate { get; set; }
 
+    public byte[] CoverImage { get; set; }
+    [MaxLength(200)]
+    public string? CoverImageName { get; set; }
+
 }
