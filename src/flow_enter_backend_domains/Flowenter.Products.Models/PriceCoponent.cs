@@ -17,6 +17,8 @@ public abstract class PriceCoponent: EffectiveEntity
     [Required]
     public Guid? UnitOfMeasureId { get; set; }
     public UnitOfMeasure? UnitOfMeasure { get; set; }
+
+    public Guid? SpecifiedForPartyId { get; set; }
 }
 
 public class BasePrice: PriceCoponent

@@ -1,9 +1,10 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConfigProvider, Layout, Menu, Tabs } from "antd";
-import { ApartmentOutlined, GlobalOutlined, BankOutlined, EnvironmentOutlined } from "@ant-design/icons";
+import { ApartmentOutlined, GlobalOutlined, BankOutlined, EnvironmentOutlined, DeploymentUnitOutlined } from "@ant-design/icons";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { EnterprisesPage } from "./features/enterprises/EnterprisesPage";
 import { CountriesPage } from "./features/countries/CountriesPage";
+import { UnitOfMeasuresPage } from "./features/world/UnitOfMeasuresPage";
 import "./styles.css";
 import "antd/dist/reset.css";
 
@@ -13,7 +14,10 @@ const MAIN_MENU_ITEMS = [
 ];
 const SUB_MENU_ITEMS: Record<string, { key: string; label: string; icon: ReactNode }[]> = {
   enterprises: [{ key: "enterpeise", label: "Enterprises", icon: <BankOutlined /> }],
-  world: [{ key: "geographic-boundaries", label: "Geographic Boundaries", icon: <EnvironmentOutlined /> }]
+  world: [
+    { key: "geographic-boundaries", label: "Geographic Boundaries", icon: <EnvironmentOutlined /> },
+    { key: "unit-of-measure", label: "UnitOfMeasure", icon: <DeploymentUnitOutlined /> }
+  ]
 };
 const DEFAULT_DOMAIN_KEY = "enterprises";
 const DEFAULT_SUBDOMAIN_KEY = "enterpeise";
@@ -117,6 +121,8 @@ export function App({ apiBaseUrl }: AppProps) {
                 <EnterprisesPage apiBaseUrl={apiBaseUrl} />
               ) : domainKey === "world" && subdomainKey === "geographic-boundaries" ? (
                 <CountriesPage apiBaseUrl={apiBaseUrl} />
+              ) : domainKey === "world" && subdomainKey === "unit-of-measure" ? (
+                <UnitOfMeasuresPage apiBaseUrl={apiBaseUrl} />
               ) : null}
             </Layout.Content>
           </Layout>
