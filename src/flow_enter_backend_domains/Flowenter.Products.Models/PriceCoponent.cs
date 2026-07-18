@@ -14,7 +14,6 @@ public abstract class PriceCoponent: EffectiveEntity
     public decimal? Price { get; set; }
     public decimal? Percent { get; set; }
 
-    [Required]
     public Guid? UnitOfMeasureId { get; set; }
     public UnitOfMeasure? UnitOfMeasure { get; set; }
 

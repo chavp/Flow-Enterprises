@@ -20,6 +20,7 @@ import {
   EnterpriseGood,
   EnterpriseService,
   EnterpriseServiceFeatureApplicability,
+  EnterpriseServicePriceCoponent,
   EnterpriseProductFeature,
   ProductFeatureCategory,
   EnterprisesResponse,
@@ -436,6 +437,18 @@ export async function fetchEnterpriseServiceFeatureApplicabilities(
 ): Promise<EnterpriseServiceFeatureApplicability[]> {
   return requestJson<EnterpriseServiceFeatureApplicability[]>(
     `/api/parties/enterprises/${enterpriseId}/products/services/${serviceId}/feature-applicabilities`,
+    { method: "GET" },
+    apiBaseUrl
+  );
+}
+
+export async function fetchEnterpriseServicePriceCoponents(
+  enterpriseId: string,
+  serviceId: string,
+  apiBaseUrl?: string
+): Promise<EnterpriseServicePriceCoponent[]> {
+  return requestJson<EnterpriseServicePriceCoponent[]>(
+    `/api/parties/enterprises/${enterpriseId}/products/services/${serviceId}/price-coponents`,
     { method: "GET" },
     apiBaseUrl
   );

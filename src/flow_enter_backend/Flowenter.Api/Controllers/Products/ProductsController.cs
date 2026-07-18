@@ -199,6 +199,17 @@ public class ProductsController : ControllerBase
         return Ok(applicabilities);
     }
 
+    [HttpGet("services/{serviceId:guid}/price-coponents")]
+    [ProducesResponseType(typeof(List<EnterpriseServicePriceCoponentDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetServicePriceCoponents(
+        [FromRoute] Guid enterpriseId,
+        [FromRoute] Guid serviceId,
+        CancellationToken cancellationToken)
+    {
+        var priceCoponents = await _productsServices.GetServicePriceCoponentsAsync(enterpriseId, serviceId, cancellationToken);
+        return Ok(priceCoponents);
+    }
+
     [HttpGet("{productId:guid}/feature-applicabilities")]
     [ProducesResponseType(typeof(List<EnterpriseServiceFeatureApplicabilityDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetProductFeatureApplicabilities(

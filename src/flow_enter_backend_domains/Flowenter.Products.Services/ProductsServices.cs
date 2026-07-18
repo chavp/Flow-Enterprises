@@ -18,6 +18,11 @@ public class ProductsServices : IProductsServices
         .GetTypes()
         .Where(type => type.IsClass && !type.IsAbstract && type.IsSubclassOf(typeof(ProductFeatureApplicability)))
         .ToDictionary(type => type.Name, type => type, StringComparer.OrdinalIgnoreCase);
+    private static readonly Dictionary<string, Type> PriceCoponentTypes = typeof(PriceCoponent)
+        .Assembly
+        .GetTypes()
+        .Where(type => type.IsClass && !type.IsAbstract && type.IsSubclassOf(typeof(PriceCoponent)))
+        .ToDictionary(type => type.Name, type => type, StringComparer.OrdinalIgnoreCase);
 
     public ProductsServices(IDbContextFactory<ProductsContext> factory)
     {
@@ -144,6 +149,65 @@ public class ProductsServices : IProductsServices
         }
 
         return await GetProductFeatureApplicabilitiesAsync(enterpriseId, serviceId, cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<EnterpriseServicePriceCoponentDto>> GetServicePriceCoponentsAsync(
+        Guid enterpriseId,
+        Guid serviceId,
+        CancellationToken cancellationToken = default)
+    {
+        using var context = _factory.CreateDbContext();
+
+        var serviceExists = await context.Products
+            .OfType<Service>()
+            .AnyAsync(item => item.Id == serviceId && item.ProviderPartyId == enterpriseId, cancellationToken);
+        if (!serviceExists)
+        {
+            return [];
+        }
+
+        var data = await context.PriceCoponents
+            .Where(item => item.SpecifiedForPartyId == serviceId)
+            .OrderBy(item => item.FromDate)
+            .ThenBy(item => item.Id)
+            .Include(item => item.UnitOfMeasure)
+            .ToListAsync(cancellationToken);
+
+        var timeFrequencyMeasureIds = data
+            .OfType<RecurringCharge>()
+            .Where(item => item.TimeFrequencyMeasureId.HasValue)
+            .Select(item => item.TimeFrequencyMeasureId!.Value)
+            .ToHashSet();
+        var timeFrequencyMeasureLookup = await context.UnitOfMeasures
+            .OfType<TimeFrequencyMeasure>()
+            .Where(item => timeFrequencyMeasureIds.Contains(item.Id!.Value))
+            .ToDictionaryAsync(item => item.Id!.Value, item => item.Abbreviation!, cancellationToken);
+
+        return data.Select(item =>
+        {
+            var recurringCharge = item as RecurringCharge;
+            string? timeFrequencyMeasureAbbreviation = null;
+            if (recurringCharge?.TimeFrequencyMeasureId is Guid timeFrequencyMeasureId &&
+                timeFrequencyMeasureLookup.TryGetValue(timeFrequencyMeasureId, out var abbreviation))
+            {
+                timeFrequencyMeasureAbbreviation = abbreviation;
+            }
+
+            return new EnterpriseServicePriceCoponentDto
+            {
+                PriceCoponentId = item.Id!.Value,
+                PriceCoponentType = item.PriceCoponentType!,
+                Price = item.Price,
+                Percent = item.Percent,
+                UnitOfMeasureId = item.UnitOfMeasureId,
+                UnitOfMeasureAbbreviation = item.UnitOfMeasure?.Abbreviation,
+                TimeFrequencyMeasureId = recurringCharge?.TimeFrequencyMeasureId,
+                TimeFrequencyMeasureAbbreviation = timeFrequencyMeasureAbbreviation,
+                FromDate = item.FromDate,
+                ThruDate = item.ThruDate,
+                Description = item.Description
+            };
+        }).ToList();
     }
 
     public async Task<IReadOnlyList<ProductFeatureCategoryDto>> GetFeatureCategoriesAsync(
@@ -289,6 +353,12 @@ public class ProductsServices : IProductsServices
             data.Id!.Value,
             payload.ProductFeatureApplicabilities,
             cancellationToken);
+        await SyncServicePriceCoponentsAsync(
+            context,
+            enterpriseId,
+            data.Id!.Value,
+            payload.PriceCoponents,
+            cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
     }
 
@@ -356,6 +426,12 @@ public class ProductsServices : IProductsServices
             enterpriseId,
             serviceId,
             payload.ProductFeatureApplicabilities,
+            cancellationToken);
+        await SyncServicePriceCoponentsAsync(
+            context,
+            enterpriseId,
+            serviceId,
+            payload.PriceCoponents,
             cancellationToken);
 
         await context.SaveChangesAsync(cancellationToken);
@@ -517,6 +593,22 @@ public class ProductsServices : IProductsServices
         return resolvedType.Name;
     }
 
+    private static string NormalizePriceCoponentType(string? priceCoponentType)
+    {
+        var normalized = priceCoponentType?.Trim();
+        if (string.IsNullOrWhiteSpace(normalized))
+        {
+            throw new ArgumentException("Price coponent type is required.");
+        }
+
+        if (!PriceCoponentTypes.TryGetValue(normalized, out var resolvedType))
+        {
+            throw new ArgumentException("Price coponent type is invalid.");
+        }
+
+        return resolvedType.Name;
+    }
+
     private static async Task EnsureFeatureCategoryExistsAsync(
         ProductsContext context,
         Guid enterpriseId,
@@ -564,6 +656,22 @@ public class ProductsServices : IProductsServices
         return instance;
     }
 
+    private static PriceCoponent CreatePriceCoponent(string priceCoponentType)
+    {
+        if (!PriceCoponentTypes.TryGetValue(priceCoponentType, out var resolvedType))
+        {
+            throw new ArgumentException("Price coponent type is invalid.");
+        }
+
+        var instance = Activator.CreateInstance(resolvedType) as PriceCoponent;
+        if (instance == null)
+        {
+            throw new ArgumentException("Price coponent type is invalid.");
+        }
+
+        return instance;
+    }
+
     private static async Task SyncServiceFeatureApplicabilitiesAsync(
         ProductsContext context,
         Guid enterpriseId,
@@ -604,6 +712,86 @@ public class ProductsServices : IProductsServices
             data.ProductFeatureId = applicability.ProductFeatureId;
             data.ProductFeatureApplicabilityType = applicabilityType;
             data.Order = applicability.Order;
+            await context.AddAsync(data, cancellationToken);
+        }
+    }
+
+    private static async Task SyncServicePriceCoponentsAsync(
+        ProductsContext context,
+        Guid enterpriseId,
+        Guid serviceId,
+        IReadOnlyCollection<UpsertEnterpriseServicePriceCoponentDto>? priceCoponents,
+        CancellationToken cancellationToken)
+    {
+        _ = enterpriseId;
+        var components = priceCoponents ?? [];
+
+        var unitOfMeasureIds = components
+            .Where(item => item.UnitOfMeasureId.HasValue)
+            .Select(item => item.UnitOfMeasureId!.Value)
+            .ToHashSet();
+        var existingUnitOfMeasureIds = await context.UnitOfMeasures
+            .Where(item => unitOfMeasureIds.Contains(item.Id!.Value))
+            .Select(item => item.Id!.Value)
+            .ToListAsync(cancellationToken);
+        if (existingUnitOfMeasureIds.Count != unitOfMeasureIds.Count)
+        {
+            throw new ArgumentException("One or more unit of measures were not found.");
+        }
+
+        var recurringTimeFrequencyMeasureIds = components
+            .Where(item => string.Equals(item.PriceCoponentType, nameof(RecurringCharge), StringComparison.OrdinalIgnoreCase))
+            .Select(item => item.TimeFrequencyMeasureId)
+            .ToList();
+        if (recurringTimeFrequencyMeasureIds.Any(item => item == null))
+        {
+            throw new ArgumentException("RecurringCharge requires TimeFrequencyMeasure.");
+        }
+
+        var resolvedRecurringIds = recurringTimeFrequencyMeasureIds
+            .Where(item => item.HasValue)
+            .Select(item => item!.Value)
+            .ToHashSet();
+        if (resolvedRecurringIds.Count > 0)
+        {
+            var existingTimeFrequencyMeasureIds = await context.UnitOfMeasures
+                .OfType<TimeFrequencyMeasure>()
+                .Where(item => resolvedRecurringIds.Contains(item.Id!.Value))
+                .Select(item => item.Id!.Value)
+                .ToListAsync(cancellationToken);
+            if (existingTimeFrequencyMeasureIds.Count != resolvedRecurringIds.Count)
+            {
+                throw new ArgumentException("One or more TimeFrequencyMeasure were not found.");
+            }
+        }
+
+        var existing = await context.PriceCoponents
+            .Where(item => item.SpecifiedForPartyId == serviceId)
+            .ToListAsync(cancellationToken);
+        if (existing.Count > 0)
+        {
+            context.RemoveRange(existing);
+        }
+
+        foreach (var item in components)
+        {
+            var priceCoponentType = NormalizePriceCoponentType(item.PriceCoponentType);
+            var data = CreatePriceCoponent(priceCoponentType);
+            data.Id = Guid.NewGuid();
+            data.PriceCoponentType = priceCoponentType;
+            data.SpecifiedForPartyId = serviceId;
+            data.UnitOfMeasureId = item.UnitOfMeasureId;
+            data.Price = item.Price;
+            data.Percent = item.Percent;
+            data.FromDate = item.FromDate ?? DateOnly.FromDateTime(DateTime.Today);
+            data.ThruDate = item.ThruDate ?? DateOnly.MaxValue;
+            data.Description = NormalizeDescription(item.Description);
+
+            if (data is RecurringCharge recurringCharge)
+            {
+                recurringCharge.TimeFrequencyMeasureId = item.TimeFrequencyMeasureId!.Value;
+            }
+
             await context.AddAsync(data, cancellationToken);
         }
     }

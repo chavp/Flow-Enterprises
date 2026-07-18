@@ -17,6 +17,7 @@ public interface IProductsServices
     Task<IReadOnlyList<EnterpriseGoodDto>> GetGoodsAsync(Guid enterpriseId, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<EnterpriseServiceFeatureApplicabilityDto>> GetProductFeatureApplicabilitiesAsync(Guid enterpriseId, Guid productId, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<EnterpriseServiceFeatureApplicabilityDto>> GetServiceFeatureApplicabilitiesAsync(Guid enterpriseId, Guid serviceId, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<EnterpriseServicePriceCoponentDto>> GetServicePriceCoponentsAsync(Guid enterpriseId, Guid serviceId, CancellationToken cancellationToken = default);
     Task CreateServiceAsync(Guid enterpriseId, CreateEnterpriseServiceDto payload, CancellationToken cancellationToken = default);
     Task<bool> UpdateServiceAsync(Guid enterpriseId, Guid serviceId, UpdateEnterpriseServiceDto payload, CancellationToken cancellationToken = default);
     Task<bool> DeleteServiceAsync(Guid enterpriseId, Guid serviceId, CancellationToken cancellationToken = default);
@@ -116,6 +117,7 @@ public sealed class CreateEnterpriseServiceDto
     public byte[] CoverImage { get; set; } = [];
     public string? CoverImageName { get; set; }
     public List<UpsertEnterpriseServiceFeatureApplicabilityDto> ProductFeatureApplicabilities { get; set; } = [];
+    public List<UpsertEnterpriseServicePriceCoponentDto> PriceCoponents { get; set; } = [];
 }
 
 public sealed class UpdateEnterpriseServiceDto
@@ -129,6 +131,7 @@ public sealed class UpdateEnterpriseServiceDto
     public string? CoverImageName { get; set; }
     public bool RemoveCoverImage { get; set; }
     public List<UpsertEnterpriseServiceFeatureApplicabilityDto> ProductFeatureApplicabilities { get; set; } = [];
+    public List<UpsertEnterpriseServicePriceCoponentDto> PriceCoponents { get; set; } = [];
 }
 
 public sealed class EnterpriseServiceFeatureApplicabilityDto
@@ -146,4 +149,31 @@ public sealed class UpsertEnterpriseServiceFeatureApplicabilityDto
     public Guid ProductFeatureId { get; set; }
     public string ProductFeatureApplicabilityType { get; set; } = string.Empty;
     public int Order { get; set; }
+}
+
+public sealed class EnterpriseServicePriceCoponentDto
+{
+    public Guid PriceCoponentId { get; set; }
+    public string PriceCoponentType { get; set; } = string.Empty;
+    public decimal? Price { get; set; }
+    public decimal? Percent { get; set; }
+    public Guid? UnitOfMeasureId { get; set; }
+    public string? UnitOfMeasureAbbreviation { get; set; }
+    public Guid? TimeFrequencyMeasureId { get; set; }
+    public string? TimeFrequencyMeasureAbbreviation { get; set; }
+    public DateOnly FromDate { get; set; }
+    public DateOnly ThruDate { get; set; }
+    public string? Description { get; set; }
+}
+
+public sealed class UpsertEnterpriseServicePriceCoponentDto
+{
+    public string PriceCoponentType { get; set; } = string.Empty;
+    public decimal? Price { get; set; }
+    public decimal? Percent { get; set; }
+    public Guid? UnitOfMeasureId { get; set; }
+    public Guid? TimeFrequencyMeasureId { get; set; }
+    public DateOnly? FromDate { get; set; }
+    public DateOnly? ThruDate { get; set; }
+    public string? Description { get; set; }
 }

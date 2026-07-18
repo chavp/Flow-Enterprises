@@ -16,11 +16,13 @@ import {
   fetchEnterpriseProductFeatureTypes,
   fetchEnterpriseProductFeatures,
   fetchEnterpriseServiceFeatureApplicabilities,
+  fetchEnterpriseServicePriceCoponents,
   fetchEnterpriseServices,
   updateEnterpriseProductFeatureCategory,
   updateEnterpriseProductFeature,
   updateEnterpriseService
 } from "../../../api/enterprises";
+import { fetchCurrencyMeasures, fetchTimeFrequencyMeasures } from "../../../api/unitOfMeasures";
 import { TopDrawerForm } from "../../../components/TopDrawerForm";
 import type {
   CreateEnterpriseProductFeatureRequest,
@@ -30,7 +32,8 @@ import type {
   EnterpriseGood,
   ProductFeatureCategory,
   EnterpriseProductFeature,
-  EnterpriseService
+  EnterpriseService,
+  EnterpriseServicePriceCoponentRequest
 } from "../types";
 
 const { Title, Text } = Typography;
@@ -123,6 +126,21 @@ export function EnterpriseProductsPage({
     queryFn: () =>
       fetchEnterpriseServiceFeatureApplicabilities(enterprise.enterpriseId, editingService!.serviceId, apiBaseUrl),
     enabled: Boolean(editingService)
+  });
+  const servicePriceCoponentsQuery = useQuery({
+    queryKey: ["enterprise-service-price-coponents", enterprise.enterpriseId, editingService?.serviceId, apiBaseUrl],
+    queryFn: () => fetchEnterpriseServicePriceCoponents(enterprise.enterpriseId, editingService!.serviceId, apiBaseUrl),
+    enabled: Boolean(editingService)
+  });
+  const currencyMeasuresQuery = useQuery({
+    queryKey: ["currency-measures", apiBaseUrl],
+    queryFn: () => fetchCurrencyMeasures(apiBaseUrl),
+    enabled: productsTabKey === "manage-products" && productManagementTabKey === "services"
+  });
+  const timeFrequencyMeasuresQuery = useQuery({
+    queryKey: ["time-frequency-measures", apiBaseUrl],
+    queryFn: () => fetchTimeFrequencyMeasures(apiBaseUrl),
+    enabled: productsTabKey === "manage-products" && productManagementTabKey === "services"
   });
 
   const productFeatureApplicabilitiesQuery = useQuery({
@@ -355,9 +373,32 @@ export function EnterpriseProductsPage({
       })),
     [featureApplicabilityTypesQuery.data]
   );
+  const unitOfMeasureOptions = useMemo(
+    () =>
+      (currencyMeasuresQuery.data ?? []).map((item) => ({
+        value: item.currencyMeasureId,
+        label: item.abbreviation
+      })),
+    [currencyMeasuresQuery.data]
+  );
+  const timeFrequencyMeasureOptions = useMemo(
+    () =>
+      (timeFrequencyMeasuresQuery.data ?? []).map((item) => ({
+        value: item.timeFrequencyMeasureId,
+        label: item.abbreviation
+      })),
+    [timeFrequencyMeasuresQuery.data]
+  );
+  const priceCoponentTypeOptions = useMemo(
+    () => [
+      { value: "BasePrice", label: "BasePrice" },
+      { value: "RecurringCharge", label: "RecurringCharge" }
+    ],
+    []
+  );
 
   useEffect(() => {
-    if (!editingService || !serviceFeatureApplicabilitiesQuery.data) {
+    if (!editingService || !serviceFeatureApplicabilitiesQuery.data || !servicePriceCoponentsQuery.data) {
       return;
     }
 
@@ -371,9 +412,19 @@ export function EnterpriseProductsPage({
         productFeatureId: item.productFeatureId,
         productFeatureApplicabilityType: item.productFeatureApplicabilityType,
         order: item.order
+      })),
+      priceCoponents: servicePriceCoponentsQuery.data.map((item) => ({
+        priceCoponentType: item.priceCoponentType,
+        price: item.price,
+        percent: item.percent,
+        unitOfMeasureId: item.unitOfMeasureId,
+        timeFrequencyMeasureId: item.timeFrequencyMeasureId,
+        fromDate: item.fromDate,
+        thruDate: item.thruDate,
+        description: item.description
       }))
     });
-  }, [editingService, serviceFeatureApplicabilitiesQuery.data, editServiceForm]);
+  }, [editingService, serviceFeatureApplicabilitiesQuery.data, servicePriceCoponentsQuery.data, editServiceForm]);
 
   const openProductFeaturesModal = (product: EnterpriseService | EnterpriseGood) => {
     const productId = "serviceId" in product ? product.serviceId : product.goodId;
@@ -390,7 +441,17 @@ export function EnterpriseProductsPage({
       discontinuedDate: values.discontinuedDate || undefined,
       supportDiscontinuedDate: values.supportDiscontinuedDate || undefined,
       coverImage: values.coverImage || undefined,
-      coverImageName: values.coverImageName || undefined
+      coverImageName: values.coverImageName || undefined,
+      productFeatureApplicabilities: values.productFeatureApplicabilities ?? [],
+      priceCoponents:
+        (values.priceCoponents ?? []).map((item: EnterpriseServicePriceCoponentRequest) => ({
+          ...item,
+          unitOfMeasureId: item.unitOfMeasureId || undefined,
+          timeFrequencyMeasureId: item.timeFrequencyMeasureId || undefined,
+          fromDate: item.fromDate || undefined,
+          thruDate: item.thruDate || undefined,
+          description: item.description || undefined
+        })) ?? []
     }) as T;
 
   const toBase64 = async (file: File): Promise<string> => {
@@ -495,6 +556,146 @@ export function EnterpriseProductsPage({
                           style={{ marginBottom: 0 }}
                         >
                           <InputNumber min={0} style={{ width: "100%" }} />
+                        </Form.Item>
+                      </td>
+                      <td>
+                        <Button danger onClick={() => remove(field.name)}>
+                          Remove
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </Space>
+      )}
+    </Form.List>
+  );
+
+  const renderServicePriceCoponents = () => (
+    <Form.List name="priceCoponents">
+      {(fields, { add, remove }) => (
+        <Space direction="vertical" size="middle" style={{ width: "100%" }}>
+          <Space style={{ width: "100%", justifyContent: "space-between" }}>
+            <Text strong>PriceCoponent</Text>
+            <Button
+              type="dashed"
+              onClick={() =>
+                add({
+                  priceCoponentType: "BasePrice",
+                  price: undefined,
+                  percent: undefined,
+                  unitOfMeasureId: undefined,
+                  timeFrequencyMeasureId: undefined,
+                  fromDate: undefined,
+                  thruDate: undefined,
+                  description: undefined
+                })
+              }
+            >
+              Add PriceCoponent
+            </Button>
+          </Space>
+          {fields.length === 0 ? (
+            <Empty description="No price coponents." />
+          ) : (
+            <div className="tanstack-table-wrapper">
+              <table className="tanstack-table">
+                <thead>
+                  <tr>
+                    <th>Type</th>
+                    <th>Price</th>
+                    <th>Percent</th>
+                    <th>Unit</th>
+                    <th>Time Frequency</th>
+                    <th>From</th>
+                    <th>Thru</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {fields.map((field) => (
+                    <tr key={field.key}>
+                      <td>
+                        <Form.Item
+                          name={[field.name, "priceCoponentType"]}
+                          rules={[{ required: true, message: "Type is required" }]}
+                          style={{ marginBottom: 0 }}
+                        >
+                          <Select options={priceCoponentTypeOptions} />
+                        </Form.Item>
+                      </td>
+                      <td>
+                        <Form.Item name={[field.name, "price"]} style={{ marginBottom: 0 }}>
+                          <InputNumber style={{ width: "100%" }} min={0} />
+                        </Form.Item>
+                      </td>
+                      <td>
+                        <Form.Item name={[field.name, "percent"]} style={{ marginBottom: 0 }}>
+                          <InputNumber style={{ width: "100%" }} min={0} max={100} />
+                        </Form.Item>
+                      </td>
+                      <td>
+                        <Form.Item
+                          name={[field.name, "unitOfMeasureId"]}
+                          style={{ marginBottom: 0 }}
+                        >
+                          <Select
+                            options={unitOfMeasureOptions}
+                            loading={currencyMeasuresQuery.isLoading}
+                            placeholder="Unit"
+                            optionFilterProp="label"
+                            showSearch
+                            allowClear
+                          />
+                        </Form.Item>
+                      </td>
+                      <td>
+                        <Form.Item
+                          noStyle
+                          shouldUpdate={(prevValues, currentValues) =>
+                            prevValues.priceCoponents?.[field.name]?.priceCoponentType !==
+                            currentValues.priceCoponents?.[field.name]?.priceCoponentType
+                          }
+                        >
+                          {({ getFieldValue }) => {
+                            const type = getFieldValue(["priceCoponents", field.name, "priceCoponentType"]);
+                            const isRecurring = type === "RecurringCharge";
+                            return (
+                              <Form.Item
+                                name={[field.name, "timeFrequencyMeasureId"]}
+                                rules={isRecurring ? [{ required: true, message: "Time frequency is required" }] : []}
+                                style={{ marginBottom: 0 }}
+                              >
+                                <Select
+                                  options={timeFrequencyMeasureOptions}
+                                  loading={timeFrequencyMeasuresQuery.isLoading}
+                                  placeholder="Time Frequency"
+                                  optionFilterProp="label"
+                                  showSearch
+                                  disabled={!isRecurring}
+                                />
+                              </Form.Item>
+                            );
+                          }}
+                        </Form.Item>
+                      </td>
+                      <td>
+                        <Form.Item name={[field.name, "fromDate"]} style={{ marginBottom: 0 }}>
+                          <Input type="date" />
+                        </Form.Item>
+                      </td>
+                      <td>
+                        <Form.Item name={[field.name, "thruDate"]} style={{ marginBottom: 0 }}>
+                          <Input type="date" />
+                        </Form.Item>
+                      </td>
+                      <td>
+                        <Form.Item name={[field.name, "description"]} style={{ marginBottom: 0 }}>
+                          <Input maxLength={300} />
                         </Form.Item>
                       </td>
                       <td>
@@ -644,7 +845,8 @@ export function EnterpriseProductsPage({
                                             releaseDate: service.releaseDate,
                                             discontinuedDate: service.discontinuedDate,
                                             supportDiscontinuedDate: service.supportDiscontinuedDate,
-                                            productFeatureApplicabilities: []
+                                            productFeatureApplicabilities: [],
+                                            priceCoponents: []
                                           });
                                         }}
                                       >
@@ -945,7 +1147,7 @@ export function EnterpriseProductsPage({
         <Form<CreateEnterpriseServiceRequest>
           form={createServiceForm}
           layout="vertical"
-          initialValues={{ productFeatureApplicabilities: [] }}
+          initialValues={{ productFeatureApplicabilities: [], priceCoponents: [] }}
           onFinish={(values) => createServiceMutation.mutate(values)}
         >
           <Form.Item name="name" label="Service Name" rules={[{ required: true, message: "Service name is required" }]}>
@@ -995,6 +1197,7 @@ export function EnterpriseProductsPage({
             </Space>
           </Form.Item>
           {renderServiceFeatureApplicabilities()}
+          {renderServicePriceCoponents()}
         </Form>
       </TopDrawerForm>
 
@@ -1010,12 +1213,12 @@ export function EnterpriseProductsPage({
           setEditServiceCoverImageRemoved(false);
         }}
         onSubmit={() => editServiceForm.submit()}
-        loading={updateServiceMutation.isPending || serviceFeatureApplicabilitiesQuery.isLoading}
+        loading={updateServiceMutation.isPending || serviceFeatureApplicabilitiesQuery.isLoading || servicePriceCoponentsQuery.isLoading}
       >
         <Form<CreateEnterpriseServiceRequest>
           form={editServiceForm}
           layout="vertical"
-          initialValues={{ productFeatureApplicabilities: [] }}
+          initialValues={{ productFeatureApplicabilities: [], priceCoponents: [] }}
           onFinish={(values) => updateServiceMutation.mutate(values)}
         >
           <Form.Item name="name" label="Service Name" rules={[{ required: true, message: "Service name is required" }]}>
@@ -1066,6 +1269,7 @@ export function EnterpriseProductsPage({
             </Space>
           </Form.Item>
           {renderServiceFeatureApplicabilities()}
+          {renderServicePriceCoponents()}
         </Form>
       </TopDrawerForm>
 

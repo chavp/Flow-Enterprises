@@ -67,6 +67,31 @@ export type EnterpriseServiceFeatureApplicabilityRequest = {
   order: number;
 };
 
+export type EnterpriseServicePriceCoponent = {
+  priceCoponentId: string;
+  priceCoponentType: string;
+  price?: number;
+  percent?: number;
+  unitOfMeasureId?: string;
+  unitOfMeasureAbbreviation?: string;
+  timeFrequencyMeasureId?: string;
+  timeFrequencyMeasureAbbreviation?: string;
+  fromDate: string;
+  thruDate: string;
+  description?: string;
+};
+
+export type EnterpriseServicePriceCoponentRequest = {
+  priceCoponentType: string;
+  price?: number;
+  percent?: number;
+  unitOfMeasureId?: string;
+  timeFrequencyMeasureId?: string;
+  fromDate?: string;
+  thruDate?: string;
+  description?: string;
+};
+
 export type CreateEnterpriseServiceRequest = {
   name: string;
   description?: string;
@@ -76,6 +101,7 @@ export type CreateEnterpriseServiceRequest = {
   coverImage?: string;
   coverImageName?: string;
   productFeatureApplicabilities: EnterpriseServiceFeatureApplicabilityRequest[];
+  priceCoponents: EnterpriseServicePriceCoponentRequest[];
 };
 
 export type UpdateEnterpriseServiceRequest = CreateEnterpriseServiceRequest & {
