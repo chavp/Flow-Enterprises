@@ -814,6 +814,7 @@ export function EnterpriseProductsPage({
                               <tr>
                                 <th>Service Name</th>
                                 <th>Description</th>
+                                <th>Price</th>
                                 <th>Features</th>
                                 <th>Actions</th>
                               </tr>
@@ -823,6 +824,7 @@ export function EnterpriseProductsPage({
                                 <tr key={service.serviceId}>
                                   <td>{service.name}</td>
                                   <td>{service.description || "-"}</td>
+                                  <td>{service.priceDisplay ?? (service.price != null ? service.price.toLocaleString() : "-")}</td>
                                   <td>
                                     <Button type="link" onClick={() => openProductFeaturesModal(service)}>
                                       {service.featureCount}

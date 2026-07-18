@@ -25,6 +25,8 @@ export type EnterpriseService = {
   enterpriseId: string;
   name: string;
   description?: string;
+  price?: number;
+  priceDisplay?: string;
   releaseDate?: string;
   discontinuedDate?: string;
   supportDiscontinuedDate?: string;

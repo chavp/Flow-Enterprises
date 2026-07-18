@@ -79,6 +79,8 @@ public sealed class EnterpriseServiceDto
     public Guid EnterpriseId { get; set; }
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
+    public decimal? Price { get; set; }
+    public string? PriceDisplay { get; set; }
     public DateOnly? ReleaseDate { get; set; }
     public DateOnly? DiscontinuedDate { get; set; }
     public DateOnly? SupportDiscontinuedDate { get; set; }

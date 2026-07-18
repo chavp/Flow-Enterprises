@@ -2,6 +2,7 @@
 using Flowenter.Products.Mappings;
 using Flowenter.Products.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace Flowenter.Products.Services;
 
@@ -53,7 +54,7 @@ public class ProductsServices : IProductsServices
     {
         using var context = _factory.CreateDbContext();
 
-        return await context.Products
+        var services = await context.Products
             .OfType<Service>()
             .Where(item => item.ProviderPartyId == enterpriseId)
             .OrderBy(item => item.Name)
@@ -74,6 +75,48 @@ public class ProductsServices : IProductsServices
                 Revision = item.Revision
             })
             .ToListAsync(cancellationToken);
+
+        if (services.Count == 0)
+        {
+            return services;
+        }
+
+        var serviceIds = services.Select(item => item.ServiceId).ToHashSet();
+        var priceCoponents = await context.PriceCoponents
+            .Where(item => item.SpecifiedForPartyId.HasValue && serviceIds.Contains(item.SpecifiedForPartyId.Value))
+            .OrderBy(item => item.FromDate)
+            .ThenBy(item => item.Id)
+            .Include(item => item.UnitOfMeasure)
+            .ToListAsync(cancellationToken);
+
+        var recurringTimeFrequencyMeasureIds = priceCoponents
+            .OfType<RecurringCharge>()
+            .Where(item => item.TimeFrequencyMeasureId.HasValue)
+            .Select(item => item.TimeFrequencyMeasureId!.Value)
+            .ToHashSet();
+        var timeFrequencyMeasureLookup = recurringTimeFrequencyMeasureIds.Count == 0
+            ? new Dictionary<Guid, string>()
+            : await context.UnitOfMeasures
+                .OfType<TimeFrequencyMeasure>()
+                .Where(item => recurringTimeFrequencyMeasureIds.Contains(item.Id!.Value))
+                .ToDictionaryAsync(item => item.Id!.Value, item => item.Abbreviation ?? string.Empty, cancellationToken);
+
+        var priceCoponentsByService = priceCoponents
+            .GroupBy(item => item.SpecifiedForPartyId!.Value)
+            .ToDictionary(group => group.Key, group => group.ToList());
+
+        foreach (var service in services)
+        {
+            if (!priceCoponentsByService.TryGetValue(service.ServiceId, out var components))
+            {
+                continue;
+            }
+
+            service.Price = components.Select(item => item.Price).FirstOrDefault();
+            service.PriceDisplay = BuildServicePriceDisplay(components, timeFrequencyMeasureLookup);
+        }
+
+        return services;
     }
 
     public async Task<IReadOnlyList<EnterpriseGoodDto>> GetGoodsAsync(Guid enterpriseId, CancellationToken cancellationToken = default)
@@ -670,6 +713,49 @@ public class ProductsServices : IProductsServices
         }
 
         return instance;
+    }
+
+    private static string? BuildServicePriceDisplay(
+        IReadOnlyCollection<PriceCoponent> components,
+        IReadOnlyDictionary<Guid, string> timeFrequencyMeasureLookup)
+    {
+        var recurringParts = components
+            .OfType<RecurringCharge>()
+            .Where(item => item.Price.HasValue)
+            .Select(item =>
+            {
+                var unit = item.UnitOfMeasure?.Abbreviation;
+                var frequency = item.TimeFrequencyMeasureId.HasValue &&
+                                timeFrequencyMeasureLookup.TryGetValue(item.TimeFrequencyMeasureId.Value, out var abbreviation)
+                    ? abbreviation
+                    : null;
+                return BuildPricePart(unit, item.Price!.Value, frequency);
+            })
+            .Where(item => !string.IsNullOrWhiteSpace(item))
+            .ToList();
+        if (recurringParts.Count > 0)
+        {
+            return string.Join(", ", recurringParts);
+        }
+
+        var firstWithPrice = components.FirstOrDefault(item => item.Price.HasValue);
+        if (firstWithPrice == null)
+        {
+            return null;
+        }
+
+        return BuildPricePart(firstWithPrice.UnitOfMeasure?.Abbreviation, firstWithPrice.Price!.Value, null);
+    }
+
+    private static string BuildPricePart(string? unitOfMeasureAbbreviation, decimal price, string? timeFrequencyAbbreviation)
+    {
+        var priceText = price.ToString("0.##", CultureInfo.InvariantCulture);
+        var withUnit = string.IsNullOrWhiteSpace(unitOfMeasureAbbreviation)
+            ? priceText
+            : $"{unitOfMeasureAbbreviation} {priceText}";
+        return string.IsNullOrWhiteSpace(timeFrequencyAbbreviation)
+            ? withUnit
+            : $"{withUnit} / {timeFrequencyAbbreviation}";
     }
 
     private static async Task SyncServiceFeatureApplicabilitiesAsync(
