@@ -25,6 +25,24 @@ export type EnterpriseService = {
   enterpriseId: string;
   name: string;
   description?: string;
+  releaseDate?: string;
+  discontinuedDate?: string;
+  supportDiscontinuedDate?: string;
+  featureCount: number;
+  createdAtUtc: string;
+  updatedAtUtc?: string;
+  revision: number;
+};
+
+export type EnterpriseGood = {
+  goodId: string;
+  enterpriseId: string;
+  name: string;
+  description?: string;
+  releaseDate?: string;
+  discontinuedDate?: string;
+  supportDiscontinuedDate?: string;
+  featureCount: number;
   createdAtUtc: string;
   updatedAtUtc?: string;
   revision: number;
@@ -48,6 +66,9 @@ export type EnterpriseServiceFeatureApplicabilityRequest = {
 export type CreateEnterpriseServiceRequest = {
   name: string;
   description?: string;
+  releaseDate?: string;
+  discontinuedDate?: string;
+  supportDiscontinuedDate?: string;
   productFeatureApplicabilities: EnterpriseServiceFeatureApplicabilityRequest[];
 };
 

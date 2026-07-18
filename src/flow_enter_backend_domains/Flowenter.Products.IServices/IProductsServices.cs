@@ -14,6 +14,8 @@ public interface IProductsServices
     Task<bool> DeleteFeatureAsync(Guid enterpriseId, Guid featureId, CancellationToken cancellationToken = default);
 
     Task<IReadOnlyList<EnterpriseServiceDto>> GetServicesAsync(Guid enterpriseId, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<EnterpriseGoodDto>> GetGoodsAsync(Guid enterpriseId, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<EnterpriseServiceFeatureApplicabilityDto>> GetProductFeatureApplicabilitiesAsync(Guid enterpriseId, Guid productId, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<EnterpriseServiceFeatureApplicabilityDto>> GetServiceFeatureApplicabilitiesAsync(Guid enterpriseId, Guid serviceId, CancellationToken cancellationToken = default);
     Task CreateServiceAsync(Guid enterpriseId, CreateEnterpriseServiceDto payload, CancellationToken cancellationToken = default);
     Task<bool> UpdateServiceAsync(Guid enterpriseId, Guid serviceId, UpdateEnterpriseServiceDto payload, CancellationToken cancellationToken = default);
@@ -76,6 +78,25 @@ public sealed class EnterpriseServiceDto
     public Guid EnterpriseId { get; set; }
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
+    public DateOnly? ReleaseDate { get; set; }
+    public DateOnly? DiscontinuedDate { get; set; }
+    public DateOnly? SupportDiscontinuedDate { get; set; }
+    public int FeatureCount { get; set; }
+    public DateTime CreatedAtUtc { get; set; }
+    public DateTime? UpdatedAtUtc { get; set; }
+    public ulong Revision { get; set; }
+}
+
+public sealed class EnterpriseGoodDto
+{
+    public Guid GoodId { get; set; }
+    public Guid EnterpriseId { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string? Description { get; set; }
+    public DateOnly? ReleaseDate { get; set; }
+    public DateOnly? DiscontinuedDate { get; set; }
+    public DateOnly? SupportDiscontinuedDate { get; set; }
+    public int FeatureCount { get; set; }
     public DateTime CreatedAtUtc { get; set; }
     public DateTime? UpdatedAtUtc { get; set; }
     public ulong Revision { get; set; }
@@ -85,6 +106,9 @@ public sealed class CreateEnterpriseServiceDto
 {
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
+    public DateOnly? ReleaseDate { get; set; }
+    public DateOnly? DiscontinuedDate { get; set; }
+    public DateOnly? SupportDiscontinuedDate { get; set; }
     public List<UpsertEnterpriseServiceFeatureApplicabilityDto> ProductFeatureApplicabilities { get; set; } = [];
 }
 
@@ -92,6 +116,9 @@ public sealed class UpdateEnterpriseServiceDto
 {
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
+    public DateOnly? ReleaseDate { get; set; }
+    public DateOnly? DiscontinuedDate { get; set; }
+    public DateOnly? SupportDiscontinuedDate { get; set; }
     public List<UpsertEnterpriseServiceFeatureApplicabilityDto> ProductFeatureApplicabilities { get; set; } = [];
 }
 

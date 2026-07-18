@@ -58,9 +58,68 @@ public class ProductsServices : IProductsServices
                 EnterpriseId = enterpriseId,
                 Name = item.Name!,
                 Description = item.Description,
+                ReleaseDate = item.ReleaseDate,
+                DiscontinuedDate = item.DiscontinuedDate,
+                SupportDiscontinuedDate = item.SupportDiscontinuedDate,
+                FeatureCount = context.ProductFeatureApplicabilities.Count(app => app.ProductId == item.Id),
                 CreatedAtUtc = item.CreatedAtUtc,
                 UpdatedAtUtc = item.UpdatedAtUtc,
                 Revision = item.Revision
+            })
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<EnterpriseGoodDto>> GetGoodsAsync(Guid enterpriseId, CancellationToken cancellationToken = default)
+    {
+        using var context = _factory.CreateDbContext();
+
+        return await context.Products
+            .OfType<Good>()
+            .Where(item => item.ProviderPartyId == enterpriseId)
+            .OrderBy(item => item.Name)
+            .Select(item => new EnterpriseGoodDto
+            {
+                GoodId = item.Id!.Value,
+                EnterpriseId = enterpriseId,
+                Name = item.Name!,
+                Description = item.Description,
+                ReleaseDate = item.ReleaseDate,
+                DiscontinuedDate = item.DiscontinuedDate,
+                SupportDiscontinuedDate = item.SupportDiscontinuedDate,
+                FeatureCount = context.ProductFeatureApplicabilities.Count(app => app.ProductId == item.Id),
+                CreatedAtUtc = item.CreatedAtUtc,
+                UpdatedAtUtc = item.UpdatedAtUtc,
+                Revision = item.Revision
+            })
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<EnterpriseServiceFeatureApplicabilityDto>> GetProductFeatureApplicabilitiesAsync(
+        Guid enterpriseId,
+        Guid productId,
+        CancellationToken cancellationToken = default)
+    {
+        using var context = _factory.CreateDbContext();
+
+        var productExists = await context.Products
+            .AnyAsync(item => item.Id == productId && item.ProviderPartyId == enterpriseId, cancellationToken);
+        if (!productExists)
+        {
+            return [];
+        }
+
+        return await context.ProductFeatureApplicabilities
+            .Where(item => item.ProductId == productId)
+            .OrderBy(item => item.Order)
+            .ThenBy(item => item.ProductFeature!.Code)
+            .Select(item => new EnterpriseServiceFeatureApplicabilityDto
+            {
+                ProductFeatureApplicabilityId = item.Id!.Value,
+                ProductFeatureId = item.ProductFeatureId!.Value,
+                ProductFeatureCode = item.ProductFeature!.Code!,
+                ProductFeatureTitle = item.ProductFeature.Title!,
+                ProductFeatureApplicabilityType = item.ProductFeatureApplicabilityType!,
+                Order = item.Order
             })
             .ToListAsync(cancellationToken);
     }
@@ -80,20 +139,7 @@ public class ProductsServices : IProductsServices
             return [];
         }
 
-        return await context.ProductFeatureApplicabilities
-            .Where(item => item.ProductId == serviceId)
-            .OrderBy(item => item.Order)
-            .ThenBy(item => item.ProductFeature!.Code)
-            .Select(item => new EnterpriseServiceFeatureApplicabilityDto
-            {
-                ProductFeatureApplicabilityId = item.Id!.Value,
-                ProductFeatureId = item.ProductFeatureId!.Value,
-                ProductFeatureCode = item.ProductFeature!.Code!,
-                ProductFeatureTitle = item.ProductFeature.Title!,
-                ProductFeatureApplicabilityType = item.ProductFeatureApplicabilityType!,
-                Order = item.Order
-            })
-            .ToListAsync(cancellationToken);
+        return await GetProductFeatureApplicabilitiesAsync(enterpriseId, serviceId, cancellationToken);
     }
 
     public async Task<IReadOnlyList<ProductFeatureCategoryDto>> GetFeatureCategoriesAsync(
@@ -221,7 +267,10 @@ public class ProductsServices : IProductsServices
             Id = Guid.NewGuid(),
             ProviderPartyId = enterpriseId,
             Name = name,
-            Description = NormalizeDescription(payload.Description)
+            Description = NormalizeDescription(payload.Description),
+            ReleaseDate = payload.ReleaseDate,
+            DiscontinuedDate = payload.DiscontinuedDate,
+            SupportDiscontinuedDate = payload.SupportDiscontinuedDate
         };
 
         await context.AddAsync(data, cancellationToken);
@@ -280,6 +329,9 @@ public class ProductsServices : IProductsServices
 
         service.Name = name;
         service.Description = NormalizeDescription(payload.Description);
+        service.ReleaseDate = payload.ReleaseDate;
+        service.DiscontinuedDate = payload.DiscontinuedDate;
+        service.SupportDiscontinuedDate = payload.SupportDiscontinuedDate;
         await SyncServiceFeatureApplicabilitiesAsync(
             context,
             enterpriseId,

@@ -22,6 +22,14 @@ public class ProductsController : ControllerBase
         return Ok(services);
     }
 
+    [HttpGet("goods")]
+    [ProducesResponseType(typeof(List<EnterpriseGoodDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetGoods([FromRoute] Guid enterpriseId, CancellationToken cancellationToken)
+    {
+        var goods = await _productsServices.GetGoodsAsync(enterpriseId, cancellationToken);
+        return Ok(goods);
+    }
+
     [HttpPost("services")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -188,6 +196,17 @@ public class ProductsController : ControllerBase
         CancellationToken cancellationToken)
     {
         var applicabilities = await _productsServices.GetServiceFeatureApplicabilitiesAsync(enterpriseId, serviceId, cancellationToken);
+        return Ok(applicabilities);
+    }
+
+    [HttpGet("{productId:guid}/feature-applicabilities")]
+    [ProducesResponseType(typeof(List<EnterpriseServiceFeatureApplicabilityDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetProductFeatureApplicabilities(
+        [FromRoute] Guid enterpriseId,
+        [FromRoute] Guid productId,
+        CancellationToken cancellationToken)
+    {
+        var applicabilities = await _productsServices.GetProductFeatureApplicabilitiesAsync(enterpriseId, productId, cancellationToken);
         return Ok(applicabilities);
     }
 

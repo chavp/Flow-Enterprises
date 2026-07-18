@@ -9,7 +9,9 @@ import {
   deleteEnterpriseProductFeatureCategory,
   deleteEnterpriseProductFeature,
   deleteEnterpriseService,
+  fetchEnterpriseGoods,
   fetchEnterpriseProductFeatureApplicabilityTypes,
+  fetchEnterpriseProductFeatureApplicabilities,
   fetchEnterpriseProductFeatureCategories,
   fetchEnterpriseProductFeatureTypes,
   fetchEnterpriseProductFeatures,
@@ -25,6 +27,7 @@ import type {
   CreateEnterpriseServiceRequest,
   CreateProductFeatureCategoryRequest,
   Enterprise,
+  EnterpriseGood,
   ProductFeatureCategory,
   EnterpriseProductFeature,
   EnterpriseService
@@ -61,6 +64,7 @@ export function EnterpriseProductsPage({
   const [featureCategoryManagerOpen, setFeatureCategoryManagerOpen] = useState(false);
   const [featureCategoryCreateOpen, setFeatureCategoryCreateOpen] = useState(false);
   const [editingFeatureCategory, setEditingFeatureCategory] = useState<ProductFeatureCategory | null>(null);
+  const [selectedProductForFeatures, setSelectedProductForFeatures] = useState<{ productId: string; productName: string } | null>(null);
 
   const [createServiceForm] = Form.useForm<CreateEnterpriseServiceRequest>();
   const [editServiceForm] = Form.useForm<CreateEnterpriseServiceRequest>();
@@ -80,7 +84,7 @@ export function EnterpriseProductsPage({
     queryFn: () => fetchEnterpriseProductFeatureCategories(enterprise.enterpriseId, apiBaseUrl),
     enabled:
       productsTabKey === "manage-products" &&
-      (productManagementTabKey === "features" || productManagementTabKey === "services")
+      (productManagementTabKey === "features" || productManagementTabKey === "services" || productManagementTabKey === "goods")
   });
 
   const featureTypesQuery = useQuery({
@@ -94,7 +98,13 @@ export function EnterpriseProductsPage({
     queryFn: () => fetchEnterpriseProductFeatures(enterprise.enterpriseId, apiBaseUrl),
     enabled:
       productsTabKey === "manage-products" &&
-      (productManagementTabKey === "features" || productManagementTabKey === "services")
+      (productManagementTabKey === "features" || productManagementTabKey === "services" || productManagementTabKey === "goods")
+  });
+
+  const goodsQuery = useQuery({
+    queryKey: ["enterprise-goods", enterprise.enterpriseId, apiBaseUrl],
+    queryFn: () => fetchEnterpriseGoods(enterprise.enterpriseId, apiBaseUrl),
+    enabled: productsTabKey === "manage-products" && productManagementTabKey === "goods"
   });
 
   const featureApplicabilityTypesQuery = useQuery({
@@ -110,9 +120,16 @@ export function EnterpriseProductsPage({
     enabled: Boolean(editingService)
   });
 
+  const productFeatureApplicabilitiesQuery = useQuery({
+    queryKey: ["enterprise-product-feature-applicabilities", enterprise.enterpriseId, selectedProductForFeatures?.productId, apiBaseUrl],
+    queryFn: () =>
+      fetchEnterpriseProductFeatureApplicabilities(enterprise.enterpriseId, selectedProductForFeatures!.productId, apiBaseUrl),
+    enabled: Boolean(selectedProductForFeatures)
+  });
+
   const createServiceMutation = useMutation({
     mutationFn: async (values: CreateEnterpriseServiceRequest) => {
-      await createEnterpriseService(enterprise.enterpriseId, values, apiBaseUrl);
+      await createEnterpriseService(enterprise.enterpriseId, normalizeServicePayload(values), apiBaseUrl);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
@@ -133,7 +150,7 @@ export function EnterpriseProductsPage({
         throw new Error("No service selected");
       }
 
-      await updateEnterpriseService(enterprise.enterpriseId, editingService.serviceId, values, apiBaseUrl);
+      await updateEnterpriseService(enterprise.enterpriseId, editingService.serviceId, normalizeServicePayload(values), apiBaseUrl);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
@@ -275,6 +292,7 @@ export function EnterpriseProductsPage({
   });
 
   const services = servicesQuery.data ?? [];
+  const goods = goodsQuery.data ?? [];
   const productFeatures = featuresQuery.data ?? [];
   const productFeatureCategories = featureCategoriesQuery.data ?? [];
   const productFeatureCategoryOptions = useMemo(
@@ -318,6 +336,9 @@ export function EnterpriseProductsPage({
     editServiceForm.setFieldsValue({
       name: editingService.name,
       description: editingService.description,
+      releaseDate: editingService.releaseDate,
+      discontinuedDate: editingService.discontinuedDate,
+      supportDiscontinuedDate: editingService.supportDiscontinuedDate,
       productFeatureApplicabilities: serviceFeatureApplicabilitiesQuery.data.map((item) => ({
         productFeatureId: item.productFeatureId,
         productFeatureApplicabilityType: item.productFeatureApplicabilityType,
@@ -325,6 +346,21 @@ export function EnterpriseProductsPage({
       }))
     });
   }, [editingService, serviceFeatureApplicabilitiesQuery.data, editServiceForm]);
+
+  const openProductFeaturesModal = (product: EnterpriseService | EnterpriseGood) => {
+    const productId = "serviceId" in product ? product.serviceId : product.goodId;
+    setSelectedProductForFeatures({
+      productId,
+      productName: product.name
+    });
+  };
+
+  const normalizeServicePayload = (values: CreateEnterpriseServiceRequest): CreateEnterpriseServiceRequest => ({
+    ...values,
+    releaseDate: values.releaseDate || undefined,
+    discontinuedDate: values.discontinuedDate || undefined,
+    supportDiscontinuedDate: values.supportDiscontinuedDate || undefined
+  });
 
   const renderServiceFeatureApplicabilities = () => (
     <Form.List name="productFeatureApplicabilities">
@@ -509,6 +545,7 @@ export function EnterpriseProductsPage({
                               <tr>
                                 <th>Service Name</th>
                                 <th>Description</th>
+                                <th>Features</th>
                                 <th>Actions</th>
                               </tr>
                             </thead>
@@ -518,6 +555,11 @@ export function EnterpriseProductsPage({
                                   <td>{service.name}</td>
                                   <td>{service.description || "-"}</td>
                                   <td>
+                                    <Button type="link" onClick={() => openProductFeaturesModal(service)}>
+                                      {service.featureCount}
+                                    </Button>
+                                  </td>
+                                  <td>
                                     <Space>
                                       <Button
                                         size="small"
@@ -526,6 +568,9 @@ export function EnterpriseProductsPage({
                                           editServiceForm.setFieldsValue({
                                             name: service.name,
                                             description: service.description,
+                                            releaseDate: service.releaseDate,
+                                            discontinuedDate: service.discontinuedDate,
+                                            supportDiscontinuedDate: service.supportDiscontinuedDate,
                                             productFeatureApplicabilities: []
                                           });
                                         }}
@@ -632,8 +677,50 @@ export function EnterpriseProductsPage({
                         </div>
                       )}
                     </Space>
+                  ) : productManagementTabKey === "goods" ? (
+                    <Space direction="vertical" size="middle" style={{ width: "100%" }}>
+                      {goodsQuery.isError ? (
+                        <Alert
+                          type="error"
+                          message="Failed to load goods"
+                          description={goodsQuery.error instanceof Error ? goodsQuery.error.message : "Unknown error"}
+                          showIcon
+                        />
+                      ) : goodsQuery.isLoading ? (
+                        <div className="table-loading">
+                          <Spin />
+                        </div>
+                      ) : goods.length === 0 ? (
+                        <Empty description="No goods found for this enterprise." />
+                      ) : (
+                        <div className="tanstack-table-wrapper">
+                          <table className="tanstack-table">
+                            <thead>
+                              <tr>
+                                <th>Good Name</th>
+                                <th>Description</th>
+                                <th>Features</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {goods.map((good) => (
+                                <tr key={good.goodId}>
+                                  <td>{good.name}</td>
+                                  <td>{good.description || "-"}</td>
+                                  <td>
+                                    <Button type="link" onClick={() => openProductFeaturesModal(good)}>
+                                      {good.featureCount}
+                                    </Button>
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      )}
+                    </Space>
                   ) : (
-                    <Empty description="Goods products management UI for this enterprise will be added here." />
+                    <Empty description="Unsupported tab." />
                   )}
                 </div>
               </Layout.Content>
@@ -641,6 +728,53 @@ export function EnterpriseProductsPage({
           </Layout>
         </Space>
       </Card>
+
+      <Modal
+        open={Boolean(selectedProductForFeatures)}
+        title={`Product Features - ${selectedProductForFeatures?.productName ?? ""}`}
+        width={900}
+        onCancel={() => setSelectedProductForFeatures(null)}
+        footer={null}
+        destroyOnHidden
+      >
+        {productFeatureApplicabilitiesQuery.isError ? (
+          <Alert
+            type="error"
+            message="Failed to load product features"
+            description={productFeatureApplicabilitiesQuery.error instanceof Error ? productFeatureApplicabilitiesQuery.error.message : "Unknown error"}
+            showIcon
+          />
+        ) : productFeatureApplicabilitiesQuery.isLoading ? (
+          <div className="table-loading">
+            <Spin />
+          </div>
+        ) : (productFeatureApplicabilitiesQuery.data ?? []).length === 0 ? (
+          <Empty description="No features configured for this product." />
+        ) : (
+          <div className="tanstack-table-wrapper">
+            <table className="tanstack-table">
+              <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>Title</th>
+                  <th>Applicability Type</th>
+                  <th>Order</th>
+                </tr>
+              </thead>
+              <tbody>
+                {(productFeatureApplicabilitiesQuery.data ?? []).map((item) => (
+                  <tr key={item.productFeatureApplicabilityId}>
+                    <td>{item.productFeatureCode}</td>
+                    <td>{item.productFeatureTitle}</td>
+                    <td>{item.productFeatureApplicabilityType}</td>
+                    <td>{item.order}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </Modal>
 
       <Modal
         open={featureCategoryManagerOpen}
@@ -745,6 +879,15 @@ export function EnterpriseProductsPage({
           <Form.Item name="description" label="Description">
             <Input.TextArea rows={4} maxLength={500} />
           </Form.Item>
+          <Form.Item name="releaseDate" label="Release Date">
+            <Input type="date" />
+          </Form.Item>
+          <Form.Item name="discontinuedDate" label="Discontinued Date">
+            <Input type="date" />
+          </Form.Item>
+          <Form.Item name="supportDiscontinuedDate" label="Support Discontinued Date">
+            <Input type="date" />
+          </Form.Item>
           {renderServiceFeatureApplicabilities()}
         </Form>
       </TopDrawerForm>
@@ -771,6 +914,15 @@ export function EnterpriseProductsPage({
           </Form.Item>
           <Form.Item name="description" label="Description">
             <Input.TextArea rows={4} maxLength={500} />
+          </Form.Item>
+          <Form.Item name="releaseDate" label="Release Date">
+            <Input type="date" />
+          </Form.Item>
+          <Form.Item name="discontinuedDate" label="Discontinued Date">
+            <Input type="date" />
+          </Form.Item>
+          <Form.Item name="supportDiscontinuedDate" label="Support Discontinued Date">
+            <Input type="date" />
           </Form.Item>
           {renderServiceFeatureApplicabilities()}
         </Form>

@@ -17,6 +17,7 @@ import {
   Employment,
   Floor,
   LegalStructure,
+  EnterpriseGood,
   EnterpriseService,
   EnterpriseServiceFeatureApplicability,
   EnterpriseProductFeature,
@@ -417,6 +418,17 @@ export async function fetchEnterpriseServices(
   );
 }
 
+export async function fetchEnterpriseGoods(
+  enterpriseId: string,
+  apiBaseUrl?: string
+): Promise<EnterpriseGood[]> {
+  return requestJson<EnterpriseGood[]>(
+    `/api/parties/enterprises/${enterpriseId}/products/goods`,
+    { method: "GET" },
+    apiBaseUrl
+  );
+}
+
 export async function fetchEnterpriseServiceFeatureApplicabilities(
   enterpriseId: string,
   serviceId: string,
@@ -424,6 +436,18 @@ export async function fetchEnterpriseServiceFeatureApplicabilities(
 ): Promise<EnterpriseServiceFeatureApplicability[]> {
   return requestJson<EnterpriseServiceFeatureApplicability[]>(
     `/api/parties/enterprises/${enterpriseId}/products/services/${serviceId}/feature-applicabilities`,
+    { method: "GET" },
+    apiBaseUrl
+  );
+}
+
+export async function fetchEnterpriseProductFeatureApplicabilities(
+  enterpriseId: string,
+  productId: string,
+  apiBaseUrl?: string
+): Promise<EnterpriseServiceFeatureApplicability[]> {
+  return requestJson<EnterpriseServiceFeatureApplicability[]>(
+    `/api/parties/enterprises/${enterpriseId}/products/${productId}/feature-applicabilities`,
     { method: "GET" },
     apiBaseUrl
   );
