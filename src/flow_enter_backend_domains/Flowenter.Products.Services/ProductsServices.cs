@@ -140,6 +140,7 @@ public class ProductsServices : IProductsServices
                 .Where(item => item.SpecifiedForPartyId == enterpriseId)
                 .ToList();
             var selected = providerComponents.Count > 0 ? providerComponents : components;
+            service.PriceCoponentCount = components.Count;
             service.Price = selected.Select(item => item.Price).FirstOrDefault();
             service.PriceDisplay = BuildServicePriceDisplay(selected, timeFrequencyMeasureLookup);
         }

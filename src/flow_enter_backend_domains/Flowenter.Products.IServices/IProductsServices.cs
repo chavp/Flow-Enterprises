@@ -86,6 +86,7 @@ public sealed class EnterpriseServiceDto
     public DateOnly? SupportDiscontinuedDate { get; set; }
     public bool HasCoverImage { get; set; }
     public string? CoverImageName { get; set; }
+    public int PriceCoponentCount { get; set; }
     public int FeatureCount { get; set; }
     public DateTime CreatedAtUtc { get; set; }
     public DateTime? UpdatedAtUtc { get; set; }

@@ -69,6 +69,7 @@ export function EnterpriseProductsPage({
   const [featureCategoryCreateOpen, setFeatureCategoryCreateOpen] = useState(false);
   const [editingFeatureCategory, setEditingFeatureCategory] = useState<ProductFeatureCategory | null>(null);
   const [selectedProductForFeatures, setSelectedProductForFeatures] = useState<{ productId: string; productName: string } | null>(null);
+  const [selectedServiceForPrices, setSelectedServiceForPrices] = useState<{ serviceId: string; serviceName: string } | null>(null);
   const [createServiceCoverImageBase64, setCreateServiceCoverImageBase64] = useState<string | undefined>(undefined);
   const [createServiceCoverImageName, setCreateServiceCoverImageName] = useState<string | undefined>(undefined);
   const [editServiceCoverImageBase64, setEditServiceCoverImageBase64] = useState<string | undefined>(undefined);
@@ -132,6 +133,11 @@ export function EnterpriseProductsPage({
     queryKey: ["enterprise-service-price-coponents", enterprise.enterpriseId, editingService?.serviceId, apiBaseUrl],
     queryFn: () => fetchEnterpriseServicePriceCoponents(enterprise.enterpriseId, editingService!.serviceId, apiBaseUrl),
     enabled: Boolean(editingService)
+  });
+  const servicePriceListQuery = useQuery({
+    queryKey: ["enterprise-service-price-list", enterprise.enterpriseId, selectedServiceForPrices?.serviceId, apiBaseUrl],
+    queryFn: () => fetchEnterpriseServicePriceCoponents(enterprise.enterpriseId, selectedServiceForPrices!.serviceId, apiBaseUrl),
+    enabled: Boolean(selectedServiceForPrices)
   });
   const enterpriseBranchsQuery = useQuery({
     queryKey: ["enterprise-branchs", enterprise.enterpriseId, apiBaseUrl],
@@ -401,6 +407,11 @@ export function EnterpriseProductsPage({
         value: item.branchPartyId ?? item.branchId,
         label: `${item.branchLegalName} (${item.branchPartyId ?? item.branchId})`
       })),
+    [enterpriseBranchsQuery.data]
+  );
+  const branchPartyLabelMap = useMemo(
+    () =>
+      new Map((enterpriseBranchsQuery.data ?? []).map((item) => [item.branchPartyId ?? item.branchId, item.branchLegalName])),
     [enterpriseBranchsQuery.data]
   );
   const priceCoponentTypeOptions = useMemo(
@@ -854,7 +865,14 @@ export function EnterpriseProductsPage({
                                 <tr key={service.serviceId}>
                                   <td>{service.name}</td>
                                   <td>{service.description || "-"}</td>
-                                  <td>{service.priceDisplay ?? (service.price != null ? service.price.toLocaleString() : "-")}</td>
+                                  <td>
+                                    <Button
+                                      type="link"
+                                      onClick={() => setSelectedServiceForPrices({ serviceId: service.serviceId, serviceName: service.name })}
+                                    >
+                                      {service.priceCoponentCount ?? 0}
+                                    </Button>
+                                  </td>
                                   <td>
                                     <Button type="link" onClick={() => openProductFeaturesModal(service)}>
                                       {service.featureCount}
@@ -1035,6 +1053,68 @@ export function EnterpriseProductsPage({
           </Layout>
         </Space>
       </Card>
+
+      <Modal
+        open={Boolean(selectedServiceForPrices)}
+        title={`Service Prices - ${selectedServiceForPrices?.serviceName ?? ""}`}
+        width={1100}
+        onCancel={() => setSelectedServiceForPrices(null)}
+        footer={null}
+        destroyOnHidden
+      >
+        {servicePriceListQuery.isError ? (
+          <Alert
+            type="error"
+            message="Failed to load service prices"
+            description={servicePriceListQuery.error instanceof Error ? servicePriceListQuery.error.message : "Unknown error"}
+            showIcon
+          />
+        ) : servicePriceListQuery.isLoading ? (
+          <div className="table-loading">
+            <Spin />
+          </div>
+        ) : (servicePriceListQuery.data ?? []).length === 0 ? (
+          <Empty description="No prices configured for this service." />
+        ) : (
+          <div className="tanstack-table-wrapper">
+            <table className="tanstack-table">
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Specified For Party</th>
+                  <th>Price</th>
+                  <th>Percent</th>
+                  <th>Unit</th>
+                  <th>Time Frequency</th>
+                  <th>From</th>
+                  <th>Thru</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                {(servicePriceListQuery.data ?? []).map((item) => {
+                  const specifiedFor = item.specifiedForPartyId === enterprise.enterpriseId
+                    ? "Provider"
+                    : (item.specifiedForPartyId ? branchPartyLabelMap.get(item.specifiedForPartyId) ?? item.specifiedForPartyId : "Provider");
+                  return (
+                    <tr key={item.priceCoponentId}>
+                      <td>{item.priceCoponentType}</td>
+                      <td>{specifiedFor}</td>
+                      <td>{item.price != null ? item.price.toLocaleString() : "-"}</td>
+                      <td>{item.percent != null ? item.percent.toLocaleString() : "-"}</td>
+                      <td>{item.unitOfMeasureAbbreviation ?? "-"}</td>
+                      <td>{item.timeFrequencyMeasureAbbreviation ?? "-"}</td>
+                      <td>{item.fromDate}</td>
+                      <td>{item.thruDate}</td>
+                      <td>{item.description || "-"}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </Modal>
 
       <Modal
         open={Boolean(selectedProductForFeatures)}

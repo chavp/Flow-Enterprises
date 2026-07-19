@@ -32,6 +32,7 @@ export type EnterpriseService = {
   supportDiscontinuedDate?: string;
   hasCoverImage: boolean;
   coverImageName?: string;
+  priceCoponentCount?: number;
   featureCount: number;
   createdAtUtc: string;
   updatedAtUtc?: string;
